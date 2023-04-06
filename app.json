@@ -1,0 +1,41 @@
+{
+  "id": "1320702c-b467-40bd-a46e-d380e2eb9dc9",
+  "name": "Weave Essential",
+  "publisher": "ACW Solutions Ltd.",
+  "version": "1.0.0.21",
+  "brief": "",
+  "description": "",
+  "privacyStatement": "",
+  "EULA": "",
+  "help": "",
+  "url": "",
+  "logo": "",
+
+  "screenshots": [],
+  "platform": "1.0.0.0",
+  "application": "21.0.0.0",
+  
+  "idRanges": [
+    {
+      "from": 80000,
+      "to": 89999
+    }
+  ],
+  "resourceExposurePolicy": {
+    "allowDebugging": true,
+    "allowDownloadingSource": false,
+    "includeSourceInSymbolFile": false
+  },
+  "runtime": "10.0",
+  
+  "dependencies": [
+    {
+    "id":  "8c35a66d-109b-4c89-aff2-d0feea8da136",
+    "name":  "Universal Data Sync",
+    "publisher":  "ACW Solutions Ltd.",
+    "version":  "1.0.0.0"
+    }
+  ]
+  
+  
+}

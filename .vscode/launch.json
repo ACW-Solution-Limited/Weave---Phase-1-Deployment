@@ -1,0 +1,53 @@
+// {
+//     "version": "0.2.0",
+//     "configurations": [
+//         {   
+//             "name": "Microsoft cloud Production",
+//             "request": "launch",
+//             "type": "al",
+//             "environmentType": "Production",
+//             "environmentName": "Production",
+//             "startupObjectId": 82002,
+//             "startupObjectType": "Page",
+//             "breakOnError": true,
+//             "launchBrowser": true,
+//             "tenant": "cce404bd-9b2a-47f0-810f-dbdc73e2e849",
+//             "enableLongRunningSqlStatements": true,
+//             "enableSqlInformationDebugger": true,
+//             "schemaUpdateMode": "ForceSync"             
+//         }
+//     ]
+// }
+{
+    "version": "0.2.0",
+    "configurations": [
+    // {
+    //     "name": "Attach: Microsoft cloud sandbox",
+    //     "type": "al",
+    //     "request": "attach",
+    //     "environmentType": "Sandbox",
+    //     "environmentName": "DEV",
+    //     "breakOnError": "All",
+    //     "breakOnRecordWrite": "None",
+    //     "enableSqlInformationDebugger": true,
+    //     "enableLongRunningSqlStatements": true,
+    //     "longRunningSqlStatementsThreshold": 500,
+    //     "numberOfSqlStatements": 10,
+    //     "breakOnNext": "WebServiceClient"
+    // },
+        {   
+            "name": "Microsoft cloud Sandbox",
+            "request": "launch",
+            "type": "al",
+            "environmentType": "Sandbox",
+            "environmentName": "DEV",
+            "startupObjectId": 82011,
+            "startupObjectType": "Page",
+            "breakOnError": true,
+            "launchBrowser": true,
+            "enableLongRunningSqlStatements": true,
+            "enableSqlInformationDebugger": true,
+            "schemaUpdateMode": "ForceSync"             
+        }
+    ]
+}
