@@ -40,7 +40,7 @@
             "request": "launch",
             "type": "al",
             "environmentType": "Sandbox",
-            "environmentName": "DEV",
+            "environmentName": "Pre-production",
             "startupObjectId": 82011,
             "startupObjectType": "Page",
             "breakOnError": true,

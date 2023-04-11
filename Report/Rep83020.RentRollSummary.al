@@ -29,13 +29,10 @@ report 83020 "Rent Roll Summary"
             column(Status; Status) { }
             column(TotalStayPeriodPerLicenseAgreement; g_decTotalStayPeriodPerLicenseAgreement) { }
             column(RemainingStay; g_decRemainingStay) { }
-            column(DiscountRoomRate; g_decDiscountRoomRate) { }
             column(MonthlyRent; g_decMonthlyRent) { }
             column(OccupancyinPeriodDays; g_decOccupancyinPeriodDays) { }
             column(OccupancyDaysAdjusted; g_decOccupancyDaysAdjusted) { }
             column(GrossRevenueToBeRecognised; g_decGrossRevenueToBeRecognised) { }
-            column(NetRevenueAfterDiscounts; g_decNetRevenueAfterDiscounts) { }
-            column(DiscountToRecognize; g_decDiscountToRecognize) { }
             trigger OnAfterGetRecord()
             begin
 
@@ -55,7 +52,7 @@ report 83020 "Rent Roll Summary"
                 g_txtBookingAccountType := GetCustomerPostingGroup("Customer No.");
                 g_decTotalStayPeriodPerLicenseAgreement := CalcTotalStaryPeriodPerLicenseAgreement();
                 g_decRemainingStay := CalcRemainingStay();
-                g_decDiscountRoomRate := 0;
+
                 g_decOccupancyinPeriodDays := CalcOccupancyInPeriod(g_datCheckInDay, g_datCheckOutDay);
                 if g_decOccupancyinPeriodDays < 0 then
                     g_decOccupancyinPeriodDays := 0;
@@ -63,8 +60,7 @@ report 83020 "Rent Roll Summary"
                 g_decMonthlyRent := CalcMonthyRent();
                 g_decOccupancyDaysAdjusted := g_decOccupancyinPeriodDays;
                 g_decGrossRevenueToBeRecognised := LeaseContractHeader."Monthly Rent" * g_decOccupancyinPeriodDays / (g_datEndDate - g_datStartDate + 1);
-                g_decNetRevenueAfterDiscounts := LeaseContractHeader."Monthly Discount" * g_decOccupancyinPeriodDays / (g_datEndDate - g_datStartDate + 1);
-                g_decDiscountToRecognize := g_decGrossRevenueToBeRecognised - g_decNetRevenueAfterDiscounts;
+
             end;
         }
 
@@ -181,11 +177,10 @@ report 83020 "Rent Roll Summary"
 
     procedure CalcRemainingStay(): Decimal
     begin
-        if LeaseContractHeader."Payment Type" = LeaseContractHeader."Payment Type"::"One-off (ShortStay)" then
+        if (g_datCheckOutDay - g_datEndDate) > 0 then
             exit(g_datCheckOutDay - g_datEndDate)
         else
-            exit(g_datCheckOutDay - g_datEndDate + 1)
-
+            exit(0)
     end;
 
 
@@ -229,12 +224,10 @@ report 83020 "Rent Roll Summary"
         g_datCheckOutDay: Date;
         g_decTotalStayPeriodPerLicenseAgreement: Decimal;
         g_decRemainingStay: Decimal;
-        g_decDiscountRoomRate: Decimal;
         g_decMonthlyRent: Decimal;
         g_decOccupancyinPeriodDays: Decimal;
         g_decOccupancyDaysAdjusted: Decimal;
         g_decGrossRevenueToBeRecognised: Decimal;
-        g_decNetRevenueAfterDiscounts: Decimal;
-        g_decDiscountToRecognize: Decimal;
+
 
 }

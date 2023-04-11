@@ -2835,6 +2835,9 @@ End Function
         <Field Name="CurrencySymbol">
           <DataField>CurrencySymbol</DataField>
         </Field>
+        <Field Name="Stripe_Invoice_ID">
+          <DataField>Stripe_Invoice_ID</DataField>
+        </Field>
         <Field Name="Stripe_Payment_Link">
           <DataField>Stripe_Payment_Link</DataField>
         </Field>
