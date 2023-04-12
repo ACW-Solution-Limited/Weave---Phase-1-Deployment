@@ -75,7 +75,7 @@ codeunit 83136 CDSProductInventory
         CompanyInformation: Record "Company Information";
     begin
         CompanyInformation.Get;
-        if (CompanyInformation."SG Master Company") = false AND (CompanyInformation."HK Master Company") = false then begin
+        if not (CompanyInformation."SG Master Company") AND not (CompanyInformation."HK Master Company") then begin
             AddEntityTableMapping('BC to CRM ProdLine', DATABASE::"CDS acwapp_productinventory", TempNameValueBuffer);
             AddEntityTableMapping('BC to CRM ProdLine', DATABASE::Item, TempNameValueBuffer);
         end;
@@ -93,7 +93,7 @@ codeunit 83136 CDSProductInventory
         CompanyInformation: Record "Company Information";
     begin
         CompanyInformation.Get;
-        if (CompanyInformation."SG Master Company") = false AND (CompanyInformation."HK Master Company") = false then begin
+        if not (CompanyInformation."SG Master Company") AND not (CompanyInformation."HK Master Company") then begin
             InsertIntegrationTableMapping(
              IntegrationTableMapping, 'BC to CRM ProdLine',
               DATABASE::Item, DATABASE::"CDS acwapp_productinventory", CRMProduct.FieldNo(acwapp_productinventoryId), CRMProduct.FieldNo(ModifiedOn), '', '', false);
