@@ -286,15 +286,15 @@ page 83027 "Sales Commission"
                         // >> check whether the contract period more 3 months
                         l_recSalesComissionSetup.reset;
                         l_recBillingSchedule.reset;
+                        l_sequence := 0;
                         l_recSalesComissionSetup.Get(l_recPostedSalesInvoice."Commission Type");
-                        l_recSalesComissionSetup.FindFirst();
                         l_recBillingSchedule.SetFilter("Contract No.", '%1', l_recPostedSalesInvoice."Lease Contract No.");
                         l_recBillingSchedule.SetRange(Type, l_recBillingSchedule.Type::Rent);
                         l_recBillingSchedule.setRange(l_recBillingSchedule."Sub-Type", '');
                         If l_recBillingSchedule.findset then
                             repeat
                                 If l_recBillingSchedule."No. of Days Current Month" = l_recBillingSchedule."No. of Days to Bill" then
-                                    l_sequence += 1
+                                    l_sequence += 1;
                             until l_recBillingSchedule.Next = 0;
 
                         If l_sequence >= l_recSalesComissionSetup."Minimum Contract Period" then begin
@@ -340,6 +340,7 @@ page 83027 "Sales Commission"
         l_recPostedCreditMemo.SetFilter("Salesperson Code", '<>%1', '');
         If l_recPostedCreditMemo.findset then
             repeat
+                l_sequence := 0;
                 case l_recPostedCreditMemo."Calculation Type" of
                     l_recPostedCreditMemo."Calculation Type"::ByPrecentage:
                         begin
@@ -372,7 +373,7 @@ page 83027 "Sales Commission"
                             l_recCommissionTemp."invoice Amount" += l_PostedDeferralLine.Amount;
 
 
-                            l_recPostedCreditMemoline.SetRange("Document No.", l_recPostedSalesInvoice."No.");
+                            l_recPostedCreditMemoline.SetRange("Document No.", l_recPostedCreditMemo."No.");
                             l_recPostedCreditMemoline.SetRange("Line No.", l_PostedDeferralLine."Line No.");
                             If l_recPostedCreditMemoline.FindFirst then
                                 l_recCommissionTemp."Invoice Amount Including VAT" += l_PostedDeferralLine.Amount * (1 + l_recPostedCreditMemoline."VAT %" / 100);
@@ -382,29 +383,47 @@ page 83027 "Sales Commission"
 
                     // >> For Renewal Commission Type - No need to refer to deferral schedule
                     If (l_recPostedCreditMemo."Posting Date" >= DateStartfilter) And (l_recPostedCreditMemo."Posting Date" <= DateEndfilter) then begin
-                        l_recPostedCreditMemoLine.reset;
-                        l_recPostedCreditMemoLine.setrange("Document No.", l_recPostedSalesInvoice."No.");
-                        l_recPostedCreditMemoLine.SetFilter("Tender Type", '=%1', '');
-                        If l_recPostedCreditMemoLine.Findset() then begin
+                        //      
+                        l_sequence := 0;
+                        l_recSalesComissionSetup.reset;
+                        l_recBillingSchedule.reset;
+                        l_recSalesComissionSetup.Get(l_recPostedCreditMemo."Commission Type");
+                        // l_recSalesComissionSetup.FindFirst();
+                        l_recBillingSchedule.SetFilter("Contract No.", '%1', l_recPostedCreditMemo."Lease Contract No.");
+                        l_recBillingSchedule.SetRange(Type, l_recBillingSchedule.Type::Rent);
+                        l_recBillingSchedule.setRange(l_recBillingSchedule."Sub-Type", '');
+                        If l_recBillingSchedule.findset then
                             repeat
+                                If l_recBillingSchedule."No. of Days Current Month" = l_recBillingSchedule."No. of Days to Bill" then
+                                    l_sequence += 1;
+                            until l_recBillingSchedule.Next = 0;
 
-                                l_recCommissionTemp."invoice Amount" += l_recPostedCreditMemoLine."Line Amount";
-                                l_recCommissionTemp."Invoice Amount Including VAT" += l_recPostedCreditMemoLine."Amount Including VAT";
-                            until l_recPostedCreditMemoLine.Next() = 0;
+                        If l_sequence >= l_recSalesComissionSetup."Minimum Contract Period" then begin
+
+                            //
+                            l_recPostedCreditMemoLine.reset;
+                            l_recPostedCreditMemoLine.setrange("Document No.", l_recPostedCreditMemo."No.");
+                            l_recPostedCreditMemoLine.SetFilter("Tender Type", '=%1', '');
+                            If l_recPostedCreditMemoLine.Findset() then begin
+                                repeat
+
+                                    l_recCommissionTemp."invoice Amount" += l_recPostedCreditMemoLine."Line Amount";
+                                    l_recCommissionTemp."Invoice Amount Including VAT" += l_recPostedCreditMemoLine."Amount Including VAT";
+                                until l_recPostedCreditMemoLine.Next() = 0;
+                            end;
+                            l_recCommissionTemp."Contract No." := l_recPostedCreditMemo."Lease Contract No.";
+                            l_recCommissionTemp."Commission Type" := l_recPostedCreditMemo."Commission Type";
+                            l_recCommissionTemp."Document Type" := l_recCommissionTemp."Document Type"::Invoice;
+                            l_recCommissionTemp."Document No." := l_recPostedCreditMemo."No.";
+                            l_recCommissionTemp.Date := l_recPostedCreditMemo."Posting Date";
+                            l_recCommissionTemp.validate(Salesperson, l_recPostedCreditMemo."Salesperson Code");
+
+                            l_recCommissionTemp."Commission Amount" := l_Commission;
+                            l_recCommissionTemp."invoice Amount" := l_recPostedCreditMemo."Amount Including VAT";
+                            l_recCommissionTemp."Invoice Amount Including VAT" := l_recPostedCreditMemo."Amount Including VAT";
+                            // >> For Renewal Commission Type - No need to refer to deferral schedule
+
                         end;
-                        l_recCommissionTemp."Contract No." := l_recPostedCreditMemo."Lease Contract No.";
-                        l_recCommissionTemp."Commission Type" := l_recPostedCreditMemo."Commission Type";
-                        l_recCommissionTemp."Document Type" := l_recCommissionTemp."Document Type"::Invoice;
-                        l_recCommissionTemp."Document No." := l_recPostedCreditMemo."No.";
-                        l_recCommissionTemp.Date := l_recPostedCreditMemo."Posting Date";
-                        l_recCommissionTemp.validate(Salesperson, l_recPostedCreditMemo."Salesperson Code");
-
-                        l_recCommissionTemp."Commission Amount" := l_Commission;
-                        l_recCommissionTemp."invoice Amount" := l_recPostedCreditMemo."Amount Including VAT";
-                        l_recCommissionTemp."Invoice Amount Including VAT" := l_recPostedCreditMemo."Amount Including VAT";
-                        // >> For Renewal Commission Type - No need to refer to deferral schedule
-
-
                     end;
                 end;
 

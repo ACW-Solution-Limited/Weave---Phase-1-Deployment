@@ -47,8 +47,6 @@ page 83009 "Lease Contract Setup"
                     ToolTip = 'Specifies the value of the Rental Income Deferral Template field.';
                 }
                 field("Item Sales Location"; rec."Item Sales Location") { ApplicationArea = All; }
-                field("Rental Income G/L Account No."; rec."Rental Income G/L Account No.") { ApplicationArea = All; }
-
                 field("Event Fee G/L Account No."; Rec."Event Fee G/L Account No.") { ApplicationArea = all; }
 
             }

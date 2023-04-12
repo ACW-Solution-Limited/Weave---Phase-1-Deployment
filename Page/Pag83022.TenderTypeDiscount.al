@@ -53,7 +53,7 @@ page 83022 "Tender Type Discount"
                     ToolTip = 'Specifies the value of the Payment Intent field.';
                 }
 
-                field("Stripe/QFPay Invoice ID"; Rec."Stripe/QFPay Invoice ID")
+                field("Stripe Invoice ID"; Rec."Stripe Invoice ID")
                 {
                     ToolTip = 'Specifies the value of the Stripe Invoice Id field.';
                 }

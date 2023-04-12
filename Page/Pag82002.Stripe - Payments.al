@@ -55,7 +55,7 @@ page 82002 "Stripe Payments"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Charge Id field.';
                 }
-                field("Stripe/QFPay Invoice ID"; Rec."Stripe/QFPay Invoice ID")
+                field("Stripe Invoice ID"; Rec."Stripe Invoice ID")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Stripe Invoice Id field.';

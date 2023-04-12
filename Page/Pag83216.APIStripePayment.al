@@ -69,7 +69,7 @@ page 83216 "API Stripe Payment"
                 {
                     Caption = 'Sales Document No.';
                 }
-                field(stripeInvoiceId; Rec."Stripe/QFPay Invoice ID")
+                field(stripeInvoiceId; Rec."Stripe Invoice ID")
                 {
                     Caption = 'Stripe Invoice Id';
                 }

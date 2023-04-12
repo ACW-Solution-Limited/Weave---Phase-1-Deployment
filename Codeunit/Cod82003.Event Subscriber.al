@@ -25,7 +25,7 @@ codeunit 83002 EventSubscriber
 
         UpdateBillingScheduleStatus(SalesHeader);
 
-        if SalesHeader."Stripe/QFPay Invoice ID" <> '' then
+        if SalesHeader."Stripe Invoice ID" <> '' then
             ProcessFirstTimePayment(SalesInvHdrNo, SalesHeader)
         else
             ProcessSecondTimePayment(SalesInvHdrNo, SalesHeader);
@@ -143,14 +143,6 @@ codeunit 83002 EventSubscriber
     end;
 
 
-
-    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"CRM Integration Table Synch.", 'OnQueryPostFilterIgnoreRecord', '', false, false)]
-    // procedure OnQueryPostFilterIgnoreRecord(SourceRecordRef: RecordRef; var IgnoreRecord: Boolean)
-    // begin
-    //     IgnoreRecord := true;
-    // end;
-
-
     [EventSubscriber(ObjectType::Table, Database::"Sales Invoice Line", 'OnAfterInsertEvent', '', false, false)]
     local procedure InsertCloneLine(var Rec: Record "Sales Invoice Line"; RunTrigger: Boolean)
     var
@@ -189,8 +181,6 @@ codeunit 83002 EventSubscriber
     begin
         if DeferralTemplate."Start Date" = DeferralTemplate."Start Date"::"Refer to Purchase Invoice" then
             AdjustedStartDate := DeferralTemplate."Temp Posting Date";
-
-        // Message('%1', DeferralTemplate."Temp Posting Date");
     end;
 
 
@@ -250,10 +240,10 @@ codeunit 83002 EventSubscriber
     begin
         if l_recSalesInvHdr.get(SalesInvHdrNo) then begin
             l_recSalesInvHdr."External Payment Gateway" := l_recSalesInvHdr."External Payment Gateway"::Stripe;
-            l_recSalesInvHdr."Stripe/QFPay Invoice ID" := SalesHeader."Stripe/QFPay Invoice ID";
+            l_recSalesInvHdr."Stripe Invoice ID" := SalesHeader."Stripe Invoice ID";
             l_recSalesInvHdr."Payment Status" := l_recSalesInvHdr."Payment Status"::Paid;
             l_recSalesInvHdr."External Payment Gateway" := GetExternalPaymentGateway();
-            UpdateExtraCharge(l_recSalesInvHdr."No.", l_recSalesInvHdr."Stripe Payment Link", l_recSalesInvHdr."Stripe/QFPay Invoice ID");
+            UpdateExtraCharge(l_recSalesInvHdr."No.", l_recSalesInvHdr."Stripe Payment Link", l_recSalesInvHdr."Stripe Invoice ID");
             l_recSalesInvHdr.Modify();
         end;
 
@@ -288,7 +278,7 @@ codeunit 83002 EventSubscriber
                     l_recExtraCharges."Posted Sales Invoice No." := SalesInvoiceNo;
                     l_recExtraCharges."Payment Link" := PaymentLink;
                     l_recExtraCharges."External Payment Gateway" := GetExternalPaymentGateway();
-                    l_recExtraCharges."Stripe/QFPay Invoice ID" := InvoiceId;
+                    l_recExtraCharges."Stripe Invoice ID" := InvoiceId;
                     l_recExtraCharges."BC Status" := l_recExtraCharges."BC Status"::Posted;
                     l_recExtraCharges.Modify();
                 end;
@@ -340,7 +330,7 @@ codeunit 83002 EventSubscriber
         l_recSalesInvoiceHeader.Reset();
         l_recSalesInvoiceHeader.SetFilter("No.", SalesInvoiceNo);
         if l_recSalesInvoiceHeader.FindFirst() then begin
-            l_recSalesInvoiceHeader."Stripe/QFPay Invoice ID" := StripeQFPayInvoiceID;
+            l_recSalesInvoiceHeader."Stripe Invoice ID" := StripeQFPayInvoiceID;
             l_recSalesInvoiceHeader."Payment Status" := l_recSalesInvoiceHeader."Payment Status"::Paid;
             l_recSalesInvoiceHeader.Modify();
         end;
@@ -349,7 +339,7 @@ codeunit 83002 EventSubscriber
         l_recLeaseBillingSchedule.SetFilter("Document No.", SalesInvoiceNo);
         if l_recLeaseBillingSchedule.FindFirst() then
             repeat
-                l_recLeaseBillingSchedule."Stripe/QFPay Invoice ID" := StripeQFPayInvoiceID;
+                l_recLeaseBillingSchedule."Stripe Invoice ID" := StripeQFPayInvoiceID;
                 l_recLeaseBillingSchedule."External Payment Gateway" := GetExternalPaymentGateway();
                 l_recLeaseBillingSchedule.Status := l_recLeaseBillingSchedule.Status::Paid;
                 l_recLeaseBillingSchedule.Modify();

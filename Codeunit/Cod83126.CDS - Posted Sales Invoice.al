@@ -104,7 +104,7 @@ codeunit 83126 "CDS Posted Sales Invoice"
         InsertIntegrationFieldMapping('BC to CRM PSH', PostedSalesInvoiceHeader.FieldNo("Payment Status"), CRMPostedSalesInvoice.FieldNo(acwapp_PaymentStatus), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('BC to CRM PSH', PostedSalesInvoiceHeader.FieldNo("Stripe Payment Link"), CRMPostedSalesInvoice.FieldNo(acwapp_PaymentLink), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('BC to CRM PSH', PostedSalesInvoiceHeader.FieldNo(BlobURL), CRMPostedSalesInvoice.FieldNo(acwapp_BlobURL), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
-        InsertIntegrationFieldMapping('BC to CRM PSH', PostedSalesInvoiceHeader.FieldNo("Stripe/QFPay Invoice ID"), CRMPostedSalesInvoice.FieldNo(acwapp_PaymentReferenceID), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
+        InsertIntegrationFieldMapping('BC to CRM PSH', PostedSalesInvoiceHeader.FieldNo("Stripe Invoice ID"), CRMPostedSalesInvoice.FieldNo(acwapp_PaymentReferenceID), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
 
         IntegrationTableMapping.reset;
         IntegrationTableMapping.SetFilter(Name, 'BC to CRM PSH');

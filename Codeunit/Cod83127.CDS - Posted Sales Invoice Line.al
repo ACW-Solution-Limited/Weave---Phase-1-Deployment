@@ -84,7 +84,6 @@ codeunit 83127 "CDS Posted Sales Invoice Line"
         IntegrationFieldMapping: Record "Integration Field Mapping";
         CRMPostedSalesInvoiceLine: Record "CDS acwapp_postedsalesinvoiceline";
         PostedSalesInvoiceLine: Record "Posted Sales Inv. Line for CRM";
-        // PostedSalesInvoiceLine: Record "Sales Invoice Line";
         CUCreateJob: Codeunit "Integ. Table Create Job Queue";
         FilterStr: OutStream;
         FilterText: Text;

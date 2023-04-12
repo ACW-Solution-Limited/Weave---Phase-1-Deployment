@@ -20,6 +20,7 @@ codeunit 83153 AttachedDocuments
         OutS: OutStream;
         tempBlob: Codeunit "Temp Blob";
         Filename: Text;
+        Convert: Codeunit "Base64 Convert";
     begin
         l_recSalesInvHeader.reset;
         l_recSalseCreditMemo.reset;
@@ -31,9 +32,13 @@ codeunit 83153 AttachedDocuments
             //Copy from outstream to instream
             tempBlob.CreateOutStream(OutS);
             DocumentAttachment."Document Reference ID".ExportStream(OutS);
+            //OutS.write(base64.FromBase64(Base64Value));
+            // tempBlob.CreateInStream(InS, TextEncoding::UTF8);
             tempBlob.CreateInStream(InS);
+            //  Message('1%', InS.Read());
             Filename := DocumentAttachment."File Name" + '.' + DocumentAttachment."File Extension";
             ABSBlobClient.PutBlobBlockBlobStream(Filename, InS);
+            //ABSBlobClient.PutBlobAppendBlobStream(Filename);
             l_recSalesInvHeader.setrange("No.", DocumentAttachment."No.");
             If l_recSalesInvHeader.findfirst then begin
                 l_recSalesInvHeader.BlobURL := StrSubstNo('https://%1.blob.core.windows.net/%2/%3', ABSContainersetup."Account Name", ABSContainersetup."Container Name", Filename);

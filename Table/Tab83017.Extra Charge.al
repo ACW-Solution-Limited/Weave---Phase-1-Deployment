@@ -101,7 +101,7 @@ table 83017 "Extra Charge"
             DataClassification = ToBeClassified;
             OptionMembers = " ",Pending,Overdue,Paid;
         }
-        field(22; "Stripe/QFPay Invoice ID"; Text[250])
+        field(22; "Stripe Invoice ID"; Text[250])
         {
             Caption = 'Stripe/QFPay Invoice ID';
             DataClassification = ToBeClassified;

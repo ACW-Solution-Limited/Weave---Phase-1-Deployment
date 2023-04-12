@@ -2816,51 +2816,6 @@
                 <PaddingRight>5pt</PaddingRight>
               </Style>
             </Textbox>
-<<<<<<< HEAD
-=======
-            <Textbox Name="CustomerAddress18">
-              <CanGrow>true</CanGrow>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>=Fields!Stripe_Payment_Link.Value</Value>
-                      <MarkupType>HTML</MarkupType>
-                      <Style>
-                        <FontSize>8pt</FontSize>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style />
-                </Paragraph>
-              </Paragraphs>
-              <rd:DefaultName>CustomerAddress1</rd:DefaultName>
-              <ActionInfo>
-                <Actions>
-                  <Action>
-                    <Hyperlink>=Fields!Stripe_Payment_Link.Value</Hyperlink>
-                  </Action>
-                </Actions>
-              </ActionInfo>
-              <Top>0.29265cm</Top>
-              <Left>3.40044cm</Left>
-              <Height>0.42334cm</Height>
-              <Width>7.88227cm</Width>
-              <ZIndex>1</ZIndex>
-              <Visibility>
-                <Hidden>true</Hidden>
-              </Visibility>
-              <Style>
-                <Border>
-                  <Color>LightGrey</Color>
-                  <Style>None</Style>
-                </Border>
-                <PaddingLeft>5pt</PaddingLeft>
-                <PaddingRight>5pt</PaddingRight>
-              </Style>
-            </Textbox>
->>>>>>> 08db8c97c638ad50aa7c686bc93480c7ba1b12bf
             <Textbox Name="CustomerAddress20">
               <CanGrow>true</CanGrow>
               <KeepTogether>true</KeepTogether>
@@ -2878,13 +2833,8 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>CustomerAddress1</rd:DefaultName>
-<<<<<<< HEAD
               <Top>0.17978cm</Top>
               <Left>3.39769cm</Left>
-=======
-              <Top>0.75127cm</Top>
-              <Left>3.40089cm</Left>
->>>>>>> 08db8c97c638ad50aa7c686bc93480c7ba1b12bf
               <Height>0.37916cm</Height>
               <Width>9.11743cm</Width>
               <ZIndex>1</ZIndex>
@@ -3436,13 +3386,8 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>CustomerAddress1</rd:DefaultName>
-<<<<<<< HEAD
               <Top>3.24074cm</Top>
               <Height>0.42334cm</Height>
-=======
-              <Top>3.50349cm</Top>
-              <Height>0.35188cm</Height>
->>>>>>> 08db8c97c638ad50aa7c686bc93480c7ba1b12bf
               <Width>3.36561cm</Width>
               <ZIndex>17</ZIndex>
               <Visibility>
@@ -3476,13 +3421,8 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>CustomerAddress1</rd:DefaultName>
-<<<<<<< HEAD
               <Top>3.6914cm</Top>
               <Height>0.42334cm</Height>
-=======
-              <Top>3.90365cm</Top>
-              <Height>0.35188cm</Height>
->>>>>>> 08db8c97c638ad50aa7c686bc93480c7ba1b12bf
               <Width>3.36561cm</Width>
               <ZIndex>18</ZIndex>
               <Visibility>

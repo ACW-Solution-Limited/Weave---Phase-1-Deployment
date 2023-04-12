@@ -96,9 +96,9 @@ table 83015 "Additional Amenities"
             DataClassification = ToBeClassified;
             OptionMembers = " ",Pending,Overdue,Paid;
         }
-        field(22; "Stripe/QFPay Invoice ID"; Text[250])
+        field(22; "Stripe Invoice ID"; Text[250])
         {
-            Caption = '"Stripe/QFPay Invoice ID"';
+            Caption = '"Stripe Invoice ID"';
             DataClassification = ToBeClassified;
         }
         field(23; "External Payment Gateway"; Enum "External Payment Gateway")

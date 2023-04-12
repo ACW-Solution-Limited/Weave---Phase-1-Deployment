@@ -17,7 +17,7 @@ page 83200 "API Property Booking"
         {
             repeater(General)
             {
-                field(stPaymentStripeInvoiceID; Rec."1st Pymt. Stripe/QFPay Inv. ID")
+                field(stPaymentStripeInvoiceID; Rec."1st Payment Stripe Invoice ID")
                 {
                     Caption = '1st Payment Stripe Invoice ID';
                 }

@@ -98,7 +98,7 @@ page 83201 APIBillingSchedule
                 {
                     Caption = 'Status';
                 }
-                field(stripeQFPayInvoiceID; Rec."Stripe/QFPay Invoice ID")
+                field(stripeQFPayInvoiceID; Rec."Stripe Invoice ID")
                 {
                     Caption = 'Stripe Invoice ID';
                 }

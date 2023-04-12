@@ -81,7 +81,7 @@ page 83219 "API Welcome Amentities"
                 {
                     Caption = 'BC Status';
                 }
-                field(stripeInvoiceID; Rec."Stripe/QFPay Invoice ID")
+                field(stripeInvoiceID; Rec."Stripe Invoice ID")
                 {
                     Caption = 'Stripe Invoice ID';
                 }

@@ -108,7 +108,7 @@ codeunit 83122 "CDS Welcome Amentities"
         InsertIntegrationFieldMapping('CRM to BC Wel. Amen.', WelcomeItemSales.FieldNo("Payment Status"), CRMWelcomeAmenities.FieldNo(acwapp_paymentstatus), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Wel. Amen.', WelcomeItemSales.FieldNo("BC Status"), CRMWelcomeAmenities.FieldNo(acwapp_bcstatus), IntegrationFieldMapping.Direction::Bidirectional, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Wel. Amen.', WelcomeItemSales.FieldNo("Posted Sales Invoice No."), CRMWelcomeAmenities.FieldNo(acwapp_postedsalesinvoices), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
-        InsertIntegrationFieldMapping('CRM to BC Wel. Amen.', WelcomeItemSales.FieldNo("Stripe/QFPay Invoice ID"), CRMWelcomeAmenities.FieldNo(acwapp_stripeinvoiceid), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
+        InsertIntegrationFieldMapping('CRM to BC Wel. Amen.', WelcomeItemSales.FieldNo("Stripe Invoice ID"), CRMWelcomeAmenities.FieldNo(acwapp_stripeinvoiceid), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Wel. Amen.', WelcomeItemSales.FieldNo("Payment Link"), CRMWelcomeAmenities.FieldNo(acwapp_paymentlink), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         CompanyInformation.Get;
         IntegrationTableMapping."Integration Table Filter".CreateOutStream(FilterStr);

@@ -76,7 +76,7 @@ page 82004 "Stripe Refund"
                     l_recStripePayment: Record "Stripe Payment";
                     l_cuStripe: Codeunit Stripe;
                 begin
-                    l_cuStripe.GetRefund(l_recStripePayment."Stripe/QFPay Invoice ID");
+                    l_cuStripe.GetRefund(l_recStripePayment."Stripe Invoice ID");
                 end;
             }
             action("Create Journal")

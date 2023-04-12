@@ -721,7 +721,7 @@ page 83206 "API Sales Header"
                 {
                     Caption = 'Assigned User ID';
                 }
-                field(stripeInvoiceID; Rec."Stripe/QFPay Invoice ID")
+                field(stripeInvoiceID; Rec."Stripe Invoice ID")
                 {
                     Caption = 'Stripe Invoice ID';
                 }

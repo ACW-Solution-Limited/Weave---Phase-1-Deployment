@@ -17,7 +17,7 @@ tableextension 83008 "Sales Invoice Header Ext" extends "Sales Invoice Header"
         {
             DataClassification = SystemMetadata;
         }
-        field(82004; "Stripe/QFPay Invoice ID"; Text[50])
+        field(82004; "Stripe Invoice ID"; Text[50])
         {
             DataClassification = ToBeClassified;
         }
@@ -77,7 +77,7 @@ tableextension 83008 "Sales Invoice Header Ext" extends "Sales Invoice Header"
         if l_recLeaseContractBillingSchedule.FindFirst() then
             repeat
                 l_recLeaseContractBillingSchedule.Status := l_recLeaseContractBillingSchedule.Status::Paid;
-                l_recLeaseContractBillingSchedule."Stripe/QFPay Invoice ID" := InvoiceID;
+                l_recLeaseContractBillingSchedule."Stripe Invoice ID" := InvoiceID;
                 l_recLeaseContractBillingSchedule.Modify();
             until l_recLeaseContractBillingSchedule.Next() = 0;
 

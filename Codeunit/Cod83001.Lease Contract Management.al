@@ -95,8 +95,8 @@ codeunit 83001 "Lease Contract Management"
                 l_recLeaseContractBillingSchedule.Amount := p_recLeaseContractHeader."Deposit Amount" - l_recLeaseContractBillingSchedule.amount;
                 g_deposit := l_recLeaseContractBillingSchedule.Amount;
                 l_recLeaseContractBillingSchedule."Line No." := l_intLineNo;
-                If p_recLeaseContractHeader."1st Pymt. Stripe/QFPay Inv. ID" <> '' then begin
-                    l_recLeaseContractBillingSchedule."Stripe/QFPay Invoice ID" := p_recLeaseContractHeader."1st Pymt. Stripe/QFPay Inv. ID";
+                If p_recLeaseContractHeader."1st Payment Stripe Invoice ID" <> '' then begin
+                    l_recLeaseContractBillingSchedule."Stripe Invoice ID" := p_recLeaseContractHeader."1st Payment Stripe Invoice ID";
                 end;
                 l_intLineNo += 10000;
                 l_recLeaseContractBillingSchedule.insert;
@@ -230,20 +230,20 @@ codeunit 83001 "Lease Contract Management"
                         end;
 
 
-                        If p_recLeaseContractHeader."1st Pymt. Stripe/QFPay Inv. ID" <> '' then begin
+                        If p_recLeaseContractHeader."1st Payment Stripe Invoice ID" <> '' then begin
                             // Prepayment >>
                             If p_recLeaseContractHeader."Payment Type" = p_recLeaseContractHeader."Payment Type"::Monthly then begin
                                 If l_recLeaseContractBillingSchedule."Contract Start Date" = DT2date(p_recLeaseContractHeader."Contract Start Date") then begin
-                                    l_recLeaseContractBillingSchedule."Stripe/QFPay Invoice ID" := p_recLeaseContractHeader."1st Pymt. Stripe/QFPay Inv. ID";
+                                    l_recLeaseContractBillingSchedule."Stripe Invoice ID" := p_recLeaseContractHeader."1st Payment Stripe Invoice ID";
                                 end;
                             end else begin
-                                l_recLeaseContractBillingSchedule."Stripe/QFPay Invoice ID" := p_recLeaseContractHeader."1st Pymt. Stripe/QFPay Inv. ID";
+                                l_recLeaseContractBillingSchedule."Stripe Invoice ID" := p_recLeaseContractHeader."1st Payment Stripe Invoice ID";
                             end;
                         end;
 
                         l_recLeaseContractBillingSchedule.Insert;
                         If l_recLeaseContractBillingSchedule."Contract Start Date" = DT2date(p_recLeaseContractHeader."Contract Start Date") then begin
-                            l_intLineNo := l_CodAddItem.CreateWelcomeAmentities(l_recCRMWelcomeAmentities, p_recLeaseContractHeader."No.", l_recLeaseContractBillingSchedule."Line No.", l_recLeaseContractBillingSchedule."Posting Date", l_recLeaseContractBillingSchedule."Due Date", p_recLeaseContractHeader."1st Pymt. Stripe/QFPay Inv. ID");
+                            l_intLineNo := l_CodAddItem.CreateWelcomeAmentities(l_recCRMWelcomeAmentities, p_recLeaseContractHeader."No.", l_recLeaseContractBillingSchedule."Line No.", l_recLeaseContractBillingSchedule."Posting Date", l_recLeaseContractBillingSchedule."Due Date", p_recLeaseContractHeader."1st Payment Stripe Invoice ID");
                         end;
                         Oneoffdiscount(p_recLeaseContractHeader, l_recLeaseContractBillingSchedule);
                         Monthlydiscount(p_recLeaseContractHeader, l_recLeaseContractBillingSchedule);
@@ -267,12 +267,12 @@ codeunit 83001 "Lease Contract Management"
                 l_recLeaseContractBillingSchedule."Line No." := l_intLineNo;
                 l_recLeaseContractBillingSchedule.Amount := p_recLeaseContractHeader.Price;
 
-                If p_recLeaseContractHeader."1st Pymt. Stripe/QFPay Inv. ID" <> '' then
-                    l_recLeaseContractBillingSchedule."Stripe/QFPay Invoice ID" := p_recLeaseContractHeader."1st Pymt. Stripe/QFPay Inv. ID";
+                If p_recLeaseContractHeader."1st Payment Stripe Invoice ID" <> '' then
+                    l_recLeaseContractBillingSchedule."Stripe Invoice ID" := p_recLeaseContractHeader."1st Payment Stripe Invoice ID";
 
                 l_recLeaseContractBillingSchedule.insert;
                 If l_recLeaseContractBillingSchedule."Contract Start Date" = DT2date(p_recLeaseContractHeader."Contract Start Date") then begin
-                    l_intLineNo := l_CodAddItem.CreateWelcomeAmentities(l_recCRMWelcomeAmentities, p_recLeaseContractHeader."No.", l_recLeaseContractBillingSchedule."Line No.", l_recLeaseContractBillingSchedule."Posting Date", l_recLeaseContractBillingSchedule."Due Date", p_recLeaseContractHeader."1st Pymt. Stripe/QFPay Inv. ID");
+                    l_intLineNo := l_CodAddItem.CreateWelcomeAmentities(l_recCRMWelcomeAmentities, p_recLeaseContractHeader."No.", l_recLeaseContractBillingSchedule."Line No.", l_recLeaseContractBillingSchedule."Posting Date", l_recLeaseContractBillingSchedule."Due Date", p_recLeaseContractHeader."1st Payment Stripe Invoice ID");
                 end;
                 Oneoffdiscount(p_recLeaseContractHeader, l_recLeaseContractBillingSchedule);
 
@@ -293,10 +293,10 @@ codeunit 83001 "Lease Contract Management"
                 l_recLeaseContractBillingSchedule.Amount := p_recLeaseContractHeader.Price;
 
                 If l_recLeaseContractBillingSchedule."Contract Start Date" = DT2date(p_recLeaseContractHeader."Contract Start Date") then
-                    l_intLineNo := l_CodAddItem.CreateWelcomeAmentities(l_recCRMWelcomeAmentities, p_recLeaseContractHeader."No.", l_recLeaseContractBillingSchedule."Line No.", l_recLeaseContractBillingSchedule."Posting Date", l_recLeaseContractBillingSchedule."Due Date", p_recLeaseContractHeader."1st Pymt. Stripe/QFPay Inv. ID");
+                    l_intLineNo := l_CodAddItem.CreateWelcomeAmentities(l_recCRMWelcomeAmentities, p_recLeaseContractHeader."No.", l_recLeaseContractBillingSchedule."Line No.", l_recLeaseContractBillingSchedule."Posting Date", l_recLeaseContractBillingSchedule."Due Date", p_recLeaseContractHeader."1st Payment Stripe Invoice ID");
 
-                If p_recLeaseContractHeader."1st Pymt. Stripe/QFPay Inv. ID" <> '' then
-                    l_recLeaseContractBillingSchedule."Stripe/QFPay Invoice ID" := p_recLeaseContractHeader."1st Pymt. Stripe/QFPay Inv. ID";
+                If p_recLeaseContractHeader."1st Payment Stripe Invoice ID" <> '' then
+                    l_recLeaseContractBillingSchedule."Stripe Invoice ID" := p_recLeaseContractHeader."1st Payment Stripe Invoice ID";
 
                 l_recLeaseContractBillingSchedule.insert;
                 Oneoffdiscount(p_recLeaseContractHeader, l_recLeaseContractBillingSchedule);
@@ -352,7 +352,7 @@ codeunit 83001 "Lease Contract Management"
         l_recLeaseContractBillingSchedule.SetRange(Status, l_recLeaseContractBillingSchedule.Status::" ");
         l_recLeaseContractBillingSchedule.SetRange("Contract Start Date", calcdate('1D', DT2date(p_recLeaseContractHeader."Contract Termination Date")), 99991231D);
         l_recLeaseContractBillingSchedule.SetRange(Type, l_recLeaseContractBillingSchedule.type::Deposit, l_recLeaseContractBillingSchedule.type::Rent);
-        l_recLeaseContractBillingSchedule.SetRange("Stripe/QFPay Invoice ID", '');
+        l_recLeaseContractBillingSchedule.SetRange("Stripe Invoice ID", '');
         l_recLeaseContractBillingSchedule.DeleteAll();
 
         // Get Line Number 
@@ -400,7 +400,7 @@ codeunit 83001 "Lease Contract Management"
                     end else begin
                         // Refund current month which the period not yet ended
                         If l_recLeaseContractBillingSchedule."Contract End Date" > DT2date(p_recLeaseContractHeader."Contract Termination Date") then begin
-                            If (l_recLeaseContractBillingSchedule.status <> l_recLeaseContractBillingSchedule.status::" ") OR (l_recLeaseContractBillingSchedule."Stripe/QFPay Invoice ID" <> '') then begin
+                            If (l_recLeaseContractBillingSchedule.status <> l_recLeaseContractBillingSchedule.status::" ") OR (l_recLeaseContractBillingSchedule."Stripe Invoice ID" <> '') then begin
                                 // Message('%1 %2', l_recLeaseContractBillingSchedule."Contract Line No.", l_recLeaseContractBillingSchedule.status);
                                 If l_intLineNo <> 10000 then
                                     l_intLineNo += 10000;
@@ -559,8 +559,8 @@ codeunit 83001 "Lease Contract Management"
 
                 end;
                 l_recLeaseContractBillingSchedule2."Line No." := l_intLineNo;
-                If p_recLeaseContractHeader."1st Pymt. Stripe/QFPay Inv. ID" <> '' then
-                    l_recLeaseContractBillingSchedule2."Stripe/QFPay Invoice ID" := p_recLeaseContractHeader."1st Pymt. Stripe/QFPay Inv. ID";
+                If p_recLeaseContractHeader."1st Payment Stripe Invoice ID" <> '' then
+                    l_recLeaseContractBillingSchedule2."Stripe Invoice ID" := p_recLeaseContractHeader."1st Payment Stripe Invoice ID";
 
                 l_recLeaseContractBillingSchedule2.insert;
             end;
@@ -613,12 +613,12 @@ codeunit 83001 "Lease Contract Management"
             end;
 
             l_recLeaseContractBillingSchedule2."Line No." := l_intLineNo;
-            If p_recLeaseContractHeader."1st Pymt. Stripe/QFPay Inv. ID" <> '' then begin
+            If p_recLeaseContractHeader."1st Payment Stripe Invoice ID" <> '' then begin
                 If p_recLeaseContractHeader."Payment Type" = p_recLeaseContractHeader."Payment Type"::Monthly then begin
                     If l_recLeaseContractBillingSchedule2."Contract Start Date" = DT2date(p_recLeaseContractHeader."Contract Start Date") then
-                        l_recLeaseContractBillingSchedule2."Stripe/QFPay Invoice ID" := p_recLeaseContractHeader."1st Pymt. Stripe/QFPay Inv. ID";
+                        l_recLeaseContractBillingSchedule2."Stripe Invoice ID" := p_recLeaseContractHeader."1st Payment Stripe Invoice ID";
                 end else begin
-                    l_recLeaseContractBillingSchedule2."Stripe/QFPay Invoice ID" := p_recLeaseContractHeader."1st Pymt. Stripe/QFPay Inv. ID";
+                    l_recLeaseContractBillingSchedule2."Stripe Invoice ID" := p_recLeaseContractHeader."1st Payment Stripe Invoice ID";
                 end;
             end;
             l_recLeaseContractBillingSchedule2.insert;
@@ -650,8 +650,8 @@ codeunit 83001 "Lease Contract Management"
                 l_recLeaseContractBillingSchedule2."No. of Days to Bill" := l_recLeaseContractBillingSchedule."No. of Days to Bill";
                 l_recLeaseContractBillingSchedule2.Amount := -p_recLeaseContractHeader."Prepaid Amount";
                 l_recLeaseContractBillingSchedule2."Line No." := l_intLineNo;
-                If p_recLeaseContractHeader."1st Pymt. Stripe/QFPay Inv. ID" <> '' then
-                    l_recLeaseContractBillingSchedule2."Stripe/QFPay Invoice ID" := p_recLeaseContractHeader."1st Pymt. Stripe/QFPay Inv. ID";
+                If p_recLeaseContractHeader."1st Payment Stripe Invoice ID" <> '' then
+                    l_recLeaseContractBillingSchedule2."Stripe Invoice ID" := p_recLeaseContractHeader."1st Payment Stripe Invoice ID";
                 l_recLeaseContractBillingSchedule2.insert;
             end;
         end;
@@ -703,7 +703,7 @@ codeunit 83001 "Lease Contract Management"
                     l_recLeaseContractBillingScheduleinsertTemp.insert;
                 end else begin
                     // If the Sales invoice has already been created, reverse the schedule >>
-                    If (l_recLeaseContractBillingSchedule2.Status <> l_recLeaseContractBillingSchedule2.Status::" ") OR (l_recLeaseContractBillingSchedule2."Stripe/QFPay Invoice ID" <> '') then begin
+                    If (l_recLeaseContractBillingSchedule2.Status <> l_recLeaseContractBillingSchedule2.Status::" ") OR (l_recLeaseContractBillingSchedule2."Stripe Invoice ID" <> '') then begin
                         l_intLineNo += 10000;
                         l_recLeaseContractBillingScheduleinsertTemp.init;
                         if DT2date(p_recLeaseContractHeader."Contract Termination Date") > WorkDate() then
@@ -908,7 +908,7 @@ codeunit 83001 "Lease Contract Management"
             l_recLeaseContractBillingSchedule.SetFilter("Contract Start Date", '<=%1', DT2DATE(p_recLeaseContractHeader."Contract Termination Date"));
             l_recLeaseContractBillingSchedule.SetFilter("Contract End Date", '>%1', DT2DATE(p_recLeaseContractHeader."Contract Termination Date"));
             l_recLeaseContractBillingSchedule.SetRange(Type, l_recLeaseContractBillingSchedule.type::Rent);
-            l_recLeaseContractBillingSchedule.SetRange("Stripe/QFPay Invoice ID", ' ');
+            l_recLeaseContractBillingSchedule.SetRange("Stripe Invoice ID", ' ');
             l_recLeaseContractBillingSchedule.SetFilter("Line No.", '<=%1', g_intoriginalLineNo);
             l_recLeaseContractBillingSchedule.DeleteAll();
         end;
@@ -953,7 +953,7 @@ codeunit 83001 "Lease Contract Management"
                 l_recLeaseContractBillingSchedule2."No. of Days to Bill" := l_recLeaseContractBillingSchedule."No. of Days to Bill";
                 l_recLeaseContractBillingSchedule2."Tender Type" := p_recLeaseContractHeader."Tender Type";
                 l_recLeaseContractBillingSchedule2.Amount := -p_recLeaseContractHeader."Tender Type Discount Amount";
-                l_recLeaseContractBillingSchedule2."Stripe/QFPay Invoice ID" := p_recLeaseContractHeader."1st Pymt. Stripe/QFPay Inv. ID";
+                l_recLeaseContractBillingSchedule2."Stripe Invoice ID" := p_recLeaseContractHeader."1st Payment Stripe Invoice ID";
                 l_recLeaseContractBillingSchedule2."Line No." := l_intLineNo;
                 l_recLeaseContractBillingSchedule2.Insert();
 

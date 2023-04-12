@@ -97,9 +97,9 @@ codeunit 83131 "CDS - Tender Type"
         InsertIntegrationFieldMapping('CRM to BC Tender', TenderTypeSetup.FieldNo(Currency), CRMTenderType.FieldNo(acwapp_CurrencyText), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
 
         l_GeneralLedgerSetup.Get;
-        // CompanyInformation.Get;
+        CompanyInformation.Get;
         IntegrationTableMapping."Integration Table Filter".CreateOutStream(FilterStr);
-        FilterText := 'VERSION(1) SORTING(Field1) WHERE(Field48=1(' + l_GeneralLedgerSetup."LCY Code" + '))';
+        FilterText := 'VERSION(1) SORTING(Field1) WHERE(Field40=1(' + CompanyInformation."CRM Currency Guid" + '))';
         FilterStr.Write(FilterText);
         IntegrationTableMapping.Modify();
 

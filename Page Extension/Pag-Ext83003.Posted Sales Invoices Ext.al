@@ -11,7 +11,7 @@ pageextension 83003 "Posted Sales Invoices Ext" extends "Posted Sales Invoices"
             field("Stripe Customer ID"; Rec."Stripe Customer ID") { ApplicationArea = all; }
             field("Stripe Paid"; Rec."Stripe Paid") { ApplicationArea = all; }
             field(BlobURL; Rec.BlobURL) { ApplicationArea = all; }
-            field("Stripe/QFPay Invoice ID"; rec."Stripe/QFPay Invoice ID") { ApplicationArea = all; }
+            field("Stripe Invoice ID"; rec."Stripe Invoice ID") { ApplicationArea = all; }
             field("Lease Contract No."; Rec."Lease Contract No.") { ApplicationArea = all; }
             field("Lease Contract Name"; Rec."Lease Contract Name") { ApplicationArea = all; }
             field("Lease Contract Creation Date"; Rec."Lease Contract Creation Date") { ApplicationArea = all; }
@@ -47,6 +47,7 @@ pageextension 83003 "Posted Sales Invoices Ext" extends "Posted Sales Invoices"
 
                 end;
             }
+
         }
 
         addlast(processing)
@@ -79,6 +80,9 @@ pageextension 83003 "Posted Sales Invoices Ext" extends "Posted Sales Invoices"
                 end;
             }
         }
+
+
+
     }
 
     trigger OnOpenPage()

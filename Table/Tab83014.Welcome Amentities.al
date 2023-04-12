@@ -100,7 +100,7 @@ table 83014 "Welcome Amenities"
             DataClassification = ToBeClassified;
             OptionMembers = " ",Open,Created,Posted;
         }
-        field(27; "Stripe/QFPay Invoice ID"; Text[250])
+        field(27; "Stripe Invoice ID"; Text[250])
         {
             Caption = '/QFPay Invoice ID';
             DataClassification = ToBeClassified;

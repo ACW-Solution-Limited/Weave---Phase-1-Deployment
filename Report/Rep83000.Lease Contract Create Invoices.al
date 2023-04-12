@@ -98,18 +98,18 @@ report 83000 "Lease Contract Create Invoices"
             repeat
 
                 //Message('%1', g_recLeaseBillingSchedule_Temp."Customer No.");
-                if (l_codCustomerNo <> g_recLeaseBillingSchedule_Temp."Customer No.") or (l_textPaymentReferenceID <> g_recLeaseBillingSchedule_Temp."Stripe/QFPay Invoice ID") then begin
+                if (l_codCustomerNo <> g_recLeaseBillingSchedule_Temp."Customer No.") or (l_textPaymentReferenceID <> g_recLeaseBillingSchedule_Temp."Stripe Invoice ID") then begin
                     l_codCustomerNo := g_recLeaseBillingSchedule_Temp."Customer No.";
                     //Message('Customer No: %1', g_recLeaseBillingSchedule_Temp."Customer No.");
-                    //    if (l_textPaymentReferenceID <> g_recLeaseBillingSchedule_Temp."Stripe/QFPay Invoice ID") then begin
+                    //    if (l_textPaymentReferenceID <> g_recLeaseBillingSchedule_Temp."Stripe Invoice ID") then begin
 
-                    l_textPaymentReferenceID := g_recLeaseBillingSchedule_Temp."Stripe/QFPay Invoice ID";
+                    l_textPaymentReferenceID := g_recLeaseBillingSchedule_Temp."Stripe Invoice ID";
                     l_recSalesHeaderTemp.init;
                     l_recSalesHeaderTemp."Document Type" := l_recSalesHeaderTemp."Document Type"::Invoice;
                     l_recSalesHeaderTemp."No." := l_codDocNo;
                     l_codDocNo := incstr(l_codDocNo);
                     l_recSalesHeaderTemp.insert(true);
-                    l_recSalesHeaderTemp."Stripe/QFPay Invoice ID" := g_recLeaseBillingSchedule_Temp."Stripe/QFPay Invoice ID";
+                    l_recSalesHeaderTemp."Stripe Invoice ID" := g_recLeaseBillingSchedule_Temp."Stripe Invoice ID";
                     l_recSalesHeaderTemp.Validate("Sell-to Customer No.", l_codCustomerNo);
                     l_recSalesHeaderTemp.Validate("Posting Date", g_recLeaseBillingSchedule_Temp."Posting Date");
                     l_recSalesHeaderTemp."Lease Contract No." := LeaseContractHeader."No.";
@@ -408,9 +408,8 @@ report 83000 "Lease Contract Create Invoices"
                             if l_recSalesLine."Billing Schedule Type" = l_recSalesLine."Billing Schedule Type"::Rent then
                                 InsertDeferral(l_recSalesLine, l_recSalesHeader);
                             // Tender Type >>
-                            // If l_recSalesLineTemp."Tender Type" <> '' then
-                            //  ApplyEntriesforTenderType(LeaseContractHeader, l_recSalesHeader."No.", l_recSalesLineTemp."Tender Type", l_recSalesLineTemp."Unit Price");
-
+                            If l_recSalesLineTemp."Tender Type" <> '' then
+                                ApplyEntriesforTenderType(LeaseContractHeader, l_recSalesHeader."No.", l_recSalesLineTemp."Tender Type", l_recSalesLineTemp."Unit Price");
                             // Tender Type <<
                             l_recSalesLine.Modify(True);
                             ModifyBillingScheduleDocumentTypeNo(l_recSalesLine."Contract No.", l_recSalesLine."Billing Schedule Line No.", g_optBillingScheudleDocumentType::"Credit Memo", l_recSalesHeader."No.");
@@ -500,31 +499,20 @@ report 83000 "Lease Contract Create Invoices"
 
     procedure GetPropertyUnitInformation(PropertyBookID: Code[50]; ContractDate: Date; Type: Text[250]): Text
     var
-        l_recLeaseContractLine: Record "Lease Contract Line";
         l_recPropertyUnit: Record "Property Unit";
     begin
 
-
-        l_recLeaseContractLine.Reset();
-        l_recLeaseContractLine.SetFilter("Lease From Date", '<=%1', ContractDate);
-        // l_recLeaseContractLine.SetRange("Contract No.", LeaseContractHeader."No.");
-        l_recLeaseContractLine.SetRange(Key2, LeaseContractHeader."Key");
-
-        if (l_recLeaseContractLine.FindLast()) and (l_recLeaseContractLine.Count > 0) then begin
-
-            l_recPropertyUnit.SetRange("No.", l_recLeaseContractLine."Property Unit No.");
-            If l_recPropertyUnit.FindLast() then begin
-                case Type of
-                    'RoomTypeName':
-                        exit(l_recPropertyUnit."Room Type Name");//To be updated , delete comment after revised
-                    'RoomUnit':
-                        exit(l_recPropertyUnit."No.");//To be updated , delete comment after revised
-                    'Description':
-                        exit(l_recPropertyUnit."Property Unit Name");
-                end;
-            end
-        end;
-        exit('');
+        l_recPropertyUnit.SetRange("CRM Guid", LeaseContractHeader."Property CRMGuid");
+        If l_recPropertyUnit.FindLast() then begin
+            case Type of
+                'RoomTypeName':
+                    exit(l_recPropertyUnit."Room Type Name");//To be updated , delete comment after revised
+                'RoomUnit':
+                    exit(l_recPropertyUnit."No.");//To be updated , delete comment after revised
+                'Description':
+                    exit(l_recPropertyUnit."Property Unit Name");
+            end;
+        end
 
     end;
 
@@ -674,6 +662,9 @@ report 83000 "Lease Contract Create Invoices"
         if SalesLine."Deferral Code" = '' then
             exit;
 
+        if (SalesLine."Lease To Date" = 0D) or (SalesLine."Lease From Date" = 0D) then
+            exit;
+
         l_intNoOfPeriod := (Date2DMY(SalesLine."Lease To Date", 3) - Date2DMY(SalesLine."Lease From Date", 3)) * 12
                                               + (Date2DMY(SalesLine."Lease To Date", 2) - Date2DMY(SalesLine."Lease From Date", 2)) + 1;
 
@@ -777,7 +768,7 @@ report 83000 "Lease Contract Create Invoices"
         end;
 
 
-        Error('No related G/L Account of romm type : ' + RoomType);
+        Error('No related G/L Account of room type : ' + RoomType);
 
 
 
@@ -841,7 +832,7 @@ report 83000 "Lease Contract Create Invoices"
         l_recCustLedgEntry: Record "Cust. Ledger Entry";
 
     begin
-        Message('%1', SalesHeaderNo);
+        // Message('%1', SalesHeaderNo);
         l_recLeaseBillingSchedule.reset;
         l_recCustLedgEntry.reset;
         l_recLeaseBillingSchedule.setrange("Contract No.", LeaseContractHeader."No.");
@@ -854,7 +845,7 @@ report 83000 "Lease Contract Create Invoices"
             If l_recCustLedgEntry.Findlast then begin
                 l_recCustLedgEntry.validate("Applies-to ID", SalesHeaderNo);
                 l_recCustLedgEntry.Modify();
-                Message('%1', l_recLeaseBillingSchedule."Document No.");
+                //    Message('%1', l_recLeaseBillingSchedule."Document No.");
             end;
         end
 

@@ -87,7 +87,7 @@ page 82009 "Additional Amentities"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the "Total Amount Inclu. VAT" field.';
                 }
-                field("Stripe/QFPay Invoice ID"; Rec."Stripe/QFPay Invoice ID")
+                field("Stripe Invoice ID"; Rec."Stripe Invoice ID")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Stripe Invoice ID field.';

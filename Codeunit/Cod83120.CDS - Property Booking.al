@@ -176,7 +176,7 @@ codeunit 83120 "CDS Property Booking"
         InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("Net Amount"), CRMPropertybooking.FieldNo(acwapp_netamount), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("Deposit Amount"), CRMPropertybooking.FieldNo(acwapp_depositamount), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("Payment Amount"), CRMPropertybooking.FieldNo(acwapp_paymentamount), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
-        InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("1st Pymt. Stripe/QFPay Inv. ID"), CRMPropertybooking.FieldNo(acwapp_paymentreferenceid), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
+        InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("1st Payment Stripe Invoice ID"), CRMPropertybooking.FieldNo(acwapp_paymentreferenceid), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("Final Amount"), CRMPropertybooking.FieldNo(acwapp_netamountincludevat), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("Monthly Rent"), CRMPropertybooking.FieldNo(acwapp_monthlyrent), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("Daily Rent"), CRMPropertybooking.FieldNo(acwapp_dailyrent), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
@@ -184,6 +184,8 @@ codeunit 83120 "CDS Property Booking"
         InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("Promotion Deduction Type"), CRMPropertybooking.FieldNo(acwapp_PriceDeductionType), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("Promotion Amount / %"), CRMPropertybooking.FieldNo(acwapp_DeductionAmountdecimal), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
 
+        InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("Tender Type"), CRMPropertybooking.FieldNo(acwapp_TenderTypeName), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
+        InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("Tender Type Discount Amount"), CRMPropertybooking.FieldNo(acwapp_discountamount), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("Commission Type"), CRMPropertybooking.FieldNo(acwapp_CommissionType), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("Salesperson Email"), CRMPropertybooking.FieldNo(acwapp_OwnerEmail), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
 

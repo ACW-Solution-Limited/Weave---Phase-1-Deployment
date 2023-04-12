@@ -105,7 +105,7 @@ codeunit 83119 "CDS Additional Amenities"
         InsertIntegrationFieldMapping('CRM to BC Add. Amen.', AdditionalItemSales.FieldNo("BC Status"), CRMAdditionalAmenities.FieldNo(acwapp_BCStatus), IntegrationFieldMapping.Direction::Bidirectional, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Add. Amen.', AdditionalItemSales.FieldNo("Total Amount"), CRMAdditionalAmenities.FieldNo(acwapp_TotalAmountExcludeVAT), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Add. Amen.', AdditionalItemSales.FieldNo("Total Amount Inclu. VAT"), CRMAdditionalAmenities.FieldNo(acwapp_TotalAmount), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
-        InsertIntegrationFieldMapping('CRM to BC Add. Amen.', AdditionalItemSales.FieldNo("Stripe/QFPay Invoice ID"), CRMAdditionalAmenities.FieldNo(acwapp_stripeinvoiceid), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
+        InsertIntegrationFieldMapping('CRM to BC Add. Amen.', AdditionalItemSales.FieldNo("Stripe Invoice ID"), CRMAdditionalAmenities.FieldNo(acwapp_stripeinvoiceid), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Add. Amen.', AdditionalItemSales.FieldNo("Payment Link"), CRMAdditionalAmenities.FieldNo(acwapp_paymentlink), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         CompanyInformation.Get;
         IntegrationTableMapping."Integration Table Filter".CreateOutStream(FilterStr);

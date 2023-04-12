@@ -85,7 +85,7 @@ page 83217 "API Extra Charge"
                 {
                     Caption = 'Payment Status';
                 }
-                field(stripeInvoiceID; Rec."Stripe/QFPay Invoice ID")
+                field(stripeInvoiceID; Rec."Stripe Invoice ID")
                 {
                     Caption = 'Stripe Invoice ID';
                 }

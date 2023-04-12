@@ -211,7 +211,7 @@ report 83022 LeaseContractSalesCreditMemoHK
             column(CurrencySymbol; CurrSymbol)
             {
             }
-            column(Stripe_Invoice_ID; "Stripe/QFPay Invoice ID") { }
+            column(Stripe_Invoice_ID; "Stripe Invoice ID") { }
             column(Stripe_Payment_Link; "Stripe Payment Link") { }
             column(ShipmentMethodDescription; ShipmentMethod.Description)
             {
@@ -429,7 +429,7 @@ report 83022 LeaseContractSalesCreditMemoHK
                 column(LineNo_Line; "Line No.")
                 {
                 }
-                column(LineType; "Billing Schedule Type")
+                column(LineType; g_linetype)
                 {
                 }
                 column(BookingRefLbl; BookingRefLbl)
@@ -688,6 +688,10 @@ report 83022 LeaseContractSalesCreditMemoHK
                         g_paymenttype := LeaseContractHeader."Payment Type";
                     If Type <> Type::" " then
                         Sequence += 1;
+                    If "Billing Schedule Type" <> "Billing Schedule Type"::" " then
+                        g_linetype := format("Billing Schedule Type")
+                    else
+                        g_linetype := Format(Type);
                     l_recCustomer.reset;
                     l_recCustomer.Get("Sell-to Customer No.");
                     g_Customer_Name := l_recCustomer.Name;
@@ -1340,6 +1344,7 @@ report 83022 LeaseContractSalesCreditMemoHK
         g_VatAmount: Decimal;
         g_Customer_Name: Text[100];
         g_lineAmount: Decimal;
+        g_linetype: Text;
 
     local procedure InitLogInteraction()
     begin

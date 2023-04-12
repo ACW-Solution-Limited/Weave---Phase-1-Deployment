@@ -511,7 +511,7 @@ report 83021 "Lease Contract Sales InvoiceHK"
             column(CurrencySymbol; CurrSymbol)
             {
             }
-            column(Stripe_Invoice_ID; "Stripe/QFPay Invoice ID") { }
+            column(Stripe_Invoice_ID; "Stripe Invoice ID") { }
             column(Stripe_Payment_Link; "Stripe Payment Link") { }
             dataitem(Line; "Sales Invoice Line")
             {
@@ -722,7 +722,7 @@ report 83021 "Lease Contract Sales InvoiceHK"
                     AutoFormatExpression = 'USD';
                     AutoFormatType = 1;
                 }
-                column(LineType; "Billing Schedule Type")
+                column(LineType; g_linetype)
                 {
                 }
                 column(BookingRefLbl; BookingRefLbl)
@@ -809,7 +809,10 @@ report 83021 "Lease Contract Sales InvoiceHK"
                         g_paymenttype := LeaseContractHeader."Payment Type";
                     If Type <> Type::" " then
                         Sequence += 1;
-
+                    If "Billing Schedule Type" <> "Billing Schedule Type"::" " then
+                        g_linetype := format("Billing Schedule Type")
+                    else
+                        g_linetype := Format(Type);
                     If (type = Line.Type::"G/L Account") And ("No. of Days to Bill" <> 0) then begin
                         // Case g_paymenttype of
                         //     LeaseContractHeader."Payment Type"::"One-off (ShortStay)":
@@ -1658,6 +1661,7 @@ report 83021 "Lease Contract Sales InvoiceHK"
         g_VatAmount: Decimal;
 
         g_lineAmount: Decimal;
+        g_linetype: Text;
 
 
 

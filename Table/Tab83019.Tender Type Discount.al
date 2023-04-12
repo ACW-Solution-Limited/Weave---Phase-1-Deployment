@@ -85,7 +85,7 @@ table 83019 "Tender Type Discount"
         //     Caption = 'Sales Document No.';
         //       DataClassification = ToBeClassified;
         // }
-        field(14; "Stripe/QFPay Invoice ID"; Text[250])
+        field(14; "Stripe Invoice Id"; Text[250])
         {
             Caption = 'Stripe/QFPay Invoice ID';
             DataClassification = ToBeClassified;
@@ -93,15 +93,16 @@ table 83019 "Tender Type Discount"
             var
                 l_cuEventSubscriber: Codeunit EventSubscriber;
             begin
-                l_cuEventSubscriber.UpdateStripeQFPayInvoiceToDocument("Stripe/QFPay Invoice ID", "Sales Invoice No.");
+                l_cuEventSubscriber.UpdateStripeQFPayInvoiceToDocument("Stripe Invoice Id", "Sales Invoice No.");
             end;
         }
         field(15; "Net Amount"; Decimal)
         {
             DataClassification = ToBeClassified;
         }
-        field(16; "Stripe/QFPay Fee Amount"; Decimal)
+        field(16; "Stripe Fee Amount"; Decimal)
         {
+            Caption = 'Stripe/QFPay Fee Amount';
             DataClassification = ToBeClassified;
         }
 

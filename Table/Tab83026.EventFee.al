@@ -92,7 +92,7 @@ table 83026 "Event Fee"
             DataClassification = ToBeClassified;
             OptionMembers = " ",Open,Created,Posted;
         }
-        field(22; "Stripe/QFPay Invoice ID"; Text[250])
+        field(22; "Stripe Invoice ID"; Text[250])
         {
             Caption = 'Stripe/QFPay Invoice ID';
             DataClassification = ToBeClassified;

@@ -115,7 +115,7 @@ page 83007 "Lease Contract Billing Sched."
                     ApplicationArea = All;
                 }
 
-                field("Stripe/QFPay Invoice ID"; Rec."Stripe/QFPay Invoice ID")
+                field("Stripe Invoice ID"; Rec."Stripe Invoice ID")
                 {
                     ApplicationArea = All;
                 }

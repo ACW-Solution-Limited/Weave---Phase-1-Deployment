@@ -17,7 +17,7 @@ tableextension 83114 "Sales Cr.Memo Header Ext" extends "Sales Cr.Memo Header"
         {
             DataClassification = SystemMetadata;
         }
-        field(82004; "Stripe/QFPay Invoice ID"; Text[50])
+        field(82004; "Stripe Invoice ID"; Text[50])
         {
             DataClassification = ToBeClassified;
         }

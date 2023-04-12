@@ -27,7 +27,7 @@ pageextension 83004 PostedSalesInvoiceExt extends "Posted Sales Invoice"
 
             }
 
-            field("Stripe/QFPay Invoice ID"; Rec."Stripe/QFPay Invoice ID") { ApplicationArea = all; }
+            field("Stripe Invoice ID"; Rec."Stripe Invoice ID") { ApplicationArea = all; }
             field("Payment Status"; Rec."Payment Status") { ApplicationArea = all; }
 
         }

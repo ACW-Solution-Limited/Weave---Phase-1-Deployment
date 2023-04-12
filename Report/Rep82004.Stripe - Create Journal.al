@@ -8,7 +8,7 @@ report 82004 "Create Journal"
             column(StripeStatus; "Stripe Status")
             {
             }
-            column(StripeInvoiceId; "Stripe/QFPay Invoice ID")
+            column(StripeInvoiceId; "Stripe Invoice ID")
             {
             }
             column(StripeFeeAmount; "Stripe Fee Amount")

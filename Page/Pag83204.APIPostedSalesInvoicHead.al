@@ -553,7 +553,7 @@ page 83204 "API Posted Sales Invoic Head."
                 {
                     Caption = 'Stripe Paid';
                 }
-                field(stripeInvoiceID; Rec."Stripe/QFPay Invoice ID")
+                field(stripeInvoiceID; Rec."Stripe Invoice ID")
                 {
                     Caption = 'Stripe Invoice ID';
                 }

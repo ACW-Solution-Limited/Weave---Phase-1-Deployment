@@ -57,18 +57,30 @@ codeunit 82002 "Integration - QFPay"
         l_jArray := l_jtoken.AsArray();
         foreach l_payoutToken In l_jArray do begin
 
-            if GetValueAsText(l_payoutToken, 'errmsg') = '交易成功' then
-                InitQFPaymentLine(GetValueAsText(l_payoutToken, 'out_trade_no'),
-                                  GetValueAsText(l_payoutToken, 'syssn'),
-                                  GetValueAsDateTime(l_payoutToken, 'sysdtm'),
-                                  GetValueAsDateTime(l_payoutToken, 'paydtm'),
-                                  GetValueAsText(l_payoutToken, 'txcurrcd'),
-                                  GetValueAsDecimal(l_payoutToken, 'txamt'),
-                                  GetValueAsText(l_payoutToken, 'errmsg'),
-                                  GetValueAsText(l_payoutToken, 'pay_type'),
-                                  GetValueAsText(l_payoutToken, 'clisn'),
-                                  GetValueAsDateTime(l_payoutToken, 'txdtm')
-                );
+            if (GetValueAsText(l_payoutToken, 'errmsg') = '交易成功') then
+                if (GetValueAsText(l_payoutToken, 'order_type') = 'payment') then
+                    InitQFPaymentLine(GetValueAsText(l_payoutToken, 'out_trade_no'),
+                                      GetValueAsText(l_payoutToken, 'syssn'),
+                                      GetValueAsDateTime(l_payoutToken, 'sysdtm'),
+                                      GetValueAsDateTime(l_payoutToken, 'paydtm'),
+                                      GetValueAsText(l_payoutToken, 'txcurrcd'),
+                                      GetValueAsDecimal(l_payoutToken, 'txamt'),
+                                      GetValueAsText(l_payoutToken, 'errmsg'),
+                                      GetValueAsText(l_payoutToken, 'pay_type'),
+                                      GetValueAsText(l_payoutToken, 'clisn'),
+                                      GetValueAsDateTime(l_payoutToken, 'txdtm'))
+                else
+                    InitQFPayRefundLine(GetValueAsText(l_payoutToken, 'out_trade_no'),
+                                              GetValueAsText(l_payoutToken, 'syssn'),
+                                              GetValueAsDateTime(l_payoutToken, 'sysdtm'),
+                                              GetValueAsDateTime(l_payoutToken, 'paydtm'),
+                                              GetValueAsText(l_payoutToken, 'txcurrcd'),
+                                              GetValueAsDecimal(l_payoutToken, 'txamt'),
+                                              GetValueAsText(l_payoutToken, 'errmsg'),
+                                              GetValueAsText(l_payoutToken, 'pay_type'),
+                                              GetValueAsText(l_payoutToken, 'clisn'),
+                                              GetValueAsDateTime(l_payoutToken, 'txdtm'),
+                                              GetValueAsText(l_payoutToken, 'origssn'));
 
         end;
         Message('QFPay payment has been generated sucessfully!');
@@ -99,21 +111,59 @@ codeunit 82002 "Integration - QFPay"
         l_recQFPayment.Insert();
     end;
 
+    procedure InitQFPayRefundLine(OutTradeNo: Text; Syssn: Text; Sysdtm: DateTime; Paydtm: DateTime; Txcurrcd: Text; Txamt: Decimal; Errmsg: Text; PayType: Text; Clisn: Text; Txdtm: DateTime; Origssn: Text)
+    var
+        l_recQFPayRefund: Record "QFPay Refund";
+    begin
+
+        if IsExistQFPayRefundLine(OutTradeNo) then exit;
+
+        l_recQFPayRefund.Init();
+        l_recQFPayRefund.id := OutTradeNo;
+        l_recQFPayRefund.out_trade_no := OutTradeNo;
+        l_recQFPayRefund.syssn := Syssn;
+        l_recQFPayRefund.sysdtm := Sysdtm;
+        l_recQFPayRefund.paydtm := Paydtm;
+        l_recQFPayRefund.txcurrcd := Txcurrcd;
+        l_recQFPayRefund.txamt := Txamt / 100;
+        l_recQFPayRefund.errmsg := Errmsg;
+        l_recQFPayRefund.pay_type := PayType;
+        l_recQFPayRefund.clisn := Clisn;
+        l_recQFPayRefund.txdtm := Txdtm;
+        l_recQFPayRefund.Origssn := Origssn;
+        MapRefundDocumentNo(l_recQFPayRefund, Origssn);
+        l_recQFPayRefund.Insert();
+    end;
+
 
     procedure MapDocumentNo(var QFPayment: Record "QFPay Payment"; OutTradeNo: Code[250])
     var
         l_recSalesInvoiceHeader: Record "Sales Invoice Header";
     begin
         l_recSalesInvoiceHeader.Reset();
-        l_recSalesInvoiceHeader.SetFilter("Stripe/QFPay Invoice ID", OutTradeNo);
+        l_recSalesInvoiceHeader.SetFilter("Stripe Invoice ID", OutTradeNo);
         if l_recSalesInvoiceHeader.FindFirst() then begin
             QFPayment."Sales Document No." := l_recSalesInvoiceHeader."No.";
             QFPayment."Sales Document Type" := QFPayment."Sales Document Type"::Invoice;
             QFPayment."Customer No." := l_recSalesInvoiceHeader."Bill-to Customer No.";
         end;
-
-
     end;
+
+    procedure MapRefundDocumentNo(var QFPayRefund: Record "QFPay Refund"; Origssn: Text)
+    var
+        l_recQFPayPayment: Record "QFPay Payment";
+    begin
+        l_recQFPayPayment.Reset();
+        l_recQFPayPayment.SetFilter(syssn, Origssn);
+        if l_recQFPayPayment.FindFirst() then begin
+            QFPayRefund."Sales Document No." := l_recQFPayPayment."Sales Document No.";
+            QFPayRefund."Sales Document Type" := l_recQFPayPayment."Sales Document Type"::Invoice;
+            QFPayRefund."Customer No." := l_recQFPayPayment."Customer No.";
+        end;
+    end;
+
+
+
 
     procedure CalculateServiceChargeByTenderType(TenderType: Code[50]; Amount: Decimal): Decimal
     var
@@ -134,9 +184,18 @@ codeunit 82002 "Integration - QFPay"
             exit(true)
         else
             exit(false)
-
-
     end;
+
+    procedure IsExistQFPayRefundLine(OutTradeNo: Text): Boolean
+    var
+        l_recQFPayRefund: Record "QFPay Refund";
+    begin
+        if l_recQFPayRefund.Get(OutTradeNo) then
+            exit(true)
+        else
+            exit(false)
+    end;
+
 
 
     procedure CreateQFPayPayoutJournal()
@@ -207,6 +266,67 @@ codeunit 82002 "Integration - QFPay"
 
     end;
 
+
+    procedure CreateQFPayRefundJournal()
+    var
+        l_recQFPaySetup: Record "QFPay Setup";
+        l_recQFPayRefund: Record "QFPay Refund";
+        l_recJnlBatch: Record "Gen. Journal Batch";
+        l_recGenJournalLine: Record "Gen. Journal Line";
+        l_codDocNo: code[20];
+        l_intLineNo: Integer;
+        l_cduNoSeriesMgt: Codeunit NoSeriesManagement;
+
+    begin
+        l_recQFPaySetup.FindFirst();
+        l_intLineNo := l_recGenJournalLine.GetNewLineNo(l_recQFPaySetup."QFPay Refund Jnl. Template", l_recQFPaySetup."QFPay Refund Jnl. Batch");
+        l_recJnlBatch.get(l_recQFPaySetup."QFPay Refund Jnl. Template", l_recQFPaySetup."QFPay Refund Jnl. Batch");
+        l_codDocNo := l_cduNoSeriesMgt.TryGetNextNo(l_recJnlBatch."No. Series", DT2Date(l_recQFPayRefund.paydtm));
+
+
+
+        l_recQFPayRefund.Reset();
+        l_recQFPayRefund.SetRange(Status, l_recQFPayRefund.Status::Open);
+        if l_recQFPayRefund.FindSet() then
+            repeat
+
+                InitRefundGenJournalLine(l_recQFPaySetup."QFPay Refund Jnl. Template",
+                                   l_recQFPaySetup."QFPay Refund Jnl. Batch",
+                                   l_intLineNo,
+                                   DT2Date(l_recQFPayRefund.paydtm),
+                                   l_codDocNo,
+                                   "Gen. Journal Account Type"::"Bank Account",
+                                   l_recQFPaySetup."Receiving Bank Account",
+                                   l_recQFPayRefund.txamt * -1
+                                   , '');
+
+
+
+                InitRefundGenJournalLine(l_recQFPaySetup."QFPay Refund Jnl. Template",
+                                   l_recQFPaySetup."QFPay Refund Jnl. Batch",
+                                    l_intLineNo,
+                                    DT2Date(l_recQFPayRefund.paydtm),
+                                    l_codDocNo,
+                                    "Gen. Journal Account Type"::Customer,
+                                    l_recQFPayRefund."Customer No.",
+                                    l_recQFPayRefund.txamt,
+                                    l_recQFPayRefund."Sales Document No.");
+
+
+
+
+                l_recQFPayRefund."General Journal Document Type" := l_recQFPayRefund."General Journal Document Type"::Refund;
+                l_recQFPayRefund."General Journal Document No." := l_codDocNo;
+                l_recQFPayRefund.Status := l_recQFPayRefund.Status::Created;
+                l_recQFPayRefund.Modify();
+            until l_recQFPayRefund.Next() = 0;
+
+        Message('The QFPay payment journal has been created sucessfully!');
+
+    end;
+
+
+
     procedure InitGenJournalLine(JournalTemplate: Code[50]; JournalBatchCode: Code[50]; var LineNo: Integer; PostingDate: Date; DocumentNo: Code[100]; AccountType: Enum "Gen. Journal Account Type"; AccountNo: Code[50]; Amount: Decimal; SalesInvoiceNo: Code[100])
     var
         l_recGenJournalLine: Record "Gen. Journal Line";
@@ -225,6 +345,26 @@ codeunit 82002 "Integration - QFPay"
         if SalesInvoiceNo <> '' then
             l_recGenJournalLine."Applies-to Doc. Type" := l_recGenJournalLine."Applies-to Doc. Type"::Invoice;
         l_recGenJournalLine."Applies-to Doc. No." := SalesInvoiceNo;
+        if l_recGenJournalLine.Modify() then;
+        LineNo += 10000;
+
+    end;
+
+    procedure InitRefundGenJournalLine(JournalTemplate: Code[50]; JournalBatchCode: Code[50]; var LineNo: Integer; PostingDate: Date; DocumentNo: Code[100]; AccountType: Enum "Gen. Journal Account Type"; AccountNo: Code[50]; Amount: Decimal; SalesInvoiceNo: Code[100])
+    var
+        l_recGenJournalLine: Record "Gen. Journal Line";
+    begin
+        l_recGenJournalLine.init;
+        l_recGenJournalLine."Journal Template Name" := JournalTemplate;
+        l_recGenJournalLine."Journal Batch Name" := JournalBatchCode;
+        l_recGenJournalLine."Line No." := LineNo;
+        if l_recGenJournalLine.insert then;
+        l_recGenJournalLine."Posting Date" := PostingDate;
+        l_recGenJournalLine."Document Type" := l_recGenJournalLine."Document Type"::Refund;
+        l_recGenJournalLine."Document No." := DocumentNo;
+        l_recGenJournalLine."Account Type" := AccountType;
+        l_recGenJournalLine.validate("Account No.", AccountNo);
+        l_recGenJournalLine.validate(Amount, Amount);
         if l_recGenJournalLine.Modify() then;
         LineNo += 10000;
 

@@ -106,7 +106,7 @@ table 83016 "Additional Service"
         {
             DataClassification = ToBeClassified;
         }
-        field(50; "Stripe/QFPay Invoice ID"; Text[250])
+        field(50; "Stripe Invoice ID"; Text[250])
         {
             Caption = 'Stripe Invoice ID';
             DataClassification = ToBeClassified;

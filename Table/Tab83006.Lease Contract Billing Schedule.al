@@ -114,7 +114,7 @@ table 83006 "Lease Contract Billing Sched."
             // OptionMembers = "Additional Amenities","Additional Service","Welcome Amenities","Extra Charges","Ad Hoc",Admin;
             // DataClassification = SystemMetadata;
         }
-        field(21; "Stripe/QFPay Invoice ID"; Text[250])
+        field(21; "Stripe Invoice ID"; Text[250])
         {
             Caption = 'Stripe/QFPay Invoice ID';
 

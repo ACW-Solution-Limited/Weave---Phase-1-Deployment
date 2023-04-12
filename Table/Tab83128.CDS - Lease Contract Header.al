@@ -1142,6 +1142,41 @@
             Description = '';
             Caption = 'Deduction Amount';
         }
+
+        field(234; acwapp_TenderType; GUID)
+        {
+            ExternalName = 'acwapp_tendertype';
+            ExternalType = 'Lookup';
+            Description = '';
+            Caption = 'Tender Type';
+            TableRelation = "CDS acwapp_tendertype".acwapp_tendertypeId;
+        }
+        field(235; acwapp_TenderTypeName; Text[100])
+        {
+            FieldClass = FlowField;
+            CalcFormula = lookup("CDS acwapp_tendertype".acwapp_name where(acwapp_tendertypeId = field(acwapp_TenderType)));
+            ExternalName = 'acwapp_tendertypename';
+            ExternalType = 'String';
+            ExternalAccess = Read;
+        }
+        field(236; acwapp_DiscountAmount; Decimal)
+        {
+            ExternalName = 'acwapp_discountamount';
+            ExternalType = 'Money';
+            Description = '';
+            Caption = 'Discount Amount';
+        }
+        field(237; acwapp_discountamount_Base; Decimal)
+        {
+            ExternalName = 'acwapp_discountamount_base';
+            ExternalType = 'Money';
+            ExternalAccess = Read;
+            Description = 'Value of the Discount Amount in base currency.';
+            Caption = 'Discount Amount (Base)';
+        }
+
+
+
         field(262; acwapp_CommissionType; Option)
         {
             ExternalName = 'acwapp_commissiontype';

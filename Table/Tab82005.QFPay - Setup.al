@@ -64,6 +64,20 @@ table 82005 "QFPay Setup"
             DataClassification = ToBeClassified;
         }
 
+        field(17; "QFPay Refund Jnl. Template"; Code[10])
+        {
+            Caption = 'QFPay Refund Journal Template';
+
+            DataClassification = ToBeClassified;
+            TableRelation = "Gen. Journal Template".Name;
+        }
+        field(18; "QFPay Refund Jnl. Batch"; Code[10])
+        {
+            Caption = 'QFPay Refund Journal Batch';
+            DataClassification = ToBeClassified;
+            TableRelation = "Gen. Journal Batch".Name where("Journal Template Name" = field("QFPay Refund Jnl. Template"));
+        }
+
         field(20; "Enable"; Boolean)
         {
 

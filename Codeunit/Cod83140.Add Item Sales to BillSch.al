@@ -69,7 +69,7 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
                                        CRMAdditionalService.Price,
                                        CRMAdditionalService."Total Amount",
                                        CRMAdditionalService."Total Amount Inclu. VAT",
-                                       CRMAdditionalService."Stripe/QFPay Invoice ID",
+                                       CRMAdditionalService."Stripe Invoice ID",
                                        '',
                                        '',
                                        0,
@@ -103,7 +103,7 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
                                        CRMAdditionalAmenities.Price,
                                        CRMAdditionalAmenities."Total Amount",
                                        CRMAdditionalAmenities."Total Amount Inclu. VAT",
-                                       CRMAdditionalAmenities."Stripe/QFPay Invoice ID",
+                                       CRMAdditionalAmenities."Stripe Invoice ID",
                                        '',
                                        '',
                                        0,
@@ -140,7 +140,7 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
                                        CRMEventFee.Amount,
                                        CRMEventFee.Amount,
                                        CRMEventFee."Amount Including VAT",
-                                       CRMEventFee."Stripe/QFPay Invoice ID",
+                                       CRMEventFee."Stripe Invoice ID",
                                        '',
                                        '',
                                        0,
@@ -181,7 +181,7 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
                                                                         CRMExtraCharge."Total Amount",
                                                                        CRMExtraCharge."Total Amount",
                                                                        CRMExtraCharge."Total Amount Inclu. VAT",
-                                                                       CRMExtraCharge."Stripe/QFPay Invoice ID",
+                                                                       CRMExtraCharge."Stripe Invoice ID",
                                                                        '',
                                                                        '',
                                                                        0,
@@ -204,7 +204,7 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
                                                 CRMExtraCharge."Total Amount",
                                                   CRMExtraCharge."Total Amount",
                                                   CRMExtraCharge."Total Amount",
-                                                  CRMExtraCharge."Stripe/QFPay Invoice ID",
+                                                  CRMExtraCharge."Stripe Invoice ID",
                                                   '',
                                                   '',
                                                   0,
@@ -232,7 +232,7 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
                                             CRMExtraCharge."Total Amount",
                                             CRMExtraCharge."Total Amount",
                                             CRMExtraCharge."Total Amount",
-                                             CRMExtraCharge."Stripe/QFPay Invoice ID",
+                                             CRMExtraCharge."Stripe Invoice ID",
                                              '',
                                              '',
                                              0,
@@ -257,7 +257,7 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
                                             CRMExtraCharge."Total Amount",
                                             CRMExtraCharge."Total Amount",
                                             CRMExtraCharge."Total Amount",
-                                             CRMExtraCharge."Stripe/QFPay Invoice ID",
+                                             CRMExtraCharge."Stripe Invoice ID",
                                              '',
                                              '',
                                              0,
@@ -349,7 +349,7 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
         l_recLCBillingSchedule."Additional Sales Item Quantity" := SalesQuantity;
         l_recLCBillingSchedule."Add. Sales Item Unit Price" := SalesUnitPrice;
         l_recLCBillingSchedule.Amount := TotalAmount;
-        l_recLCBillingSchedule."Stripe/QFPay Invoice ID" := PaymentReferenceID;
+        l_recLCBillingSchedule."Stripe Invoice ID" := PaymentReferenceID;
         // For Tender Type only >>
         If CreditMemoNo <> '' then begin
             l_recCreditMemo.Setrange("No.", CreditMemoNo);

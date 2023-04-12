@@ -276,7 +276,7 @@ table 83000 "Lease Contract Header"
         {
             DataClassification = ToBeClassified;
         }
-        field(75; "1st Pymt. Stripe/QFPay Inv. ID"; Text[250])
+        field(75; "1st Payment Stripe Invoice ID"; Text[250])
         {
             Caption = '1st Payment Stripe/QFPay Invoice ID';
             DataClassification = ToBeClassified;

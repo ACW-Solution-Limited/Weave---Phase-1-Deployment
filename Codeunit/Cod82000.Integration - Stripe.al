@@ -8,7 +8,6 @@ codeunit 82000 Stripe
     trigger OnRun()
     var
         DocumentRecordRef: RecordRef;
-        l_recField: Record Field;
         l_recSalesInvoiceHeader: Record "Sales Invoice Header";
         l_txtTargetURL: Text;
         l_recStripePaymentSetup: Record "Stripe Payment Setup";
@@ -82,7 +81,6 @@ codeunit 82000 Stripe
         contentHeaders.Add('Authorization', g_txtAuth);
         l_txtAPIEndPoint := g_txtStripeAPIBaseURL + 'invoices';
         l_txtrequestUri := StrSubstNo('%1?customer=%2&currency=%3', l_txtAPIEndPoint, p_txtStripeCustID, p_codCurrency);
-        // Message('%1', l_txtrequestUri);
         request.SetRequestUri(l_txtrequestUri);
         request.Method := 'POST';
         client.Send(request, response);
@@ -120,7 +118,6 @@ codeunit 82000 Stripe
         else
             l_txtrequestUri := StrSubstNo('%1?customer=%2&invoice=%3&description=%4&quantity=%5&unit_amount_decimal=%6', l_txtAPIEndpoint, p_txtStripeCustID, p_txtStripeInvID, p_txtDesc, p_intQty, format(p_decUnitAmount * 100, 0, 9));
 
-        // Message('%1', l_txtrequestUri);
         request.SetRequestUri(l_txtrequestUri);
         request.Method := 'POST';
         client.Send(request, response);
@@ -217,7 +214,7 @@ codeunit 82000 Stripe
             if p_txtStripeInvoiceURL <> '' then begin
                 p_recSalesInvoice."Stripe Payment Link" := p_txtStripeInvoiceURL;
                 p_recSalesInvoice."External Payment Gateway" := p_recSalesInvoice."External Payment Gateway"::Stripe;
-                p_recSalesInvoice."Stripe/QFPay Invoice ID" := l_txtStripeInvoiceID;
+                p_recSalesInvoice."Stripe Invoice ID" := l_txtStripeInvoiceID;
                 p_recSalesInvoice.Modify();
                 exit(true);
             end;
@@ -250,8 +247,6 @@ codeunit 82000 Stripe
         contentHeaders := client.DefaultRequestHeaders;
         contentHeaders.Add('Authorization', g_txtAuth);
         l_txtAPIEndPoint := g_txtStripeAPIBaseURL + 'charges';
-        // l_txtrequestUri := StrSubstNo('%1?created[gte]=%2', l_txtAPIEndpoint, format(GetUnixTimeStamp(CreateDateTime(p_datCreatedDate, 0T)) / 1000, 0, 1));
-        // l_txtrequestUri := StrSubstNo('%1?invoice=%2', l_txtAPIEndpoint, p_txtInvoiceId);
         l_txtrequestUri := StrSubstNo('%1?paid=true', l_txtAPIEndpoint);
         request.SetRequestUri(l_txtrequestUri);
 
@@ -264,11 +259,10 @@ codeunit 82000 Stripe
 
         l_jArray := l_jtoken.AsArray();
         foreach l_chargeToken In l_jArray do begin
-            //   if p_txtInvoiceId = GetValueAsText(l_chargeToken, 'invoice') then begin
             if GetValueAsText(l_chargeToken, 'paid') = 'true' then begin
                 p_txtBalanceTxnId := GetValueAsText(l_chargeToken, 'balance_transaction');
             end;
-            //    end;
+
         end;
     end;
 
@@ -276,7 +270,6 @@ codeunit 82000 Stripe
     var
         l_txtAPIEndPoint: Text;
         l_txtrequestUri: Text;
-
         client: HttpClient;
         request: HttpRequestMessage;
         response: HttpResponseMessage;
@@ -285,10 +278,7 @@ codeunit 82000 Stripe
         l_txtresponseText: Text;
         l_responseJsonObject: JsonObject;
         l_jtoken: JsonToken;
-        l_txtStripeInvoiceID: Text;
         l_jArray: JsonArray;
-        l_chargeToken: JsonToken;
-        l_txtBalanceTxnId: Text;
         l_decRefundAmount: Decimal;
         l_intCreated: Integer;
         l_datCreated: Date;
@@ -367,9 +357,7 @@ codeunit 82000 Stripe
         DialogBox: Dialog;
         NumberOfRecords: Integer;
     begin
-
         DialogBox.Open('Progress from Stripe Payment Intent: #1', NumberOfRecords);
-
         repeat
             Clear(request);
             Clear(response);
@@ -574,7 +562,6 @@ codeunit 82000 Stripe
                 l_responseJsonObject2 := l_chargeToken.AsObject();
                 l_responseJsonObject2.SelectToken('payment_method_details', l_jtoken2);
                 l_responseJsonObject3 := l_jtoken2.AsObject();
-                //  if GetValueAsText(l_jtoken2, 'card') <> '' then             
                 if l_responseJsonObject3.SelectToken('card', l_jtoken3) = true then begin
 
                     if GetValueAsText(l_jtoken3, 'network') <> '' then
@@ -589,46 +576,7 @@ codeunit 82000 Stripe
             if l_responseJsonObject2.SelectToken('card', l_jtoken2) = true then begin
                 if GetValueAsText(l_jtoken2, 'network') <> '' then
                     StripePayments."Tender Type" := GetValueAsText(l_jtoken2, 'network');
-
-
             end;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            // InsertStripePaymentLine(GetValueAsText(l_chargeToken, 'id'),
-            //                         GetValueAsText(l_chargeToken, 'object'),
-            //                            '',
-            //                             GetValueAsText(l_chargeToken, 'currency'),
-            //                             l_decAmount,
-            //                             GetValueAsText(l_chargeToken, 'id'),
-            //                             GetValueAsText(l_chargeToken, 'status'),
-            //                             l_datCreated,
-            //                             GetValueAsText(l_chargeToken, 'payment_intent'),
-            //                             TenderType);
-
-
-
-            // if GetValueAsText(l_chargeToken, 'invoice') <> '' then begin
-            //     l_txtbalanceTxnID := GetValueAsText(l_chargeToken, 'balance_transaction');
-            //     GetBalanceTransaction(l_txtbalanceTxnID,
-            //                         GetValueAsText(l_chargeToken, 'id'),
-            //                         GetValueAsText(l_chargeToken, 'payment_intent'),
-            //                         GetValueAsText(l_chargeToken, 'status'),
-            //                         GetValueAsText(l_chargeToken, 'description'),
-            //                         TenderType
-            //                         );
-            // end;
         end;
     end;
 
@@ -815,7 +763,7 @@ codeunit 82000 Stripe
         l_recLeaseContractBillingSched.SetFilter("Document No.", SalesInvoiceNo);
         if l_recLeaseContractBillingSched.FindFirst() then
             repeat
-                l_recLeaseContractBillingSched."Stripe/QFPay Invoice ID" := StripePaymentID;
+                l_recLeaseContractBillingSched."Stripe Invoice ID" := StripePaymentID;
                 l_recLeaseContractBillingSched.Status := l_recLeaseContractBillingSched.Status::Paid;
                 l_recLeaseContractBillingSched.Modify();
             until l_recLeaseContractBillingSched.Next() = 0;
@@ -895,7 +843,7 @@ codeunit 82000 Stripe
         l_recStripePayments."Amount" := -Amount;
         l_recStripePayments."Stripe Status" := Reason;
         l_recStripePayments."Posting Date" := CreatedDate;
-        l_recStripePayments."Stripe/QFPay Invoice ID" := StripeInvoiceID;
+        l_recStripePayments."Stripe Invoice ID" := StripeInvoiceID;
         l_recStripePayments."Payment Intent" := PaymentIntent;
         l_recStripePayments."Tender Type" := TenderType;
         l_recStripePayments."Sales Document Type" := l_recStripePayments."Sales Document Type"::Invoice;
@@ -906,19 +854,18 @@ codeunit 82000 Stripe
         l_recStripePayments."Net Amount" := l_recStripePayments.Amount - l_recStripePayments."Stripe Fee Amount";
 
 
-        //    If object = 'invoice' then begin
         l_recSalesInvoice.Reset();
-        l_recSalesInvoice.SetFilter("Stripe/QFPay Invoice ID", Id);
+        l_recSalesInvoice.SetFilter("Stripe Invoice ID", Id);
         if l_recSalesInvoice.FindFirst() then begin
             l_recStripePayments."Customer No." := l_recSalesInvoice."Bill-to Customer No.";
             l_recStripePayments."Customer Name" := l_recSalesInvoice."Bill-to Name";
             l_recStripePayments."Sales Document Type" := l_recStripePayments."Sales Document Type"::Invoice;
             l_recStripePayments."Sales Document No." := l_recSalesInvoice."No.";
-            l_recStripePayments."Stripe/QFPay Invoice ID" := l_recSalesInvoice."Stripe/QFPay Invoice ID";
+            l_recStripePayments."Stripe Invoice ID" := l_recSalesInvoice."Stripe Invoice ID";
 
             l_recSalesInvoice."Stripe Paid" := true;
             l_recSalesInvoice."Payment Status" := l_recSalesInvoice."Payment Status"::Paid;
-            UpdateBillingScheduleStripeInvoiceID(l_recSalesInvoice."No.", l_recSalesInvoice."Stripe/QFPay Invoice ID");
+            UpdateBillingScheduleStripeInvoiceID(l_recSalesInvoice."No.", l_recSalesInvoice."Stripe Invoice ID");
             UpdateExtraChargePaymentStatus(l_recSalesInvoice."No.");
 
             l_recSalesInvoice.Modify();
@@ -926,7 +873,7 @@ codeunit 82000 Stripe
 
 
         l_recSalesInvoice.Reset();
-        l_recSalesInvoice.SetFilter("Stripe/QFPay Invoice ID", PaymentIntent);
+        l_recSalesInvoice.SetFilter("Stripe Invoice ID", PaymentIntent);
         if l_recSalesInvoice.FindFirst() then begin
             l_recStripePayments."Customer No." := l_recSalesInvoice."Bill-to Customer No.";
             l_recStripePayments."Customer Name" := l_recSalesInvoice."Bill-to Name";
@@ -935,13 +882,13 @@ codeunit 82000 Stripe
 
             l_recSalesInvoice."Stripe Paid" := true;
             l_recSalesInvoice."Payment Status" := l_recSalesInvoice."Payment Status"::Paid;
-            UpdateBillingScheduleStripeInvoiceID(l_recSalesInvoice."No.", l_recSalesInvoice."Stripe/QFPay Invoice ID");
+            UpdateBillingScheduleStripeInvoiceID(l_recSalesInvoice."No.", l_recSalesInvoice."Stripe Invoice ID");
             UpdateExtraChargePaymentStatus(l_recSalesInvoice."No.");
 
             l_recSalesInvoice.Modify();
         end;
 
-        //  end;
+
 
 
         if l_recStripePayments.insert then;
@@ -953,7 +900,7 @@ codeunit 82000 Stripe
         l_recStripePayments: Record "Stripe Payment";
     begin
         l_recStripePayments.Reset();
-        l_recStripePayments.SetFilter("Stripe/QFPay Invoice ID", StripeInvoiceid);
+        l_recStripePayments.SetFilter("Stripe Invoice ID", StripeInvoiceid);
         if l_recStripePayments.FindFirst() then
             exit(true)
         else
@@ -987,8 +934,6 @@ codeunit 82000 Stripe
             l_recStripePaymentSetup.Init;
             l_recStripePaymentSetup.Name := 'Stripe Payment Service';
             l_recStripePaymentSetup.Description := 'Stripe Payment Service';
-            //l_recStripePaymentSetup."Target URL".CreateOutStream(OutStream, TEXTENCODING::UTF8);
-            //OutStream.WriteText('https://api.stripe.com/v1/');
             l_recStripePaymentSetup."Target URL" := 'https://api.stripe.com/v1/';
             l_recStripePaymentSetup."Terms of Service" := 'https://stripe.com/connect-account/legal';
             l_recStripePaymentSetup.Insert;

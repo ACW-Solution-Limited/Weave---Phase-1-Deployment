@@ -70,7 +70,7 @@ table 82002 "Stripe Payment"
             Caption = 'Sales Document No.';
             DataClassification = SystemMetadata;
         }
-        field(14; "Stripe/QFPay Invoice ID"; Text[50])
+        field(14; "Stripe Invoice Id"; Text[50])
         {
             Caption = 'Stripe Invoice Id';
             DataClassification = SystemMetadata;

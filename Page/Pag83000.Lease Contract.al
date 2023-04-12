@@ -206,7 +206,7 @@ page 83000 "Lease Contract"
                         ApplicationArea = All;
 
                     }
-                    Field("11st Pymt. Stripe/QFPay Inv. ID"; Rec."1st Pymt. Stripe/QFPay Inv. ID")
+                    Field("11st Pymt. Stripe/QFPay Inv. ID"; Rec."1st Payment Stripe Invoice ID")
                     {
                         caption = '1st Payment Stripe Invoice ID';
                         ApplicationArea = All;

@@ -5,7 +5,7 @@ tableextension 83036 "Sales Header Ext" extends "Sales Header"
     fields
     {
 
-        field(82004; "Stripe/QFPay Invoice ID"; Text[250]) { Caption = 'Stripe/QFPay Invoice ID'; }
+
 
 
         modify("Posting Date")
@@ -22,7 +22,7 @@ tableextension 83036 "Sales Header Ext" extends "Sales Header"
             DataClassification = ToBeClassified;
         }
 
-
+        field(83002; "Stripe Invoice ID"; Text[250]) { Caption = 'Stripe/QFPay Invoice ID'; }
 
         field(83003; "Lease Contract No."; Code[50]) { Caption = 'Lease Contract No.'; }
 

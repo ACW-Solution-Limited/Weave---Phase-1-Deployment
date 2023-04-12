@@ -97,7 +97,7 @@ codeunit 83132 "CDS - Tender Type Discount"
         InsertIntegrationFieldMapping('CRM to BC TendType', TenderTypeDiscount.FieldNo("Payment Intent"), CRMTenderTypeDiscount.FieldNo(acwapp_name), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC TendType', TenderTypeDiscount.FieldNo("CompanyId"), CRMTenderTypeDiscount.FieldNo(acwapp_company), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC TendType', TenderTypeDiscount.FieldNo("Payment Reference Id"), CRMTenderTypeDiscount.FieldNo(acwapp_PaymentReferenceID), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
-        InsertIntegrationFieldMapping('CRM to BC TendType', TenderTypeDiscount.FieldNo("Stripe/QFPay Invoice ID"), CRMTenderTypeDiscount.FieldNo(acwapp_PaymentReferenceID), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
+        InsertIntegrationFieldMapping('CRM to BC TendType', TenderTypeDiscount.FieldNo("Stripe Invoice ID"), CRMTenderTypeDiscount.FieldNo(acwapp_PaymentReferenceID), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         CompanyInformation.Get;
         IntegrationTableMapping."Integration Table Filter".CreateOutStream(FilterStr);
         FilterText := 'VERSION(1) SORTING(Field1) WHERE(Field56=1(' + CompanyInformation."CRM Company Guid" + '))';
