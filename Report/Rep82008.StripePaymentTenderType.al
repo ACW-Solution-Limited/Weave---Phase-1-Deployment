@@ -23,6 +23,7 @@ report 82008 "Stripe Payment - Tender Type"
                 l_RecBillingSchedule: Record "Lease Contract Billing Sched.";
 
 
+
             begin
                 If "Tender Discount Amount" = 0 then
                     CurrReport.Skip();
@@ -37,7 +38,7 @@ report 82008 "Stripe Payment - Tender Type"
                 l_SalesHeader.Init();
                 l_SalesHeader.Validate("Document Type", l_SalesHeader."Document Type"::"Credit Memo");
 
-                l_SalesHeader."No." := l_CodNoseriesManagement.GetNextNo(l_RecSalesReceivablesSetup."Credit Memo Nos.", WorkDate(), true);
+                l_SalesHeader."No." := l_CodNoseriesManagement.GetNextNo(l_RecSalesReceivablesSetup."Credit Memo Nos.", WorkDate(), false);
                 l_SalesHeader.Validate("Sell-to Customer No.", l_RecPostedSalesInv."Bill-to Customer No.");
                 l_SalesHeader.Validate("Bill-to Customer No.", l_RecPostedSalesInv."Bill-to Customer No.");
                 l_SalesHeader."Lease Contract No." := l_RecPostedSalesInv."Lease Contract No.";
@@ -120,22 +121,28 @@ report 82008 "Stripe Payment - Tender Type"
     var
         l_recLeaseBillingSchedule: Record "Lease Contract Billing Sched.";
         l_recCustLedgEntry: Record "Cust. Ledger Entry";
+        l_recApplyingCustLedgEntryTemp: Record "Cust. Ledger Entry" temporary;
+        l_Cdu_CustEntry: Codeunit "Cust. Entry-SetAppl.ID";
 
     begin
-        Message('%1', SalesInvHeaderNo);
+        //Message('%1', SalesInvHeaderNo);
         // l_recLeaseBillingSchedule.reset;
         l_recCustLedgEntry.reset;
+        l_recApplyingCustLedgEntryTemp.reset;
         // l_recLeaseBillingSchedule.setrange("Contract No.", LeaseContractHeader."No.");
         // l_recLeaseBillingSchedule.setrange(Type, l_recLeaseBillingSchedule.Type::Rent);
         // l_recLeaseBillingSchedule.setrange("Tender Type", TenderType);
         // l_recLeaseBillingSchedule.setrange(Amount, -DiscountAmt);
         // l_recLeaseBillingSchedule.SetFilter(status, '<>%1', l_recLeaseBillingSchedule.Status::" ");
         // If l_recLeaseBillingSchedule.findlast then begin
+
         l_recCustLedgEntry.SetFilter("Document No.", SalesInvHeaderNo);
         If l_recCustLedgEntry.Findlast then begin
-            l_recCustLedgEntry.validate("Applies-to ID", CreditMemoNo);
-            l_recCustLedgEntry.Modify();
-            Message('%1', l_recCustLedgEntry."Document No.");
+            l_recApplyingCustLedgEntryTemp := l_recCustLedgEntry;
+            l_Cdu_CustEntry.SetApplId(l_recCustLedgEntry, l_recApplyingCustLedgEntryTemp, CreditMemoNo);
+            //l_recCustLedgEntry.validate("Applies-to ID", CreditMemoNo);
+            //  l_recCustLedgEntry.Modify();
+            // Message('%1', l_recCustLedgEntry."Document No.");
         end;
     end;
 

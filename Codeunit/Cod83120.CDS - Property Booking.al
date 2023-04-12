@@ -183,7 +183,6 @@ codeunit 83120 "CDS Property Booking"
         InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("No. of Extra Charge"), CRMPropertybooking.FieldNo(acwapp_NoofExtraChargesLine), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("Promotion Deduction Type"), CRMPropertybooking.FieldNo(acwapp_PriceDeductionType), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("Promotion Amount / %"), CRMPropertybooking.FieldNo(acwapp_DeductionAmountdecimal), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
-
         InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("Tender Type"), CRMPropertybooking.FieldNo(acwapp_TenderTypeName), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("Tender Type Discount Amount"), CRMPropertybooking.FieldNo(acwapp_discountamount), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("Commission Type"), CRMPropertybooking.FieldNo(acwapp_CommissionType), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);

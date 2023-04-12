@@ -408,8 +408,8 @@ report 83000 "Lease Contract Create Invoices"
                             if l_recSalesLine."Billing Schedule Type" = l_recSalesLine."Billing Schedule Type"::Rent then
                                 InsertDeferral(l_recSalesLine, l_recSalesHeader);
                             // Tender Type >>
-                            If l_recSalesLineTemp."Tender Type" <> '' then
-                                ApplyEntriesforTenderType(LeaseContractHeader, l_recSalesHeader."No.", l_recSalesLineTemp."Tender Type", l_recSalesLineTemp."Unit Price");
+                            //If l_recSalesLineTemp."Tender Type" <> '' then
+                            //ApplyEntri(LeaseContractHeader, l_recSalesHeader."No.", l_recSalesLiesforTenderTypeneTemp."Tender Type", l_recSalesLineTemp."Unit Price");
                             // Tender Type <<
                             l_recSalesLine.Modify(True);
                             ModifyBillingScheduleDocumentTypeNo(l_recSalesLine."Contract No.", l_recSalesLine."Billing Schedule Line No.", g_optBillingScheudleDocumentType::"Credit Memo", l_recSalesHeader."No.");
@@ -826,7 +826,7 @@ report 83000 "Lease Contract Create Invoices"
         end;
     end;
 
-    procedure ApplyEntriesforTenderType(Var LeaseContractHeader: Record "Lease Contract Header"; SalesHeaderNo: Code[20]; TenderType: code[20]; DiscountAmt: Decimal)
+    /*procedure ApplyEntriesforTenderType(Var LeaseContractHeader: Record "Lease Contract Header"; SalesHeaderNo: Code[20]; TenderType: code[20]; DiscountAmt: Decimal)
     var
         l_recLeaseBillingSchedule: Record "Lease Contract Billing Sched.";
         l_recCustLedgEntry: Record "Cust. Ledger Entry";
@@ -850,7 +850,7 @@ report 83000 "Lease Contract Create Invoices"
         end
 
     end;
-
+*/
 
 
     var
