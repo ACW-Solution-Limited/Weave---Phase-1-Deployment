@@ -650,36 +650,63 @@ codeunit 82000 Stripe
         l_payoutToken: JsonToken;
         l_recStripePayouts: Record "Stripe Payout";
         l_intDateTime: Integer;
+
+        DialogBox: Dialog;
+        NumberOfRecords: Integer;
+        l_txtLastID: Text;
+        l_jtokenHasMore: JsonToken;
     begin
-        GetAuth();
-        contentHeaders := client.DefaultRequestHeaders;
-        contentHeaders.Add('Authorization', g_txtAuth);
-        l_txtAPIEndPoint := g_txtStripeAPIBaseURL + 'payouts';
-        l_txtrequestUri := StrSubstNo('%1?arrival_date[gte]=%2', l_txtAPIEndpoint, format(GetUnixTimeStamp(CreateDateTime(p_datArrivalDate, 0T)) / 1000, 0, 1));
-        request.SetRequestUri(l_txtrequestUri);
-        request.Method := 'GET';
-        client.Send(request, response);
-        response.Content().ReadAs(l_txtresponseText);
-        l_responseJsonObject.ReadFrom(l_txtresponseText);
-        l_responseJsonObject.SelectToken('data', l_jtoken);
-        l_jArray := l_jtoken.AsArray();
-        foreach l_payoutToken In l_jArray do begin
-            if not l_recStripePayouts.get(GetValueAsText(l_payoutToken, 'id')) then begin
-                l_recStripePayouts.init;
-                l_recStripePayouts.Id := GetValueAsText(l_payoutToken, 'id');
-                l_recStripePayouts.Description := GetValueAsText(l_payoutToken, 'description');
-                Evaluate(l_intDateTime, GetValueAsText(l_payoutToken, 'arrival_date'));
-                l_recStripePayouts."Arrival Date" := CalcUnixDateTime(19700101D, 000000T, l_intDateTime);
-                Evaluate(l_intDateTime, GetValueAsText(l_payoutToken, 'created'));
-                l_recStripePayouts.Created := CalcUnixDateTime(19700101D, 000000T, l_intDateTime);
-                l_recStripePayouts."Currency Code" := GetValueAsText(l_payoutToken, 'currency');
-                Evaluate(l_recStripePayouts.Amount, GetValueAsText(l_payoutToken, 'amount'));
-                l_recStripePayouts."Posting Date" := DT2Date(l_recStripePayouts."Arrival Date");
-                l_recStripePayouts.Amount := l_recStripePayouts.Amount / 100;
-                l_recStripePayouts.Status := l_recStripePayouts.Status::Open;
-                if l_recStripePayouts.insert then;
+
+        DialogBox.Open('Progress from Stripe Payout: #1', NumberOfRecords);
+        repeat
+
+            Clear(request);
+            Clear(response);
+            Clear(g_txtAuth);
+            GetAuth();
+            contentHeaders.Clear();
+            contentHeaders := client.DefaultRequestHeaders;
+            contentHeaders.Add('Authorization', g_txtAuth);
+            if l_txtLastID = '' then
+                l_txtAPIEndPoint := g_txtStripeAPIBaseURL + 'payouts?limit=100'
+            else
+                l_txtAPIEndPoint := g_txtStripeAPIBaseURL + 'payouts?limit=100&starting_after=' + l_txtLastID;
+
+
+            l_txtrequestUri := l_txtAPIEndpoint;
+
+            request.SetRequestUri(l_txtrequestUri);
+            request.Method := 'GET';
+            client.Send(request, response);
+            response.Content().ReadAs(l_txtresponseText);
+            l_responseJsonObject.ReadFrom(l_txtresponseText);
+            l_responseJsonObject.SelectToken('data', l_jtoken);
+            l_responseJsonObject.SelectToken('has_more', l_jtokenHasMore);
+
+            l_jArray := l_jtoken.AsArray();
+            foreach l_payoutToken In l_jArray do begin
+                NumberOfRecords += 1;
+                DialogBox.UPDATE();
+                l_txtLastID := GetValueAsText(l_payoutToken, 'id');
+                if not l_recStripePayouts.get(GetValueAsText(l_payoutToken, 'id')) then begin
+                    l_recStripePayouts.init;
+                    l_recStripePayouts.Id := GetValueAsText(l_payoutToken, 'id');
+                    l_recStripePayouts.Description := GetValueAsText(l_payoutToken, 'description');
+                    Evaluate(l_intDateTime, GetValueAsText(l_payoutToken, 'arrival_date'));
+                    l_recStripePayouts."Arrival Date" := CalcUnixDateTime(19700101D, 000000T, l_intDateTime);
+                    Evaluate(l_intDateTime, GetValueAsText(l_payoutToken, 'created'));
+                    l_recStripePayouts.Created := CalcUnixDateTime(19700101D, 000000T, l_intDateTime);
+                    l_recStripePayouts."Currency Code" := GetValueAsText(l_payoutToken, 'currency');
+                    Evaluate(l_recStripePayouts.Amount, GetValueAsText(l_payoutToken, 'amount'));
+                    l_recStripePayouts."Posting Date" := DT2Date(l_recStripePayouts."Arrival Date");
+                    l_recStripePayouts.Amount := l_recStripePayouts.Amount / 100;
+                    l_recStripePayouts.Status := l_recStripePayouts.Status::Open;
+                    if l_recStripePayouts.insert then;
+                end;
             end;
-        end;
+        until l_jtokenHasMore.AsValue().AsBoolean() = false;
+        SLEEP(1000);
+        DialogBox.CLOSE();
     end;
 
     procedure GetUnixTimeStamp(FromDateTime: DateTime): BigInteger
@@ -1015,7 +1042,7 @@ codeunit 82000 Stripe
 
     end;
 
-    procedure CreateStripePaymentJournalLine(var StripePayment: Record "Stripe Payment"; var LineNo: Integer; JournalBatch: Record "Gen. Journal Batch")
+    procedure CreateStripePaymentJournalLine(var StripePayment: Record "Stripe Payment"; var LineNo: Integer; var JournalBatch: Record "Gen. Journal Batch")
     var
         l_codDocNo: code[20];
         l_cduNoSeriesMgt: Codeunit NoSeriesManagement;
@@ -1025,7 +1052,7 @@ codeunit 82000 Stripe
 
         if StripePayment.FindSet() then
             repeat
-                l_codDocNo := l_cduNoSeriesMgt.TryGetNextNo(JournalBatch."No. Series", StripePayment."Posting Date"); //<Try this new method
+                l_codDocNo := l_cduNoSeriesMgt.GetNextNo(JournalBatch."No. Series", StripePayment."Posting Date", true); //<Try this new method
 
 
                 InsertGenJournalLine(JournalBatch."Journal Template Name", JournalBatch.Name, LineNo,
@@ -1056,19 +1083,19 @@ codeunit 82000 Stripe
 
 
 
-    procedure CreateStripePayoutJournalLine(var StripePayout: Record "Stripe Payout"; var LineNo: Integer; JournalBatch: Record "Gen. Journal Batch")
+    procedure CreateStripePayoutJournalLine(var StripePayout: Record "Stripe Payout"; var LineNo: Integer; var JournalBatch: Record "Gen. Journal Batch")
     var
         l_codDocNo: code[20];
         l_cduNoSeriesMgt: Codeunit NoSeriesManagement;
         l_recStripePaymentSetup: Record "Stripe Payment Setup";
     begin
+        l_recStripePaymentSetup.Get();
         if StripePayout.FindSet() then
             repeat
-                l_codDocNo := l_cduNoSeriesMgt.TryGetNextNo(JournalBatch."No. Series", StripePayout."Posting Date"); //<Try this new method
-
+                l_codDocNo := l_cduNoSeriesMgt.GetNextNo(JournalBatch."No. Series", StripePayout."Posting Date", true); //<Try this new method
 
                 InsertGenJournalLine(JournalBatch."Journal Template Name", JournalBatch.Name, LineNo,
-                StripePayout."Posting Date", "Gen. Journal Document Type"::" ", l_codDocNo, "Gen. Journal Account Type"::"Bank Account", l_recStripePaymentSetup."Stripe Bank Account",
+                StripePayout."Posting Date", "Gen. Journal Document Type"::Payment, l_codDocNo, "Gen. Journal Account Type"::"Bank Account", l_recStripePaymentSetup."Stripe Bank Account",
                 StripePayout.Amount * -1, "Gen. Journal Document Type"::" ", '');
 
 
@@ -1098,7 +1125,7 @@ codeunit 82000 Stripe
         l_recStripePaymentSetup.Get;
         if StripeRefund.FindSet() then
             repeat
-                l_codDocNo := l_cduNoSeriesMgt.TryGetNextNo(JournalBatch."No. Series", StripeRefund."Posting Date"); //<Try this new method
+                l_codDocNo := l_cduNoSeriesMgt.GetNextNo(JournalBatch."No. Series", StripeRefund."Posting Date", false); //<Try this new method
 
                 InsertGenJournalLine(JournalBatch."Journal Template Name", JournalBatch.Name, LineNo,
                 StripeRefund."Posting Date", "Gen. Journal Document Type"::"Refund", l_codDocNo, "Gen. Journal Account Type"::"Bank Account", l_recStripePaymentSetup."Receiving Bank Account",
@@ -1119,7 +1146,7 @@ codeunit 82000 Stripe
 
 
 
-    procedure InsertGenJournalLine(JournalTemplateName: Code[50]; JournalBatchName: Code[50]; LineNo: Integer; PostingDate: Date; DocumentType: Enum "Gen. Journal Document Type"; DocumentNo: Code[50];
+    procedure InsertGenJournalLine(JournalTemplateName: Code[50]; JournalBatchName: Code[50]; var LineNo: Integer; PostingDate: Date; DocumentType: Enum "Gen. Journal Document Type"; DocumentNo: Code[50];
     AccountType: Enum "Gen. Journal Account Type"; AccountNo: Code[50]; Amount: Decimal; ApplyToDocumentType: Enum "Gen. Journal Document Type"; ApplyToDocumentNo: code[100])
     var
         l_recGenJournalLine: Record "Gen. Journal Line";
@@ -1128,7 +1155,8 @@ codeunit 82000 Stripe
         l_recGenJournalLine."Journal Template Name" := JournalTemplateName;
         l_recGenJournalLine."Journal Batch Name" := JournalBatchName;
         l_recGenJournalLine."Line No." := LineNo;
-        if l_recGenJournalLine.insert then;
+        //if l_recGenJournalLine.insert then;
+        l_recGenJournalLine.insert;
         l_recGenJournalLine."Posting Date" := PostingDate;
         l_recGenJournalLine."Document Type" := DocumentType;
         l_recGenJournalLine."Document No." := DocumentNo;
@@ -1137,7 +1165,8 @@ codeunit 82000 Stripe
         l_recGenJournalLine.validate(Amount, Amount);
         l_recGenJournalLine."Applies-to Doc. Type" := ApplyToDocumentType;
         l_recGenJournalLine."Applies-to Doc. No." := ApplyToDocumentNo;
-        if l_recGenJournalLine.Modify() then;
+        //  if l_recGenJournalLine.Modify() then;
+        l_recGenJournalLine.Modify();
         LineNo += 10000;
     end;
 

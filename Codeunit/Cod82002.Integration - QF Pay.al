@@ -131,7 +131,8 @@ codeunit 82002 "Integration - QFPay"
         l_recQFPayRefund.clisn := Clisn;
         l_recQFPayRefund.txdtm := Txdtm;
         l_recQFPayRefund.Origssn := Origssn;
-        MapRefundDocumentNo(l_recQFPayRefund, Origssn);
+        MapRefundDocumentNoAndCheckRefund(l_recQFPayRefund, Origssn);
+
         l_recQFPayRefund.Insert();
     end;
 
@@ -149,15 +150,19 @@ codeunit 82002 "Integration - QFPay"
         end;
     end;
 
-    procedure MapRefundDocumentNo(var QFPayRefund: Record "QFPay Refund"; Origssn: Text)
+    procedure MapRefundDocumentNoAndCheckRefund(var QFPayRefund: Record "QFPay Refund"; Origssn: Text)
     var
         l_recQFPayPayment: Record "QFPay Payment";
+        l_recQFPayServiceCharge: Record "QFPay Service Charge";
     begin
         l_recQFPayPayment.Reset();
         l_recQFPayPayment.SetFilter(syssn, Origssn);
         if l_recQFPayPayment.FindFirst() then begin
-            QFPayRefund."Sales Document No." := l_recQFPayPayment."Sales Document No.";
-            QFPayRefund."Sales Document Type" := l_recQFPayPayment."Sales Document Type"::Invoice;
+            if DT2Date(l_recQFPayPayment.sysdtm) <> DT2Date(QFPayRefund.sysdtm) then
+                if l_recQFPayServiceCharge.Get(QFPayRefund.pay_type) then
+                    if l_recQFPayServiceCharge."Refund Fee" then
+                        QFPayRefund."Refund Fee" := 15;
+
             QFPayRefund."Customer No." := l_recQFPayPayment."Customer No.";
         end;
     end;
@@ -312,6 +317,19 @@ codeunit 82002 "Integration - QFPay"
                                     l_recQFPayRefund.txamt,
                                     l_recQFPayRefund."Sales Document No.");
 
+                if l_recQFPayRefund."Refund Fee" <> 0 then
+                    InitRefundFeeGenJournalLine(l_recQFPaySetup."QFPay Refund Jnl. Template",
+                    l_recQFPaySetup."QFPay Refund Jnl. Batch",
+                    l_intLineNo,
+                    DT2Date(l_recQFPayRefund.paydtm),
+                    l_codDocNo,
+                    "Gen. Journal Account Type"::"G/L Account",
+                    l_recQFPaySetup."QF Pay Processing Fee G/L Acc.",
+                    l_recQFPayRefund."Refund Fee",
+                    "Gen. Journal Account Type"::"G/L Account",
+                    l_recQFPaySetup."Receiving Bank Account");
+
+
 
 
 
@@ -365,6 +383,31 @@ codeunit 82002 "Integration - QFPay"
         l_recGenJournalLine."Account Type" := AccountType;
         l_recGenJournalLine.validate("Account No.", AccountNo);
         l_recGenJournalLine.validate(Amount, Amount);
+        if l_recGenJournalLine.Modify() then;
+        LineNo += 10000;
+
+    end;
+
+
+
+    procedure InitRefundFeeGenJournalLine(JournalTemplate: Code[50]; JournalBatchCode: Code[50]; var LineNo: Integer; PostingDate: Date; DocumentNo: Code[100]; AccountType: Enum "Gen. Journal Account Type"; AccountNo: Code[50]; Amount: Decimal; BalAccountType: Enum "Gen. Journal Account Type"; BalAccountNo: Code[50])
+    var
+        l_recGenJournalLine: Record "Gen. Journal Line";
+    begin
+        l_recGenJournalLine.init;
+        l_recGenJournalLine."Journal Template Name" := JournalTemplate;
+        l_recGenJournalLine."Journal Batch Name" := JournalBatchCode;
+        l_recGenJournalLine."Line No." := LineNo;
+        if l_recGenJournalLine.insert then;
+        l_recGenJournalLine."Posting Date" := PostingDate;
+        l_recGenJournalLine."Document Type" := l_recGenJournalLine."Document Type"::Refund;
+        l_recGenJournalLine."Document No." := DocumentNo;
+        l_recGenJournalLine."Account Type" := AccountType;
+        l_recGenJournalLine.validate("Account No.", AccountNo);
+        l_recGenJournalLine.validate(Amount, Amount);
+        l_recGenJournalLine."Bal. Account Type" := BalAccountType;
+        l_recGenJournalLine.validate("Bal. Account No.", BalAccountNo);
+
         if l_recGenJournalLine.Modify() then;
         LineNo += 10000;
 

@@ -72,6 +72,11 @@ table 82009 "QFPay Refund"
             Caption = 'Original Transaction ID';
             DataClassification = ToBeClassified;
         }
+        field(14; "Refund Fee"; Decimal)
+        {
+            Caption = 'Refund Fee';
+            DataClassification = ToBeClassified;
+        }
 
 
         field(20; Status; Option)

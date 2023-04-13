@@ -5,7 +5,7 @@ page 82012 "QFPay Service Charge"
     PageType = List;
     SourceTable = "QFPay Service Charge";
     UsageCategory = Lists;
-    
+
     layout
     {
         area(content)
@@ -31,6 +31,10 @@ page 82012 "QFPay Service Charge"
                 field("Start Date"; Rec."Start Date")
                 {
                     ToolTip = 'Specifies the value of the Start Date field.';
+                }
+                field("Refund Fee"; Rec."Refund Fee")
+                {
+                    ApplicationArea = all;
                 }
             }
         }

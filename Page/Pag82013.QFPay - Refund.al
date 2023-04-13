@@ -64,6 +64,10 @@ page 82013 "QFPay - Refund"
                 {
                     ToolTip = 'Specifies the value of the Status field.';
                 }
+                field("Refund Fee"; Rec."Refund Fee")
+                {
+                    ToolTip = 'Specifies the value of the Refund Fee field.';
+                }
                 field("Sales Document No."; Rec."Sales Document No.")
                 {
                     ToolTip = 'Specifies the value of the Sales Document No. field.';

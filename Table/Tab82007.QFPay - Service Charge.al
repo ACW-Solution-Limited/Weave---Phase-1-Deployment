@@ -32,6 +32,11 @@ table 82007 "QFPay Service Charge"
             Caption = 'Start Date';
             DataClassification = ToBeClassified;
         }
+        field(6; "Refund Fee"; Boolean)
+        {
+            Caption = 'Refund Fee';
+            DataClassification = ToBeClassified;
+        }
     }
     keys
     {
