@@ -8,7 +8,8 @@ report 83000 "Lease Contract Create Invoices"
     {
         dataitem(LeaseContractHeader; "Lease Contract Header")
         {
-            DataItemTableView = sorting("No.") where(Status = filter(ConfirmedWithRoomAllocated | Active | "ReadyForCheck-in"));
+            //DataItemTableView = sorting("No.") where(Status = filter(ConfirmedWithRoomAllocated | Active | "ReadyForCheck-in"));
+            DataItemTableView = sorting("No.") where("Deposit Returned" = filter(false));
             RequestFilterFields = "No.", "Customer No.";
             trigger OnAfterGetRecord()
             var
@@ -409,7 +410,7 @@ report 83000 "Lease Contract Create Invoices"
                                 InsertDeferral(l_recSalesLine, l_recSalesHeader);
                             // Tender Type >>
                             //If l_recSalesLineTemp."Tender Type" <> '' then
-                            //ApplyEntri(LeaseContractHeader, l_recSalesHeader."No.", l_recSalesLiesforTenderTypeneTemp."Tender Type", l_recSalesLineTemp."Unit Price");
+                            //ApplyEntriesforTenderType(LeaseContractHeader, l_recSalesHeader."No.", l_recSalesLineTemp."Tender Type", l_recSalesLineTemp."Unit Price");
                             // Tender Type <<
                             l_recSalesLine.Modify(True);
                             ModifyBillingScheduleDocumentTypeNo(l_recSalesLine."Contract No.", l_recSalesLine."Billing Schedule Line No.", g_optBillingScheudleDocumentType::"Credit Memo", l_recSalesHeader."No.");

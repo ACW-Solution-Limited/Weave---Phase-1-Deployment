@@ -8,17 +8,24 @@ report 83013 "Approve/Reject PO PowerApp"
     {
         dataitem(ApprovalRecordforPowerApp; "Approval Record for PowerApp")
         {
-            DataItemTableView = sorting("Purchase No.") where(Completed = filter(false));
+            DataItemTableView = sorting("Line No") where(Completed = filter(false));
             trigger OnAfterGetRecord()
             var
                 l_recApprovalEntry: Record "Approval Entry";
+                l_recApprovalEntryApprove: Record "Approval Entry";
 
                 ApprovalsMgmt: Codeunit "Approvals Mgmt.";
             begin
                 l_recApprovalEntry.reset;
                 l_recApprovalEntry.SetRange("Workflow Step Instance ID", WorkingInstanceID);
-                If l_recApprovalEntry.FindLast() then begin
+                l_recApprovalEntry.SetRange(Status, l_recApprovalEntry.Status::Open);
+                l_recApprovalEntry.SetRange("Sequence No.", "Sequence No.");
+                If l_recApprovalEntry.Findfirst() then begin
                     If "Approve/Reject" = "Approve/Reject"::Approve then
+                        /*l_recApprovalEntryApprove.SetRange("Workflow Step Instance ID", WorkingInstanceID);
+                        l_recApprovalEntryApprove.SetRange(Status, l_recApprovalEntry.Status::Open);
+                        l_recApprovalEntryApprove.SetRange("Sequence No.", 1);
+                        l_recApprovalEntryApprove.FindSet();*/
                         ApprovalsMgmt.ApproveApprovalRequests(l_recApprovalEntry);
                     If "Approve/Reject" = "Approve/Reject"::Reject then
                         ApprovalsMgmt.RejectApprovalRequests(l_recApprovalEntry);

@@ -1062,13 +1062,13 @@ codeunit 82000 Stripe
 
                 InsertGenJournalLine(JournalBatch."Journal Template Name", JournalBatch.Name, LineNo, StripePayment."Posting Date", "Gen. Journal Document Type"::Payment, l_codDocNo,
                  "Gen. Journal Account Type"::"Bank Account", l_recStripePaymentSetup."Stripe Bank Account", StripePayment."Net Amount" * -1,
-                 "Gen. Journal Document Type"::Invoice, StripePayment."Sales Document No.");
+                 "Gen. Journal Document Type"::Invoice, '');
 
 
                 if StripePayment."Stripe Fee Amount" <> 0 then  // Stripe Service Fee Amount 
                     InsertGenJournalLine(JournalBatch."Journal Template Name", JournalBatch.Name, LineNo, StripePayment."Posting Date", "Gen. Journal Document Type"::Payment, l_codDocNo,
-                   "Gen. Journal Account Type"::"G/L Account", l_recStripePaymentSetup."Stripe Processing Fee G/L Acc.", StripePayment."Stripe Fee Amount",
-                   "Gen. Journal Document Type"::Invoice, StripePayment."Sales Document No.");
+                   "Gen. Journal Account Type"::"G/L Account", l_recStripePaymentSetup."Stripe Processing Fee G/L Acc.", StripePayment."Stripe Fee Amount" * -1,
+                   "Gen. Journal Document Type"::Invoice, '');
 
 
 
@@ -1128,7 +1128,7 @@ codeunit 82000 Stripe
                 l_codDocNo := l_cduNoSeriesMgt.GetNextNo(JournalBatch."No. Series", StripeRefund."Posting Date", false); //<Try this new method
 
                 InsertGenJournalLine(JournalBatch."Journal Template Name", JournalBatch.Name, LineNo,
-                StripeRefund."Posting Date", "Gen. Journal Document Type"::"Refund", l_codDocNo, "Gen. Journal Account Type"::"Bank Account", l_recStripePaymentSetup."Receiving Bank Account",
+                StripeRefund."Posting Date", "Gen. Journal Document Type"::"Refund", l_codDocNo, "Gen. Journal Account Type"::"Bank Account", l_recStripePaymentSetup."Stripe Bank Account",
                 StripeRefund.Amount, "Gen. Journal Document Type"::" ", '');
 
                 InsertGenJournalLine(JournalBatch."Journal Template Name", JournalBatch.Name, LineNo, StripeRefund."Posting Date", "Gen. Journal Document Type"::Refund, l_codDocNo,

@@ -16,6 +16,7 @@ codeunit 83153 AttachedDocuments
         StorageServiceAuthorization: Codeunit "Storage Service Authorization";
         l_recSalesInvHeader: Record "Sales Invoice Header";
         l_recSalseCreditMemo: Record "Sales Cr.Memo Header";
+        ABSOptionalParameters: Codeunit "ABS Optional Parameters";
         InS: InStream;
         OutS: OutStream;
         tempBlob: Codeunit "Temp Blob";
@@ -85,6 +86,9 @@ codeunit 83153 AttachedDocuments
             end;
         end;
     end;
+
+
+
 
 
 }

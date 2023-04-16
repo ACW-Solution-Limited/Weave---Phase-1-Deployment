@@ -55,6 +55,12 @@ table 83028 "Approval Record for PowerApp"
             DataClassification = ToBeClassified;
         }
 
+        field(9; "Sequence No."; Integer)
+        {
+            Caption = 'Sequence No.';
+            DataClassification = ToBeClassified;
+        }
+
     }
     keys
     {
@@ -64,18 +70,5 @@ table 83028 "Approval Record for PowerApp"
         }
 
     }
-    trigger OnInsert()
-    begin
-        //   DeleteAll();
-    end;
-
-    // procedure GetNextLineNo(): Integer
-
-    // begin
-    //     if FindLast() then
-    //         exit("Line No" + 10000)
-    //     else
-    //         exit(10000)
-    // end;
 
 }

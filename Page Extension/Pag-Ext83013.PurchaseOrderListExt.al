@@ -27,29 +27,7 @@ pageextension 83013 "Purchase Order List Ext" extends "Purchase Order List"
 
     }
 
-    actions
-    {
-        addlast(processing)
-        {
 
-            action("Testing")
-            {
-                ApplicationArea = All;
-                image = NewStatusChange;
-                Promoted = true;
-                PromotedCategory = Category7;
-                trigger OnAction()
-                var
-                    l_cduapprovalEntries: Codeunit "Approval Entries";
-                begin
-                    l_cduapprovalEntries.Run();
-                end;
-            }
-
-        }
-
-
-    }
 
 
 

@@ -45,6 +45,10 @@ page 83032 APIApproveRecord
                     Caption = 'Completed';
                 }
 
+                field(sequenceNo; Rec."Sequence No.")
+                {
+                    Caption = 'Completed';
+                }
                 field(systemCreatedAt; Rec.SystemCreatedAt)
                 {
                     Caption = 'SystemCreatedAt';

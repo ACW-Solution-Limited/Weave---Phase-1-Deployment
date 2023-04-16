@@ -57,6 +57,9 @@ report 83020 "Rent Roll Summary"
                 if g_decOccupancyinPeriodDays < 0 then
                     g_decOccupancyinPeriodDays := 0;
 
+                if (g_decOccupancyinPeriodDays > g_datEndDate - g_datStartDate + 1) then
+                    g_decOccupancyinPeriodDays := g_datEndDate - g_datStartDate + 1;
+
                 g_decMonthlyRent := CalcMonthyRent();
                 g_decOccupancyDaysAdjusted := g_decOccupancyinPeriodDays;
                 g_decGrossRevenueToBeRecognised := LeaseContractHeader."Monthly Rent" * g_decOccupancyinPeriodDays / (g_datEndDate - g_datStartDate + 1);
@@ -197,7 +200,8 @@ report 83020 "Rent Roll Summary"
     procedure CalcMonthyRent(): Decimal
     begin
 
-        if LeaseContractHeader."Payment Type" = LeaseContractHeader."Payment Type"::Monthly then
+        if (LeaseContractHeader."Payment Type" = LeaseContractHeader."Payment Type"::Monthly) or
+         (LeaseContractHeader."Payment Type" = LeaseContractHeader."Payment Type"::"Pre-paid") then
             exit(LeaseContractHeader."Monthly Rent")
         else
             exit(LeaseContractHeader."Daily Rent" * 30);
