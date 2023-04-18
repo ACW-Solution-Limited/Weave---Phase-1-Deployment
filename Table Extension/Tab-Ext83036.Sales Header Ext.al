@@ -35,7 +35,11 @@ tableextension 83036 "Sales Header Ext" extends "Sales Header"
         field(83007; "Contract End Date"; Date) { Caption = 'Contract End Date'; }
 
         field(83008; "Contract Termination Date"; Date) { Caption = 'Contract Termination Date'; }
-        field(83009; "Commission Type"; option) { Caption = 'Comission Type'; OptionMembers = " ",DirectBooking,B2COutreach,B2BOutreach,B2CCompanyAssign,B2BRenewal,B2CRenewal; }
+        field(83009; "Commission Type"; option)
+        {
+            Caption = 'Comission Type';
+            OptionMembers = " ",DirectBooking,B2COutreach,B2BOutreach,B2CCompanyAssign,B2BRenewal,B2CRenewal,"B2CCompanyAssign-PropertyViewing(OperationTeam)";
+        }
         field(83010; "Calculation Type"; Enum "Calculation Type") { Caption = 'Calculation Type'; }
 
         field(83011; "Commission Amount"; Decimal) { Caption = 'Commision Amount / %'; }

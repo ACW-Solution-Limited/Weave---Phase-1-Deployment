@@ -33,6 +33,8 @@ report 83012 "Sync PO to Companies"
                     l_recPurchaseLine.ChangeCompany(g_Companyfilter);
                     l_recPurchaseLine.Init();
                     l_recPurchaseLine.TransferFields(PurchaseLine);
+                    l_recPurchaseLine."Document No." := g_Purchase_No;
+                    // Message('%1 :%2', "No.", g_Purchase_No);
                     l_recPurchaseLine.Insert();
                 end;
 
@@ -47,6 +49,7 @@ report 83012 "Sync PO to Companies"
                 NoSeriesMgt: Codeunit NoSeriesManagement;
 
             begin
+                Clear(g_Purchase_No);
                 l_PurchasesPayablesSetup.reset;
                 l_recLocation.reset;
                 If ("Sync to Companies" = true) OR ("Assigned PO No." <> '') then
@@ -66,9 +69,11 @@ report 83012 "Sync PO to Companies"
                 //l_recPurchaseHeader := PurchaseHeader;
                 l_recPurchaseHeader.TransferFields(PurchaseHeader);
                 l_recPurchaseHeader."No." := NoSeriesMgt.GetNextNo(l_PurchasesPayablesSetup."Order Nos.", WorkDate(), true);
+                g_Purchase_No := l_recPurchaseHeader."No.";
                 l_recPurchaseHeader."Assigned PO No." := PurchaseHeader."No.";
                 l_recPurchaseHeader.Insert();
-                Message('%1 :%2', "No.", g_Companyfilter);
+                // Message('%1 :%2', "No.", g_Companyfilter);
+                //  Message('%1 :%2', "No.", g_Purchase_No);
                 "Assigned PO No." := l_recPurchaseHeader."No.";
                 "Sync to Companies" := true;
                 Modify();
@@ -97,4 +102,5 @@ report 83012 "Sync PO to Companies"
     }
     var
         g_Companyfilter: Text[100];
+        g_Purchase_No: Code[20];
 }

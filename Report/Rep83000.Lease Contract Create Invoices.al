@@ -79,12 +79,17 @@ report 83000 "Lease Contract Create Invoices"
         l_recSalesLineTemp: Record "Sales Line" temporary;
         l_recSalesHeader: Record "Sales Header";
         l_recSalesLine: Record "Sales Line";
+        l_recVATPostingSetup: Record "VAT Posting Setup";
+        l_recItem: Record Item;
+        l_recGLAccount: Record "G/L Account";
+        l_recCustomer: Record Customer;
+        l_codeVATBusinessPostingGroup: Code[50];
+        l_codeVATProductPostingGroup: Code[50];
         l_intLineNo: Integer;
         l_codDocNo: Code[20];
         l_recTenderTypeSetup: Record "Tender Type Setup";
         l_decAmt: Decimal;
         l_recLeaseContractSetup: Record "Lease Contract Setup";
-        l_recItem: Record Item;
 
     begin
         l_recLeaseContractSetup.Get();
@@ -348,6 +353,7 @@ report 83000 "Lease Contract Create Invoices"
                             l_recSalesLineTemp.Quantity := g_recLeaseBillingSchedule_Temp."Additional Sales Item Quantity";
                             l_recSalesLineTemp."Unit Price" := g_recLeaseBillingSchedule_Temp."Add. Sales Item Unit Price";
                             l_recSalesLineTemp.Amount := g_recLeaseBillingSchedule_Temp.Amount;
+
                             //Message('Item No %1', l_recItem."No.");
                         end;
                 end;
@@ -367,8 +373,31 @@ report 83000 "Lease Contract Create Invoices"
                 l_recSalesLineTemp.SetRange("Document No.", l_recSalesHeaderTemp."No.");
                 if l_recSalesLineTemp.findset then
                     repeat
-                        l_decAmt += l_recSalesLineTemp."Unit Price";
+                        case l_recSalesLineTemp.Type of
+                            l_recSalesLineTemp.Type::"G/L Account":
+                                begin
+                                    l_recGLAccount.Get(l_recSalesLineTemp."No.");
+                                    l_codeVATBusinessPostingGroup := l_recGLAccount."VAT Bus. Posting Group";
+                                    l_codeVATProductPostingGroup := l_recGLAccount."VAT Prod. Posting Group";
+                                end;
+                            l_recSalesLineTemp.Type::Item:
+                                begin
+                                    l_recItem.Get(l_recSalesLineTemp."No.");
+                                    l_codeVATProductPostingGroup := l_recItem."VAT Prod. Posting Group";
+                                    l_recCustomer.Get(l_recSalesHeaderTemp."Bill-to Customer No.");
+                                    l_codeVATBusinessPostingGroup := l_recCustomer."VAT Bus. Posting Group";
+                                end;
+                        end;
+
+                        if l_recVATPostingSetup.Get(l_codeVATBusinessPostingGroup, l_codeVATProductPostingGroup) then
+                            l_decAmt += l_recSalesLineTemp."Unit Price" * (1 + (l_recVATPostingSetup."VAT %" / 100))
+                        else
+                            l_decAmt += l_recSalesLineTemp."Unit Price";
+
+
                     until l_recSalesLineTemp.next = 0;
+
+
 
                 if l_decAmt >= 0 then begin
                     l_recSalesHeader.init;
@@ -657,14 +686,16 @@ report 83000 "Lease Contract Create Invoices"
         l_recLeaseContractSetup.Get();
         l_recGeneralLedgerSetup.Get();
 
+        if (SalesLine."Lease To Date" = 0D) or (SalesLine."Lease From Date" = 0D) then
+            exit;
+
+
 
         SalesLine."Deferral Code" := l_recLeaseContractSetup."Rental Income Deferral Templ.";
 
         if SalesLine."Deferral Code" = '' then
             exit;
 
-        if (SalesLine."Lease To Date" = 0D) or (SalesLine."Lease From Date" = 0D) then
-            exit;
 
         l_intNoOfPeriod := (Date2DMY(SalesLine."Lease To Date", 3) - Date2DMY(SalesLine."Lease From Date", 3)) * 12
                                               + (Date2DMY(SalesLine."Lease To Date", 2) - Date2DMY(SalesLine."Lease From Date", 2)) + 1;
@@ -826,6 +857,9 @@ report 83000 "Lease Contract Create Invoices"
                 exit(l_recSalesperson.Code);
         end;
     end;
+
+
+
 
     /*procedure ApplyEntriesforTenderType(Var LeaseContractHeader: Record "Lease Contract Header"; SalesHeaderNo: Code[20]; TenderType: code[20]; DiscountAmt: Decimal)
     var

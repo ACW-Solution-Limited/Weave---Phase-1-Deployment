@@ -25,6 +25,10 @@ page 83033 "Approval Record"
                 {
                     ToolTip = 'Specifies the value of the Line No. field.';
                 }
+                field("Sequence No."; Rec."Sequence No.")
+                {
+                    ToolTip = 'Specifies the value of the Sequence No. field.';
+                }
                 field("Approve/Reject"; Rec."Approve/Reject")
                 {
                     ToolTip = 'Specifies the value of the Approve/Reject field.';

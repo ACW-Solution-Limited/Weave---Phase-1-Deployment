@@ -379,10 +379,17 @@ codeunit 83001 "Lease Contract Management"
                             l_intLineNo += 10000;
                         l_recLeaseContractBillingScheduleinsertTemp.init;
                         l_recLeaseContractBillingScheduleinsertTemp."Line No." := l_intLineNo;
-                        if DT2DATE(p_recLeaseContractHeader."Contract End Date") > WorkDate() then
-                            l_recLeaseContractBillingScheduleinsertTemp."Posting Date" := DT2date(p_recLeaseContractHeader."Contract Termination Date")
-                        else
-                            l_recLeaseContractBillingScheduleinsertTemp."Posting Date" := workdate;
+                        // if DT2DATE(p_recLeaseContractHeader."Contract End Date") > WorkDate() then
+                        // Adjusting Positing Date >>
+                        If WorkDate() < DT2date(p_recLeaseContractHeader."Contract Termination Date") then begin
+                            l_recLeaseContractBillingScheduleinsertTemp."Due Date" := l_recLeaseContractBillingSchedule."Due Date";
+                            l_recLeaseContractBillingScheduleinsertTemp."Posting Date" := l_recLeaseContractBillingSchedule."Posting Date";
+                        end else begin
+                            l_recLeaseContractBillingScheduleinsertTemp."Posting Date" := DT2date(p_recLeaseContractHeader."Contract Termination Date");
+                            l_recLeaseContractBillingScheduleinsertTemp."Due Date" := 0D;
+                        end;
+                        // Adjusting Positing Date <<
+
                         l_recLeaseContractBillingScheduleinsertTemp."Customer No." := p_recLeaseContractHeader."Customer No.";
                         l_recLeaseContractBillingScheduleinsertTemp."Contract Start Date" := l_recLeaseContractBillingSchedule."Contract Start Date";
                         l_recLeaseContractBillingScheduleinsertTemp."Contract End Date" := l_recLeaseContractBillingSchedule."Contract End Date";
@@ -407,11 +414,15 @@ codeunit 83001 "Lease Contract Management"
                                 l_recLeaseContractBillingScheduleinsertTemp.Init();
                                 l_recLeaseContractBillingScheduleinsertTemp."Document No." := '';
                                 l_recLeaseContractBillingScheduleinsertTemp."Line No." := l_intLineNo;
-                                if DT2date(p_recLeaseContractHeader."Contract Termination Date") > WorkDate() then
-                                    l_recLeaseContractBillingScheduleinsertTemp."Posting Date" := DT2date(p_recLeaseContractHeader."Contract Termination Date")
-                                else
-                                    l_recLeaseContractBillingScheduleinsertTemp."Posting Date" := workdate;
-                                l_recLeaseContractBillingScheduleinsertTemp."Due Date" := 0D;
+                                // Adjusting Positing Date >>
+                                If WorkDate() < DT2date(p_recLeaseContractHeader."Contract Termination Date") then begin
+                                    l_recLeaseContractBillingScheduleinsertTemp."Posting Date" := l_recLeaseContractBillingSchedule."Posting Date";
+                                    l_recLeaseContractBillingScheduleinsertTemp."Due Date" := l_recLeaseContractBillingSchedule."Due Date";
+                                end else begin
+                                    l_recLeaseContractBillingScheduleinsertTemp."Posting Date" := DT2date(p_recLeaseContractHeader."Contract Termination Date");
+                                    l_recLeaseContractBillingScheduleinsertTemp."Due Date" := 0D;
+                                end;
+                                // Adjusting Positing Date <<
                                 // l_recLeaseContractBillingScheduleinsertTemp."Contract End Date" := DT2date(p_recLeaseContractHeader."Contract Termination Date");
                                 l_recLeaseContractBillingScheduleinsertTemp."Contract End Date" := l_recLeaseContractBillingSchedule."Contract End Date";
                                 //To handle short day And Prepaid case
@@ -681,10 +692,15 @@ codeunit 83001 "Lease Contract Management"
                     l_intLineNo += 10000;
                     l_recLeaseContractBillingScheduleinsertTemp.init;
                     l_recLeaseContractBillingScheduleinsertTemp."Line No." := l_intLineNo;
-                    if DT2date(p_recLeaseContractHeader."Contract Termination Date") > WorkDate() then
-                        l_recLeaseContractBillingScheduleinsertTemp."Posting Date" := DT2date(p_recLeaseContractHeader."Contract Termination Date")
-                    else
-                        l_recLeaseContractBillingScheduleinsertTemp."Posting Date" := workdate;
+                    // Adjusting Positing Date >>
+                    If WorkDate() < DT2date(p_recLeaseContractHeader."Contract Termination Date") then begin
+                        l_recLeaseContractBillingScheduleinsertTemp."Posting Date" := l_recLeaseContractBillingSchedule2."Posting Date";
+                        l_recLeaseContractBillingScheduleinsertTemp."Due Date" := l_recLeaseContractBillingSchedule2."Due Date";
+                    end else begin
+                        l_recLeaseContractBillingScheduleinsertTemp."Posting Date" := DT2date(p_recLeaseContractHeader."Contract Termination Date");
+                        l_recLeaseContractBillingScheduleinsertTemp."Due Date" := 0D;
+                    end;
+                    // Adjusting Positing Date <<
                     l_recLeaseContractBillingScheduleinsertTemp."Contract Start Date" := l_recLeaseContractBillingSchedule2."Contract Start Date";
                     l_recLeaseContractBillingScheduleinsertTemp."Contract End Date" := l_recLeaseContractBillingSchedule2."Contract End Date";
                     l_recLeaseContractBillingScheduleinsertTemp."Due Date" := 0D;
@@ -706,11 +722,15 @@ codeunit 83001 "Lease Contract Management"
                     If (l_recLeaseContractBillingSchedule2.Status <> l_recLeaseContractBillingSchedule2.Status::" ") OR (l_recLeaseContractBillingSchedule2."Stripe Invoice ID" <> '') then begin
                         l_intLineNo += 10000;
                         l_recLeaseContractBillingScheduleinsertTemp.init;
-                        if DT2date(p_recLeaseContractHeader."Contract Termination Date") > WorkDate() then
-                            l_recLeaseContractBillingScheduleinsertTemp."Posting Date" := DT2date(p_recLeaseContractHeader."Contract Termination Date")
-                        else
-                            l_recLeaseContractBillingScheduleinsertTemp."Posting Date" := workdate;
-                        l_recLeaseContractBillingScheduleinsertTemp."Due Date" := 0D;
+                        // Adjusting Positing Date >>
+                        If WorkDate() < DT2date(p_recLeaseContractHeader."Contract Termination Date") then begin
+                            l_recLeaseContractBillingScheduleinsertTemp."Posting Date" := l_recLeaseContractBillingSchedule2."Posting Date";
+                            l_recLeaseContractBillingScheduleinsertTemp."Due Date" := l_recLeaseContractBillingSchedule2."Due Date";
+                        end else begin
+                            l_recLeaseContractBillingScheduleinsertTemp."Posting Date" := DT2date(p_recLeaseContractHeader."Contract Termination Date");
+                            l_recLeaseContractBillingScheduleinsertTemp."Due Date" := 0D;
+                        end;
+                        // Adjusting Positing Date <<
                         l_recLeaseContractBillingScheduleinsertTemp."Line No." := l_intLineNo;
                         // l_recLeaseContractBillingScheduleinsertTemp."Contract End Date" := DT2date(p_recLeaseContractHeader."Contract Termination Date");
                         l_recLeaseContractBillingScheduleinsertTemp."Contract End Date" := l_recLeaseContractBillingSchedule2."Contract End Date";
@@ -754,11 +774,16 @@ codeunit 83001 "Lease Contract Management"
         l_recLeaseContractBillingScheduleinsertTemp2.Init();
         l_recLeaseContractBillingScheduleinsertTemp2."Document No." := '';
         l_recLeaseContractBillingScheduleinsertTemp2."Line No." := l_intLineNo;
-        if DT2date(p_recLeaseContractHeader."Contract Termination Date") > WorkDate() then
-            l_recLeaseContractBillingScheduleinsertTemp2."Posting Date" := DT2date(p_recLeaseContractHeader."Contract Termination Date")
-        else
-            l_recLeaseContractBillingScheduleinsertTemp2."Posting Date" := workdate;
-        l_recLeaseContractBillingScheduleinsertTemp2."Due Date" := 0D;
+        // Adjusting Positing Date >>
+        If WorkDate() < DT2date(p_recLeaseContractHeader."Contract Termination Date") then begin
+            l_recLeaseContractBillingScheduleinsertTemp2."Posting Date" := l_recLeaseContractBillingSchedule."Posting Date";
+            l_recLeaseContractBillingScheduleinsertTemp2."Due Date" := l_recLeaseContractBillingSchedule."Due Date";
+        end else begin
+            l_recLeaseContractBillingScheduleinsertTemp2."Posting Date" := DT2date(p_recLeaseContractHeader."Contract Termination Date");
+            l_recLeaseContractBillingScheduleinsertTemp2."Due Date" := 0D;
+        end;
+        // Adjusting Positing Date <<
+
         l_recLeaseContractBillingScheduleinsertTemp2."Tender Type" := l_recLeaseContractBillingSchedule."Tender Type";
         l_recLeaseContractBillingScheduleinsertTemp2."Customer No." := p_recLeaseContractHeader."Customer No.";
         l_recLeaseContractBillingScheduleinsertTemp2."Contract End Date" := DT2date(p_recLeaseContractHeader."Contract Termination Date");
@@ -805,11 +830,16 @@ codeunit 83001 "Lease Contract Management"
     begin
         Clear(l_recLeaseContractBillingScheduleinsertTemp2);
         l_intLineNo += 10000;
-        if DT2date(p_recLeaseContractHeader."Contract Termination Date") > WorkDate() then
-            l_recLeaseContractBillingScheduleinsertTemp2."Posting Date" := DT2date(p_recLeaseContractHeader."Contract Termination Date")
-        else
-            l_recLeaseContractBillingScheduleinsertTemp2."Posting Date" := WorkDate();
-        l_recLeaseContractBillingScheduleinsertTemp2."Due Date" := 0D;
+        // Adjusting Positing Date >>
+        If WorkDate() < DT2date(p_recLeaseContractHeader."Contract Termination Date") then begin
+            l_recLeaseContractBillingScheduleinsertTemp2."Posting Date" := l_recLeaseContractBillingSchedule2."Posting Date";
+            l_recLeaseContractBillingScheduleinsertTemp2."Due Date" := l_recLeaseContractBillingSchedule2."Due Date";
+        end else begin
+            l_recLeaseContractBillingScheduleinsertTemp2."Posting Date" := DT2date(p_recLeaseContractHeader."Contract Termination Date");
+            l_recLeaseContractBillingScheduleinsertTemp2."Due Date" := 0D;
+        end;
+        // Adjusting Positing Date >>
+
         l_recLeaseContractBillingScheduleinsertTemp2."Customer No." := p_recLeaseContractHeader."Customer No.";
         l_recLeaseContractBillingScheduleinsertTemp2."Line No." := l_intLineNo;
         l_recLeaseContractBillingScheduleinsertTemp2."Contract End Date" := DT2date(p_recLeaseContractHeader."Contract Termination Date");

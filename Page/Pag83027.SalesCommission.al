@@ -283,7 +283,7 @@ page 83027 "Sales Commission"
                 end else begin
                     // >> For Renewal Commission Type - No need to refer to deferral schedule
                     If (l_recPostedSalesInvoice."Posting Date" >= DateStartfilter) And (l_recPostedSalesInvoice."Posting Date" <= DateEndfilter) then begin
-                        // >> check whether the contract period more 3 months
+                        // >> check whether the contract period more assigned period 
                         l_recSalesComissionSetup.reset;
                         l_recBillingSchedule.reset;
                         l_sequence := 0;
@@ -296,9 +296,9 @@ page 83027 "Sales Commission"
                                 If l_recBillingSchedule."No. of Days Current Month" = l_recBillingSchedule."No. of Days to Bill" then
                                     l_sequence += 1;
                             until l_recBillingSchedule.Next = 0;
-
+                        // <<check whether the contract period more assigned period 
                         If l_sequence >= l_recSalesComissionSetup."Minimum Contract Period" then begin
-                            // << check whether the contract period more 3 months
+
                             l_recPostedSalesInvoiceLine.Reset();
                             l_recPostedSalesInvoiceLine.setrange("Document No.", l_recPostedSalesInvoice."No.");
                             l_recPostedSalesInvoiceLine.SetFilter("Tender Type", '=%1', '');
@@ -352,7 +352,7 @@ page 83027 "Sales Commission"
                         end;
                 end;
 
-                If (l_recPostedCreditMemo."Commission Type" <> l_recPostedCreditMemo."Commission Type"::B2BRenewal) And (l_recPostedCreditMemo."Commission Type" <> l_recPostedCreditMemo."Commission Type"::B2CRenewal) then begin
+                If l_recPostedCreditMemo."Commission Type" <> l_recPostedCreditMemo."Commission Type"::B2CRenewal then begin
                     l_PostedDeferralLine.reset;
                     l_PostedDeferralLine.SetRange("Document No.", l_recPostedCreditMemo."No.");
                     l_PostedDeferralLine.SetFilter("Posting Date", '%1..%2', DateStartfilter, DateEndfilter);
@@ -383,7 +383,7 @@ page 83027 "Sales Commission"
 
                     // >> For Renewal Commission Type - No need to refer to deferral schedule
                     If (l_recPostedCreditMemo."Posting Date" >= DateStartfilter) And (l_recPostedCreditMemo."Posting Date" <= DateEndfilter) then begin
-                        //      
+                        // >> check whether the contract period more assigned period 
                         l_sequence := 0;
                         l_recSalesComissionSetup.reset;
                         l_recBillingSchedule.reset;
@@ -397,10 +397,10 @@ page 83027 "Sales Commission"
                                 If l_recBillingSchedule."No. of Days Current Month" = l_recBillingSchedule."No. of Days to Bill" then
                                     l_sequence += 1;
                             until l_recBillingSchedule.Next = 0;
-
+                        // >> check whether the contract period more assigned period 
                         If l_sequence >= l_recSalesComissionSetup."Minimum Contract Period" then begin
 
-                            //
+
                             l_recPostedCreditMemoLine.reset;
                             l_recPostedCreditMemoLine.setrange("Document No.", l_recPostedCreditMemo."No.");
                             l_recPostedCreditMemoLine.SetFilter("Tender Type", '=%1', '');
@@ -418,7 +418,7 @@ page 83027 "Sales Commission"
                             l_recCommissionTemp.Date := l_recPostedCreditMemo."Posting Date";
                             l_recCommissionTemp.validate(Salesperson, l_recPostedCreditMemo."Salesperson Code");
 
-                            l_recCommissionTemp."Commission Amount" := l_Commission;
+                            l_recCommissionTemp."Commission Amount" := -l_Commission;
                             l_recCommissionTemp."invoice Amount" := l_recPostedCreditMemo."Amount Including VAT";
                             l_recCommissionTemp."Invoice Amount Including VAT" := l_recPostedCreditMemo."Amount Including VAT";
                             // >> For Renewal Commission Type - No need to refer to deferral schedule

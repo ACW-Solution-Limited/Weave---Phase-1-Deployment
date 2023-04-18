@@ -204,8 +204,7 @@ report 83020 "Rent Roll Summary"
          (LeaseContractHeader."Payment Type" = LeaseContractHeader."Payment Type"::"Pre-paid") then
             exit(LeaseContractHeader."Monthly Rent")
         else
-            exit(LeaseContractHeader."Daily Rent" * 30);
-
+            exit(LeaseContractHeader."Daily Rent" * Date2DMY(CalcDate('CM', g_datStartDate), 1));
 
     end;
 

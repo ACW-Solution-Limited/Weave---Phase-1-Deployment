@@ -17,6 +17,15 @@ table 83024 "Sales Commission Setup"
             DataClassification = ToBeClassified;
             NotBlank = True;
             // OptionMembers = "","By Percentage","By Amount";
+            trigger OnValidate()
+
+            begin
+                If Type = Rec.Type::B2CRenewal then
+                    If "Calculation Type" = "Calculation Type"::ByPrecentage then
+                        Error('%1', 'The calculation type cannot be by percentage for B2CRenewal.');
+            end;
+
+
         }
         field(3; Amount; Decimal)
         {
