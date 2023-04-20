@@ -134,7 +134,6 @@ report 83003 "Create Expense Claim PO"
 
             l_recPurchaseLine.Validate("Direct Unit Cost", ExpenseClaim.Amount);
 
-            l_recPurchaseLine.Description := ExpenseClaim.Description;
 
             if l_recPurchaseLine.Modify() then;
 

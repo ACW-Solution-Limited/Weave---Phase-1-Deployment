@@ -14,6 +14,28 @@ pageextension 83020 "General Ledger Entries Ext" extends "General Ledger Entries
 
         }
 
+        addafter("Source No.")
+        {
+            field("Customer Name"; g_txtCustomerName) { ApplicationArea = all; Editable = false; }
+        }
+
+        addafter(Description)
+        {
+            field("Invoice Description"; Rec."Invoice Description") { ApplicationArea = all; Editable = false; }
+        }
+
     }
+
+    trigger OnAfterGetRecord()
+    begin
+        if g_recCustomer.Get(Rec."Source No.") then
+            g_txtCustomerName := g_recCustomer.Name
+        else
+            g_txtCustomerName := '';
+    end;
+
+    var
+        g_txtCustomerName: Text;
+        g_recCustomer: Record Customer;
 
 }
