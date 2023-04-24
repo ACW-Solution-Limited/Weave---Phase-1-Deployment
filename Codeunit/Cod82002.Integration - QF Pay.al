@@ -107,7 +107,7 @@ codeunit 82002 "Integration - QFPay"
         l_recQFPayment.clisn := Clisn;
         l_recQFPayment.txdtm := Txdtm;
         l_recQFPayment."Service Charge" := CalculateServiceChargeByTenderType(PayType, l_recQFPayment.txamt);
-        MapDocumentNo(l_recQFPayment, OutTradeNo);
+        MapDocumentNo(l_recQFPayment, Syssn);
         l_recQFPayment.Insert();
     end;
 
@@ -137,12 +137,12 @@ codeunit 82002 "Integration - QFPay"
     end;
 
 
-    procedure MapDocumentNo(var QFPayment: Record "QFPay Payment"; OutTradeNo: Code[250])
+    procedure MapDocumentNo(var QFPayment: Record "QFPay Payment"; Syssn: Code[250])
     var
         l_recSalesInvoiceHeader: Record "Sales Invoice Header";
     begin
         l_recSalesInvoiceHeader.Reset();
-        l_recSalesInvoiceHeader.SetFilter("Stripe Invoice ID", OutTradeNo);
+        l_recSalesInvoiceHeader.SetFilter("Stripe Invoice ID", Syssn);
         if l_recSalesInvoiceHeader.FindFirst() then begin
             QFPayment."Sales Document No." := l_recSalesInvoiceHeader."No.";
             QFPayment."Sales Document Type" := QFPayment."Sales Document Type"::Invoice;
