@@ -23,7 +23,7 @@ report 83003 "Create Expense Claim PO"
                 trigger OnAfterGetRecord()
                 begin
                     if g_boolCreatePurchaseHeader then
-                        g_codeNewPONo := InsertPurchaseHeader(ExpenseClaimAdmin);
+                        g_codeNewPONo := InsertPurchaseHeader(ExpenseClaimAdmin, ExpenseClaim);
 
                     InsertPurchaseLine(ExpenseClaim);
                 end;
@@ -90,7 +90,7 @@ report 83003 "Create Expense Claim PO"
         end;
     end;
 
-    procedure InsertPurchaseHeader(ExpenseClaimAdmin: Record "Expense Claim Admin"): Code[50]
+    procedure InsertPurchaseHeader(ExpenseClaimAdmin: Record "Expense Claim Admin"; ExpenseClaim: Record "Expense Claim"): Code[50]
     var
         l_recPurchaseHeader: Record "Purchase Header";
     begin
@@ -98,8 +98,10 @@ report 83003 "Create Expense Claim PO"
         l_recPurchaseHeader.init;
         l_recPurchaseHeader."No." := '';
         l_recPurchaseHeader."Document Type" := l_recPurchaseHeader."Document Type"::Order;
-        l_recPurchaseHeader."Document Date" := g_datEnd;
-        l_recPurchaseHeader."Posting Date" := g_datEnd;
+        l_recPurchaseHeader."Document Date" := WorkDate();
+        l_recPurchaseHeader."Posting Date" := WorkDate();
+        l_recPurchaseHeader."Vendor Invoice No." := ExpenseClaim."No.";
+
 
         if l_recPurchaseHeader.insert(true) then;
         l_recPurchaseHeader.validate("Buy-from Vendor No.", ExpenseClaimAdmin."Vendor No.");

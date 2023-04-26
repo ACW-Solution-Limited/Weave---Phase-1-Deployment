@@ -103,14 +103,14 @@ codeunit 83125 "CDS Expense Claim"
         CompanyInformation.Get;
         if CompanyInformation."HK Expense Claim Master" then begin
             IntegrationTableMapping."Integration Table Filter".CreateOutStream(FilterStr);
-            FilterText := 'VERSION(1) SORTING(Field1) WHERE(Field78=1(1))';
+            FilterText := 'VERSION(1) SORTING(Field1) WHERE(Field57=1(3),Field78=1(1))';
             FilterStr.Write(FilterText);
             IntegrationTableMapping.Modify();
         End
         else
             if CompanyInformation."SG Expense Claim Master" then begin
                 IntegrationTableMapping."Integration Table Filter".CreateOutStream(FilterStr);
-                FilterText := 'VERSION(1) SORTING(Field1) WHERE(Field78=1(2))';
+                FilterText := 'VERSION(1) SORTING(Field1) WHERE(Field57=1(3),Field78=1(2))';
                 FilterStr.Write(FilterText);
                 IntegrationTableMapping.Modify();
             end;

@@ -76,8 +76,8 @@ codeunit 83110 CDSProduct
     begin
         CompanyInformation.Get;
         if (CompanyInformation."SG Master Company") OR (CompanyInformation."HK Master Company") then begin
-            AddEntityTableMapping('BC to CRM Product', DATABASE::"CDS acwapp_product", TempNameValueBuffer);
-            AddEntityTableMapping('BC to CRM Product', DATABASE::Item, TempNameValueBuffer);
+            AddEntityTableMapping('BC to CRM Item', DATABASE::"CDS acwapp_product", TempNameValueBuffer);
+            AddEntityTableMapping('BC to CRM Item', DATABASE::Item, TempNameValueBuffer);
         end;
     end;
 
@@ -97,21 +97,21 @@ codeunit 83110 CDSProduct
         CompanyInformation.Get;
         if (CompanyInformation."SG Master Company") OR (CompanyInformation."HK Master Company") then begin
             InsertIntegrationTableMapping(
-             IntegrationTableMapping, 'BC to CRM Product',
+             IntegrationTableMapping, 'BC to CRM Item',
               DATABASE::Item, DATABASE::"CDS acwapp_product", CRMProduct.FieldNo(acwapp_productId), CRMProduct.FieldNo(ModifiedOn), '', '', false);
-            // InsertIntegrationFieldMapping('BC to CRM Product', Item.FieldNo("Key"), CRMProduct.FieldNo(acwapp_productId), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
-            InsertIntegrationFieldMapping('BC to CRM Product', Item.FieldNo("CRM Company Guid"), CRMProduct.FieldNo(acwapp_BCCompany), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
-            InsertIntegrationFieldMapping('BC to CRM Product', Item.FieldNo("No."), CRMProduct.FieldNo(acwapp_ProductIDform), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
-            InsertIntegrationFieldMapping('BC to CRM Product', Item.FieldNo(Description), CRMProduct.FieldNo(acwapp_name), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
-            InsertIntegrationFieldMapping('BC to CRM Product', Item.FieldNo("Product Type GUId for CRM"), CRMProduct.FieldNo(acwapp_ProductType), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
-            InsertIntegrationFieldMapping('BC to CRM Product', Item.FieldNo("CRM Currency Guid"), CRMProduct.FieldNo(TransactionCurrencyId), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
-            InsertIntegrationFieldMapping('BC to CRM Product', Item.FieldNo("Base Unit of Measure"), CRMProduct.FieldNo(acwapp_UnitOfMeasure), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
-            InsertIntegrationFieldMapping('BC to CRM Product', Item.FieldNo("Unit Price"), CRMProduct.FieldNo(acwapp_UnitPrice), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
-            InsertIntegrationFieldMapping('BC to CRM Product', Item.FieldNo("Available On Booking Site"), CRMProduct.FieldNo(acwapp_AvailableOnBookingSite), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
-            InsertIntegrationFieldMapping('BC to CRM Product', Item.FieldNo("Inventory"), CRMProduct.FieldNo(acwapp_TotalStock), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
-            InsertIntegrationFieldMapping('BC to CRM Product', Item.FieldNo("Subscription/Immediate"), CRMProduct.FieldNo(acwapp_SubscriptionImmediate), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
-            InsertIntegrationFieldMapping('BC to CRM Product', Item.FieldNo("Subscription Period Type"), CRMProduct.FieldNo(acwapp_SubscriptionPeriodType), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
-            InsertIntegrationFieldMapping('BC to CRM Product', Item.FieldNo("Subscription Period"), CRMProduct.FieldNo(acwapp_SubscriptionPeriod), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+            // InsertIntegrationFieldMapping('BC to CRM Item', Item.FieldNo("Key"), CRMProduct.FieldNo(acwapp_productId), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+            InsertIntegrationFieldMapping('BC to CRM Item', Item.FieldNo("CRM Company Guid"), CRMProduct.FieldNo(acwapp_BCCompany), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+            InsertIntegrationFieldMapping('BC to CRM Item', Item.FieldNo("No."), CRMProduct.FieldNo(acwapp_ProductIDform), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+            InsertIntegrationFieldMapping('BC to CRM Item', Item.FieldNo(Description), CRMProduct.FieldNo(acwapp_name), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+            InsertIntegrationFieldMapping('BC to CRM Item', Item.FieldNo("Product Type GUId for CRM"), CRMProduct.FieldNo(acwapp_ProductType), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+            InsertIntegrationFieldMapping('BC to CRM Item', Item.FieldNo("CRM Currency Guid"), CRMProduct.FieldNo(TransactionCurrencyId), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+            InsertIntegrationFieldMapping('BC to CRM Item', Item.FieldNo("Base Unit of Measure"), CRMProduct.FieldNo(acwapp_UnitOfMeasure), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+            InsertIntegrationFieldMapping('BC to CRM Item', Item.FieldNo("Unit Price"), CRMProduct.FieldNo(acwapp_UnitPrice), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+            InsertIntegrationFieldMapping('BC to CRM Item', Item.FieldNo("Available On Booking Site"), CRMProduct.FieldNo(acwapp_AvailableOnBookingSite), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+            InsertIntegrationFieldMapping('BC to CRM Item', Item.FieldNo("Inventory"), CRMProduct.FieldNo(acwapp_TotalStock), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+            InsertIntegrationFieldMapping('BC to CRM Item', Item.FieldNo("Subscription/Immediate"), CRMProduct.FieldNo(acwapp_SubscriptionImmediate), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+            InsertIntegrationFieldMapping('BC to CRM Item', Item.FieldNo("Subscription Period Type"), CRMProduct.FieldNo(acwapp_SubscriptionPeriodType), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+            InsertIntegrationFieldMapping('BC to CRM Item', Item.FieldNo("Subscription Period"), CRMProduct.FieldNo(acwapp_SubscriptionPeriod), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
 
 
 
@@ -122,7 +122,7 @@ codeunit 83110 CDSProduct
             IntegrationTableMapping.Modify();
 
             IntegrationTableMapping.reset;
-            IntegrationTableMapping.SetFilter(Name, 'BC to CRM Product');
+            IntegrationTableMapping.SetFilter(Name, 'BC to CRM Item');
             CUCreateJob.CreateCustomSyncJobQueueEntry(IntegrationTableMapping);
 
         end;

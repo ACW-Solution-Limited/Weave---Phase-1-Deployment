@@ -186,15 +186,29 @@ codeunit 83002 EventSubscriber
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Line", 'OnAfterPostGenJnlLine', '', false, false)]
     local procedure OnAfterPostGenJnlLine(var GenJournalLine: Record "Gen. Journal Line"; Balancing: Boolean)
+
+    begin
+        //  Message('%1,%2', GenJournalLine."Document No.", GenJournalLine."Applies-to Doc. No.");
+
+        if GenJournalLine."Document No." <> '' then
+            UpdateDocumentsStatus(GenJournalLine."Document No.");
+
+        if GenJournalLine."Applies-to Doc. No." <> '' then
+            UpdateDocumentsStatus(GenJournalLine."Applies-to Doc. No.");
+    end;
+
+    procedure UpdateDocumentsStatus(DocumentNo: Code[250])
     var
         l_recExtraCharge: Record "Extra Charge";
         l_recStripePayment: Record "Stripe Payment";
         l_recStripePayout: Record "Stripe Payout";
         l_recStripeRefund: Record "Stripe Refund";
         l_recQFPayPayment: Record "QFPay Payment";
+        l_recLeaseContractBillingSchedule: Record "Lease Contract Billing Sched.";
+        l_recSalesInvoiceHeader: Record "Sales Invoice Header";
     begin
         l_recExtraCharge.Reset();
-        l_recExtraCharge.SetFilter("Posted Sales Invoice No.", GenJournalLine."Document No.");
+        l_recExtraCharge.SetFilter("Posted Sales Invoice No.", DocumentNo);
         if l_recExtraCharge.FindFirst() then
             repeat
                 l_recExtraCharge."BC Status" := l_recExtraCharge."BC Status"::Posted;
@@ -202,33 +216,51 @@ codeunit 83002 EventSubscriber
             until l_recExtraCharge.Next() = 0;
 
         l_recStripePayment.Reset();
-        l_recStripePayment.SetFilter("General Journal Document No.", GenJournalLine."Document No.");
-        if l_recStripePayment.FindFirst() then begin
-            l_recStripePayment.Status := l_recStripePayment.Status::Posted;
-            l_recStripePayment.Modify();
-        end;
+        l_recStripePayment.SetFilter("General Journal Document No.", DocumentNo);
+        if l_recStripePayment.FindFirst() then
+            repeat
+                l_recStripePayment.Status := l_recStripePayment.Status::Posted;
+                l_recStripePayment.Modify();
+            until l_recStripePayment.Next() = 0;
 
         l_recQFPayPayment.Reset();
-        l_recQFPayPayment.SetFilter("General Journal Document No.", GenJournalLine."Document No.");
-        if l_recQFPayPayment.FindFirst() then begin
-            l_recQFPayPayment.Status := l_recQFPayPayment.Status::Posted;
-            l_recQFPayPayment.Modify();
-        end;
+        l_recQFPayPayment.SetFilter("General Journal Document No.", DocumentNo);
+        if l_recQFPayPayment.FindFirst() then
+            repeat
+                l_recQFPayPayment.Status := l_recQFPayPayment.Status::Posted;
+                l_recQFPayPayment.Modify();
+            until l_recQFPayPayment.Next() = 0;
 
         l_recStripePayout.Reset();
-        l_recStripePayout.SetFilter("General Journal Document No.", GenJournalLine."Document No.");
-        if l_recStripePayout.FindFirst() then begin
-            l_recStripePayout.Status := l_recStripePayout.Status::Posted;
-            l_recStripePayout.Modify();
-        end;
+        l_recStripePayout.SetFilter("General Journal Document No.", DocumentNo);
+        if l_recStripePayout.FindFirst() then
+            repeat
+                l_recStripePayout.Status := l_recStripePayout.Status::Posted;
+                l_recStripePayout.Modify();
+            until l_recStripePayout.Next() = 0;
 
         l_recStripeRefund.Reset();
-        l_recStripeRefund.SetFilter("General Journal Document No.", GenJournalLine."Document No.");
-        if l_recStripeRefund.FindFirst() then begin
-            l_recStripeRefund.Status := l_recStripeRefund.Status::Posted;
-            l_recStripeRefund.Modify();
-        end;
+        l_recStripeRefund.SetFilter("General Journal Document No.", DocumentNo);
+        if l_recStripeRefund.FindFirst() then
+            repeat
+                l_recStripeRefund.Status := l_recStripeRefund.Status::Posted;
+                l_recStripeRefund.Modify();
+            until l_recStripeRefund.Next() = 0;
 
+        l_recLeaseContractBillingSchedule.Reset();
+        l_recLeaseContractBillingSchedule.SetFilter("Document No.", DocumentNo);
+        if l_recLeaseContractBillingSchedule.FindFirst() then
+            repeat
+                l_recLeaseContractBillingSchedule.Status := l_recLeaseContractBillingSchedule.Status::Paid;
+                l_recLeaseContractBillingSchedule.Modify();
+            until l_recLeaseContractBillingSchedule.Next() = 0;
+
+        l_recSalesInvoiceHeader.Reset();
+        l_recSalesInvoiceHeader.SetFilter("No.", DocumentNo);
+        if l_recSalesInvoiceHeader.FindFirst() then begin
+            l_recSalesInvoiceHeader."Payment Status" := l_recSalesInvoiceHeader."Payment Status"::Paid;
+            l_recSalesInvoiceHeader.Modify();
+        end;
 
     end;
 

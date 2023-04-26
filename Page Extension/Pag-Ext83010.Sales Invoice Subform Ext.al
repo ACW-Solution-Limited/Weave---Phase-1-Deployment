@@ -2,6 +2,10 @@ pageextension 83010 SalesInvoiceFubformExt extends "Sales Invoice Subform"
 {
     layout
     {
+        modify("Deferral Code")
+        {
+            Visible = true;
+        }
 
         addafter(Description)
         {

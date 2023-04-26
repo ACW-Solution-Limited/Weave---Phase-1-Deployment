@@ -110,8 +110,8 @@ codeunit 83124 "CDS Extra Charges"
 
         CompanyInformation.Get;
         IntegrationTableMapping."Integration Table Filter".CreateOutStream(FilterStr);
-        FilterText := 'VERSION(1) SORTING(Field1) WHERE(Field77=1(' + CompanyInformation."CRM Company Guid" + '))';
-        // FilterText := 'VERSION(1) SORTING(Field1) WHERE(Field77=1(' + CompanyInformation."CRM Company Guid" + '),Field84=1(1))';
+        //FilterText := 'VERSION(1) SORTING(Field1) WHERE(Field77=1(' + CompanyInformation."CRM Company Guid" + '))';
+        FilterText := 'VERSION(1) SORTING(Field1) WHERE(Field77=1(' + CompanyInformation."CRM Company Guid" + '),Field84=1(1))';
         //VERSION(1) SORTING(Field1) WHERE(Field77=1({317C54FD-9170-ED11-81AC-000D3A85C5F6}),Field84=1(1))
         FilterStr.Write(FilterText);
         IntegrationTableMapping.Modify();

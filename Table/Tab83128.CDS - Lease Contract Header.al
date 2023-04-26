@@ -353,7 +353,7 @@
             Caption = 'Bedroom Offer';
             TableRelation = "CDS acwapp_bedroomoffer".acwapp_bedroomofferId;
         }
-        field(75; acwapp_BedroomOfferName; Text[100])
+        field(75; acwapp_BedroomOfferName; Text[250])
         {
             FieldClass = FlowField;
             CalcFormula = lookup("CDS acwapp_bedroomoffer".acwapp_name where(acwapp_bedroomofferId = field(acwapp_BedroomOffer)));
