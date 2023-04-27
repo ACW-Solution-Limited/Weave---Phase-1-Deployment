@@ -10,7 +10,7 @@ page 83211 "API Posted Purchase Rcpt. Line"
     EntitySetName = 'postedpurchasereceptline';
     PageType = API;
     SourceTable = "Purch. Rcpt. Line";
-    
+
     layout
     {
         area(content)
@@ -389,19 +389,19 @@ page 83211 "API Posted Purchase Rcpt. Line"
                 {
                     Caption = 'Responsibility Center';
                 }
-                field(crossReferenceNo; Rec."Cross-Reference No.")
+                field(crossReferenceNo; Rec."Item Reference No.")
                 {
                     Caption = 'Cross-Reference No.';
                 }
-                field(unitOfMeasureCrossRef; Rec."Unit of Measure (Cross Ref.)")
+                field(unitOfMeasureCrossRef; Rec."Item Reference Unit of Measure")
                 {
                     Caption = 'Unit of Measure (Cross Ref.)';
                 }
-                field(crossReferenceType; Rec."Cross-Reference Type")
+                field(crossReferenceType; Rec."Item Reference Type")
                 {
                     Caption = 'Cross-Reference Type';
                 }
-                field(crossReferenceTypeNo; Rec."Cross-Reference Type No.")
+                field(crossReferenceTypeNo; Rec."Item Reference Type No.")
                 {
                     Caption = 'Cross-Reference Type No.';
                 }

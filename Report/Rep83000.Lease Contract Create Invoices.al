@@ -90,6 +90,7 @@ report 83000 "Lease Contract Create Invoices"
         l_recTenderTypeSetup: Record "Tender Type Setup";
         l_decAmt: Decimal;
         l_recLeaseContractSetup: Record "Lease Contract Setup";
+        l_recLeaseContractHeader: Record "Lease Contract Header";
 
     begin
         l_recLeaseContractSetup.Get();
@@ -118,14 +119,16 @@ report 83000 "Lease Contract Create Invoices"
                     l_recSalesHeaderTemp."Stripe Invoice ID" := g_recLeaseBillingSchedule_Temp."Stripe Invoice ID";
                     l_recSalesHeaderTemp.Validate("Sell-to Customer No.", l_codCustomerNo);
                     l_recSalesHeaderTemp.Validate("Posting Date", g_recLeaseBillingSchedule_Temp."Posting Date");
-                    l_recSalesHeaderTemp."Lease Contract No." := LeaseContractHeader."No.";
-                    l_recSalesHeaderTemp."Lease Contract Name" := LeaseContractHeader."Contract Name";
+
+                    l_recLeaseContractHeader.Get(g_recLeaseBillingSchedule_Temp."Contract No.");
+                    l_recSalesHeaderTemp."Lease Contract No." := g_recLeaseBillingSchedule_Temp."Contract No.";
+                    l_recSalesHeaderTemp."Lease Contract Name" := l_recLeaseContractHeader."Contract Name";
                     l_recSalesHeaderTemp."Lease Contract Creation Date" := WorkDate();
-                    l_recSalesHeaderTemp."Contract Start Date" := DT2Date(LeaseContractHeader."Contract Start Date");
-                    l_recSalesHeaderTemp."Contract End Date" := DT2Date(LeaseContractHeader."Contract End Date");
+                    l_recSalesHeaderTemp."Contract Start Date" := DT2Date(l_recLeaseContractHeader."Contract Start Date");
+                    l_recSalesHeaderTemp."Contract End Date" := DT2Date(l_recLeaseContractHeader."Contract End Date");
                     // Commission  >>
                     If l_recSalesHeaderTemp."Commission Amount" = 0 then begin
-                        InsertCommission(LeaseContractHeader, g_recLeaseBillingSchedule_Temp."Contract Start Date");
+                        InsertCommission(l_recLeaseContractHeader, g_recLeaseBillingSchedule_Temp."Contract Start Date");
                         l_recSalesHeaderTemp."Salesperson Code" := g_Salesperson;
                         l_recSalesHeaderTemp."Commission Type" := g_Commissiontype;
                         l_recSalesHeaderTemp."Calculation Type" := g_calculationtype;
@@ -147,8 +150,8 @@ report 83000 "Lease Contract Create Invoices"
                 l_recSalesLineTemp."Billing Schedule Line No." := g_recLeaseBillingSchedule_Temp."Line No.";
                 if (g_recLeaseBillingSchedule_Temp."Contract Start Date" = 0D) or (g_recLeaseBillingSchedule_Temp."Contract End Date" = 0D) then begin // for credit memo
                     If g_recLeaseBillingSchedule_Temp."Sub-Type" <> 'EXTENSION' then begin
-                        l_recSalesLineTemp."Lease From Date" := DT2Date(LeaseContractHeader."Contract Start Date");
-                        l_recSalesLineTemp."Lease To Date" := DT2Date(LeaseContractHeader."Contract End Date");
+                        l_recSalesLineTemp."Lease From Date" := DT2Date(l_recLeaseContractHeader."Contract Start Date");
+                        l_recSalesLineTemp."Lease To Date" := DT2Date(l_recLeaseContractHeader."Contract End Date");
                     end;
                 end
                 else begin
@@ -198,7 +201,7 @@ report 83000 "Lease Contract Create Invoices"
                             If g_recLeaseBillingSchedule_Temp."Sub-Type" = '' then begin
                                 l_recSalesLineTemp."Billing Schedule Type" := l_recSalesLineTemp."Billing Schedule Type"::Rent;
                                 // l_recSalesLineTemp."No." := l_recLeaseContractSetup."Rental Income G/L Account No.";
-                                l_recSalesLineTemp."No." := GetGLAccountByRoomType(LeaseContractHeader."Room Type");
+                                l_recSalesLineTemp."No." := GetGLAccountByRoomType(l_recLeaseContractHeader."Room Type");
                                 l_recSalesLineTemp."No. of Days to Bill" := g_recLeaseBillingSchedule_Temp."No. of Days to Bill";
                                 /* l_recSalesLineTemp."Invoice Description" := StrSubstNo('%1 - (#%2) - %3 - %4 in %5 - %6 from %7 to %8 (%9)',
                                                             g_CustomerName,
@@ -238,7 +241,7 @@ report 83000 "Lease Contract Create Invoices"
                                             //                      format(g_recLeaseBillingSchedule_Temp."Contract End Date", 0, '<Day,2>/<Month,2>/<Year4>'),
                                             //                      g_recLeaseBillingSchedule_Temp."Contract No.");
                                             l_recSalesLineTemp."Invoice Description" := StrSubstNo('Discount (%1) - %2 in %3 - %4 (%5)',
-                                            LeaseContractHeader."Promotion Code",
+                                            l_recLeaseContractHeader."Promotion Code",
                                              g_property_type,
                                             g_property_description,
                                             g_property_rmno,
@@ -260,7 +263,7 @@ report 83000 "Lease Contract Create Invoices"
                                             //                        format(g_recLeaseBillingSchedule_Temp."Contract End Date", 0, '<Day,2>/<Month,2>/<Year4>'),
                                             //                        g_recLeaseBillingSchedule_Temp."Contract No.");
                                             l_recSalesLineTemp."Invoice Description" := StrSubstNo('Discount (%1) - %2 in %3 - %4 (%5)',
-                                            LeaseContractHeader."Promotion Code",
+                                            l_recLeaseContractHeader."Promotion Code",
                                             g_property_type,
                                             g_property_description,
                                             g_property_rmno,
@@ -294,7 +297,7 @@ report 83000 "Lease Contract Create Invoices"
                                         begin
                                             l_recSalesLineTemp."Billing Schedule Type" := l_recSalesLineTemp."Billing Schedule Type"::Rent;
                                             // l_recSalesLineTemp."No." := l_recLeaseContractSetup."Rental Income G/L Account No.";
-                                            l_recSalesLineTemp."No." := GetGLAccountByRoomType(LeaseContractHeader."Room Type");
+                                            l_recSalesLineTemp."No." := GetGLAccountByRoomType(l_recLeaseContractHeader."Room Type");
                                             l_recSalesLineTemp."No. of Days to Bill" := g_recLeaseBillingSchedule_Temp."No. of Days to Bill";
                                             l_recSalesLineTemp."Invoice Description" := StrSubstNo('%1 - %2 in %3 - (%4)',
                                                                           'Extension Fee',
@@ -307,7 +310,25 @@ report 83000 "Lease Contract Create Invoices"
 
 
                                         end;
-                                // Extension <<
+                                    // Extension <<
+                                    // Early Move-in >>
+                                    'Early Move-in':
+                                        begin
+                                            l_recSalesLineTemp."Billing Schedule Type" := l_recSalesLineTemp."Billing Schedule Type"::Rent;
+                                            // l_recSalesLineTemp."No." := l_recLeaseContractSetup."Rental Income G/L Account No.";
+                                            l_recSalesLineTemp."No." := GetGLAccountByRoomType(l_recLeaseContractHeader."Room Type");
+                                            l_recSalesLineTemp."No. of Days to Bill" := g_recLeaseBillingSchedule_Temp."No. of Days to Bill";
+                                            l_recSalesLineTemp."Invoice Description" := StrSubstNo('%1 - %2 in %3 - (%4)',
+                                                                                  'Early Move-in Fee',
+                                                                                  g_property_type,
+                                                                                  g_property_description,
+                                                                                  g_property_rmno
+                                                                                  );
+                                            l_recSalesLineTemp.Quantity := 1;
+                                            l_recSalesLineTemp."Unit Price" := g_recLeaseBillingSchedule_Temp.Amount;
+                                        end;
+                                // Early Move-in <<
+
                                 end;
                                 l_recSalesLineTemp.Quantity := 1;
                                 l_recSalesLineTemp."Unit Price" := g_recLeaseBillingSchedule_Temp.Amount;
@@ -332,8 +353,8 @@ report 83000 "Lease Contract Create Invoices"
                                         l_recSalesLineTemp.Type := l_recSalesLineTemp.Type::"G/L Account";
                                         l_recSalesLineTemp."No." := l_recLeaseContractSetup."Event Fee G/L Account No.";
                                         l_recSalesLineTemp."Invoice Description" := StrSubstNo('Event Fee - %1 - in %2 (%3)',
-                                        GetEventFeeNo(LeaseContractHeader."No.", g_recLeaseBillingSchedule_Temp."Line No."),
-                                        LeaseContractHeader."Property No.",
+                                        GetEventFeeNo(l_recLeaseContractHeader."No.", g_recLeaseBillingSchedule_Temp."Line No."),
+                                        l_recLeaseContractHeader."Property No.",
                                         g_recLeaseBillingSchedule_Temp."Contract No."
                                         );
 
@@ -686,6 +707,8 @@ report 83000 "Lease Contract Create Invoices"
         l_recLeaseContractSetup.Get();
         l_recGeneralLedgerSetup.Get();
 
+        If SalesLine."Tender Type" <> '' then
+            exit;
         if (SalesLine."Lease To Date" = 0D) or (SalesLine."Lease From Date" = 0D) then
             exit;
 

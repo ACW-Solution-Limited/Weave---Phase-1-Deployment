@@ -190,7 +190,7 @@ page 83029 APIPurchaseOrder
                 {
                     Caption = 'IC Status';
                 }
-                field(id; Rec.Id)
+                field(id; Rec.SystemId)
                 {
                     Caption = 'Id';
                 }

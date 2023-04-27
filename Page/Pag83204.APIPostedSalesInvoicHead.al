@@ -425,14 +425,14 @@ page 83204 "API Posted Sales Invoic Head."
                 {
                     Caption = 'Email';
                 }
-                field(paymentInstructions; Rec."Payment Instructions")
-                {
-                    Caption = 'Payment Instructions';
-                }
-                field(paymentInstructionsName; Rec."Payment Instructions Name")
-                {
-                    Caption = 'Payment Instructions Name';
-                }
+                // field(paymentInstructions; Rec."Payment Instructions")
+                // {
+                //     Caption = 'Payment Instructions';
+                // }
+                // field(paymentInstructionsName; Rec."Payment Instructions Name")
+                // {
+                //     Caption = 'Payment Instructions Name';
+                // }
                 field(vatReportingDate; Rec."VAT Reporting Date")
                 {
                     Caption = 'VAT Date';
@@ -533,9 +533,9 @@ page 83204 "API Posted Sales Invoic Head."
                 {
                     Caption = 'Get Shipment Used';
                 }
-                field(id; Rec.Id)
+                field(id; Rec.SystemId)
                 {
-                    Caption = 'Id';
+                    Caption = 'SystemId';
                 }
                 field(draftInvoiceSystemId; Rec."Draft Invoice SystemId")
                 {

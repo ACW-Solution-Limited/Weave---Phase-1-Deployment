@@ -533,22 +533,22 @@ page 83206 "API Sales Header"
                 {
                     Caption = 'Incoming Document Entry No.';
                 }
-                field(lastEmailSentTime; Rec."Last Email Sent Time")
-                {
-                    Caption = 'Last Email Sent Time';
-                }
-                field(lastEmailSentStatus; Rec."Last Email Sent Status")
-                {
-                    Caption = 'Last Email Sent Status';
-                }
-                field(sentAsEmail; Rec."Sent as Email")
-                {
-                    Caption = 'Sent as Email';
-                }
-                field(lastEmailNotifCleared; Rec."Last Email Notif Cleared")
-                {
-                    Caption = 'Last Email Notif Cleared';
-                }
+                // field(lastEmailSentTime; Rec."Last Email Sent Time")
+                // {
+                //     Caption = 'Last Email Sent Time';
+                // }
+                // field(lastEmailSentStatus; Rec."Last Email Sent Status")
+                // {
+                //     Caption = 'Last Email Sent Status';
+                // }
+                // field(sentAsEmail; Rec."Sent as Email")
+                // {
+                //     Caption = 'Sent as Email';
+                // }
+                // field(lastEmailNotifCleared; Rec."Last Email Notif Cleared")
+                // {
+                //     Caption = 'Last Email Notif Cleared';
+                // }
                 field(isTest; Rec.IsTest)
                 {
                     Caption = 'IsTest';
@@ -713,9 +713,9 @@ page 83206 "API Sales Header"
                 {
                     Caption = 'Get Shipment Used';
                 }
-                field(id; Rec.Id)
+                field(id; Rec.SystemId)
                 {
-                    Caption = 'Id';
+                    Caption = 'SystemId';
                 }
                 field(assignedUserID; Rec."Assigned User ID")
                 {

@@ -1,4 +1,4 @@
-﻿tableextension 83100 AccountExt extends "CRM Account"
+﻿tableextension 83500 AccountExt extends "CRM Account"
 {
     Description = 'Business that represents a customer or potential customer. The company that is billed in business transactions.';
 
@@ -69,14 +69,62 @@
             Description = 'Describes whether account is opted out or not';
             Caption = 'GDPR Optout';
         }
-        field(50036; acwapp_CompanyName; Text[100])
+        field(50030; acwapp_LoyaltyProgram; GUID)
+        {
+            ExternalName = 'acwapp_loyaltyprogram';
+            ExternalType = 'Lookup';
+            Description = '';
+            Caption = 'Loyalty Program';
+            TableRelation = "CDS acwapp_loyalprogram".acwapp_loyalprogramId;
+        }
+        // field(50031; acwapp_RedeemTransaction; GUID)
+        // {
+        //     ExternalName = 'acwapp_redeemtransaction';
+        //     ExternalType = 'Lookup';
+        //     Description = '';
+        //     Caption = 'Redeem Transaction';
+        //     TableRelation = "CDS acwapp_redeemtransaction".acwapp_redeemtransactionId;
+        // }
+        // field(50032; acwapp_Tenant; GUID)
+        // {
+        //     ExternalName = 'acwapp_tenant';
+        //     ExternalType = 'Lookup';
+        //     Description = '';
+        //     Caption = 'Tenant';
+        //     TableRelation = "CDS acwapp_store".acwapp_storeId;
+        // }
+        field(50033; acwapp_LoyaltyProgramName; Text[500])
+        {
+            FieldClass = FlowField;
+            CalcFormula = lookup("CDS acwapp_loyalprogram".acwapp_name where(acwapp_loyalprogramId = field(acwapp_LoyaltyProgram)));
+            ExternalName = 'acwapp_loyaltyprogramname';
+            ExternalType = 'String';
+            ExternalAccess = Read;
+        }
+        // field(50034; acwapp_RedeemTransactionName; Text[500])
+        // {
+        //     FieldClass = FlowField;
+        //     CalcFormula = lookup("CDS acwapp_redeemtransaction".acwapp_name where(acwapp_redeemtransactionId = field(acwapp_RedeemTransaction)));
+        //     ExternalName = 'acwapp_redeemtransactionname';
+        //     ExternalType = 'String';
+        //     ExternalAccess = Read;
+        // }
+        // field(50035; acwapp_TenantName; Text[500])
+        // {
+        //     FieldClass = FlowField;
+        //     CalcFormula = lookup("CDS acwapp_store".acwapp_name where(acwapp_storeId = field(acwapp_Tenant)));
+        //     ExternalName = 'acwapp_tenantname';
+        //     ExternalType = 'String';
+        //     ExternalAccess = Read;
+        // }
+        field(50036; acwapp_CompanyName; Text[500])
         {
             ExternalName = 'acwapp_companyname';
             ExternalType = 'String';
             Description = '';
             Caption = 'Company Name';
         }
-        field(50037; acwapp_CompanyID; Text[100])
+        field(50037; acwapp_CompanyID; Text[500])
         {
             ExternalName = 'acwapp_companyid';
             ExternalType = 'String';
@@ -90,17 +138,17 @@
             Description = '';
             Caption = 'Type';
             InitValue = " ";
-            OptionMembers = " ",Prospect,Partner;
+            OptionMembers = " ","Event",Profile;
             OptionOrdinalValues = -1, 557130000, 557130001;
         }
-        field(50043; acwapp_WebsiteURL; Text[100])
+        field(50043; acwapp_WebsiteURL; Text[500])
         {
             ExternalName = 'acwapp_websiteurl';
             ExternalType = 'String';
             Description = '';
             Caption = 'Website URL';
         }
-        field(50044; acwapp_Description; Text[100])
+        field(50044; acwapp_Description; Text[500])
         {
             ExternalName = 'acwapp_description';
             ExternalType = 'String';
@@ -296,21 +344,21 @@
             Description = 'State of rollup field Total Revenue.';
             Caption = 'Total Revenue (State)';
         }
-        field(50079; acwapp_FacebookCompanyPage; Text[100])
+        field(50079; acwapp_FacebookCompanyPage; Text[500])
         {
             ExternalName = 'acwapp_facebookcompanypage';
             ExternalType = 'String';
             Description = '';
             Caption = 'Facebook Company Page';
         }
-        field(50080; acwapp_LinkedInCompanyPage; Text[100])
+        field(50080; acwapp_LinkedInCompanyPage; Text[500])
         {
             ExternalName = 'acwapp_linkedincompanypage';
             ExternalType = 'String';
             Description = '';
             Caption = 'LinkedIn Company Page';
         }
-        field(50081; acwapp_TwitterAccount; Text[100])
+        field(50081; acwapp_TwitterAccount; Text[500])
         {
             ExternalName = 'acwapp_twitteraccount';
             ExternalType = 'String';
@@ -337,7 +385,7 @@
             OptionMembers = " ";
             OptionOrdinalValues = -1;
         }
-        field(50089; acwapp_PrimaryEmail; Text[100])
+        field(50089; acwapp_PrimaryEmail; Text[500])
         {
             ExternalName = 'acwapp_primaryemail';
             ExternalType = 'String';
@@ -351,14 +399,14 @@
             Description = '';
             Caption = 'Confirm BRB';
         }
-        field(50092; acwapp_FirstName; Text[100])
+        field(50092; acwapp_FirstName; Text[500])
         {
             ExternalName = 'acwapp_firstname';
             ExternalType = 'String';
             Description = '';
             Caption = 'First Name';
         }
-        field(50093; acwapp_LastName; Text[100])
+        field(50093; acwapp_LastName; Text[500])
         {
             ExternalName = 'acwapp_lastname';
             ExternalType = 'String';
@@ -373,42 +421,58 @@
             Caption = 'Contact';
             TableRelation = "CRM Contact".ContactId;
         }
-        field(50098; acwapp_Topic; Text[100])
+        field(50098; acwapp_Topic; Text[500])
         {
             ExternalName = 'acwapp_topic';
             ExternalType = 'String';
             Description = '';
             Caption = 'Topic';
         }
-        field(50099; acwapp_AccountID; Text[100])
+        field(50099; acwapp_AccountID; Text[500])
         {
             ExternalName = 'acwapp_accountid';
             ExternalType = 'String';
             Description = '';
             Caption = 'Account ID';
         }
-        field(50502; acwapp_CustomerName; Text[100])
+        // field(10500; acwapp_Invoice; GUID)
+        // {
+        //     ExternalName = 'acwapp_invoice';
+        //     ExternalType = 'Lookup';
+        //     Description = '';
+        //     Caption = 'Invoice';
+        //     TableRelation = "CDS acwapp_invoice".acwapp_invoiceId;
+        // }
+        // field(50101; acwapp_InvoiceName; Text[500])
+        // {
+        //     FieldClass = FlowField;
+        //     CalcFormula = lookup("CDS acwapp_invoice".acwapp_name where(acwapp_invoiceId = field(acwapp_Invoice)));
+        //     ExternalName = 'acwapp_invoicename';
+        //     ExternalType = 'String';
+        //     ExternalAccess = Read;
+        // }
+        field(50102; acwapp_CustomerName; Text[500])
         {
             ExternalName = 'acwapp_customername';
             ExternalType = 'String';
             Description = '';
             Caption = 'Customer Name';
         }
-        field(50103; acwapp_GenBusPostingGroup; Text[100])
+        field(50103; acwapp_GenBusPostingGroup; Text[500])
         {
             ExternalName = 'acwapp_genbuspostinggroup';
             ExternalType = 'String';
             Description = '';
             Caption = 'Gen. Bus. Posting Group';
         }
-        field(50104; acwapp_VATBusPostingGroup; Text[100])
+        field(50104; acwapp_VATBusPostingGroup; Text[500])
         {
             ExternalName = 'acwapp_vatbuspostinggroup';
             ExternalType = 'String';
             Description = '';
-            Caption = 'VAT Bus. Posting Group';
+            Caption = 'GST Bus. Posting Group';
         }
-        field(50105; acwapp_CustomerPostingGroup; Text[100])
+        field(50105; acwapp_CustomerPostingGroup; Text[500])
         {
             ExternalName = 'acwapp_customerpostinggroup';
             ExternalType = 'String';
@@ -429,7 +493,62 @@
             Description = '';
             Caption = 'SG Customer';
         }
-
+        field(50110; acwapp_CountryCallingCode; Text[500])
+        {
+            ExternalName = 'acwapp_countrycallingcode';
+            ExternalType = 'String';
+            Description = '';
+            Caption = 'Country Calling Code';
+        }
+        field(50111; Adx_CreatedByIPAddress; Text[500])
+        {
+            ExternalName = 'adx_createdbyipaddress';
+            ExternalType = 'String';
+            Description = '';
+            Caption = 'Created By (IP Address)';
+        }
+        field(50112; Adx_CreatedByUsername; Text[500])
+        {
+            ExternalName = 'adx_createdbyusername';
+            ExternalType = 'String';
+            Description = '';
+            Caption = 'Created By (User Name)';
+        }
+        field(50113; Adx_ModifiedByIPAddress; Text[500])
+        {
+            ExternalName = 'adx_modifiedbyipaddress';
+            ExternalType = 'String';
+            Description = '';
+            Caption = 'Modified By (IP Address)';
+        }
+        field(50114; Adx_ModifiedByUsername; Text[500])
+        {
+            ExternalName = 'adx_modifiedbyusername';
+            ExternalType = 'String';
+            Description = '';
+            Caption = 'Modified By (User Name)';
+        }
+        field(50115; msa_managingpartnerid; GUID)
+        {
+            ExternalName = 'msa_managingpartnerid';
+            ExternalType = 'Lookup';
+            Description = 'Unique identifier for Account associated with Account.';
+            Caption = 'Managing Partner';
+            TableRelation = "CRM Account".AccountId;
+        }
+        field(50118; acwapp_B2BB2C; Boolean)
+        {
+            ExternalName = 'acwapp_b2bb2c';
+            ExternalType = 'Boolean';
+            Description = '';
+            Caption = 'B2B/B2C';
+        }
+        field(50120; acwapp_DataMigration; Boolean)
+        {
+            ExternalName = 'acwapp_datamigration';
+            ExternalType = 'Boolean';
+            Description = '';
+            Caption = 'Data Migration';
+        }
     }
-
 }

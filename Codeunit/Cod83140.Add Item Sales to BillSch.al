@@ -140,7 +140,7 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
                                        CRMEventFee.Amount,
                                        CRMEventFee.Amount,
                                        CRMEventFee."Amount Including VAT",
-                                       CRMEventFee."Stripe Invoice ID",
+                                       CRMEventFee."Payment Reference ID",
                                        '',
                                        '',
                                        0,
@@ -161,6 +161,7 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
     begin
 
         CRMExtraCharge.SetRange("BC Status", CRMExtraCharge."BC Status"::Open);
+        CRMExtraCharge.SetRange("CRM Status", CRMExtraCharge."CRM Status"::Confirmed);
         if CRMExtraCharge.FindFirst() then
             repeat
                 LineNo := GetLineNo(CRMExtraCharge."Contract No.");
@@ -219,26 +220,26 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
                                 Subtype := 'Early Move-in'
                             else
                                 Subtype := 'Late Move-out';
-                            InsertLCBillingSchedule(g_OptBillingType::Item,
-                                             Subtype,
-                                             CRMExtraCharge."Customer No.",
-                                             CRMExtraCharge."Contract No.",
-                                             LineNo,
-                                             DT2DATE(CRMExtraCharge."Created On"),//#Posting Date
-                                             DT2DATE(CRMExtraCharge."Created On"),//#Due Date
-                                             DT2DATE(CRMExtraCharge."Created On"),//#Item Sales Date
-                                             CRMExtraCharge."Item No.",
-                                             1,
-                                            CRMExtraCharge."Total Amount",
-                                            CRMExtraCharge."Total Amount",
-                                            CRMExtraCharge."Total Amount",
-                                             CRMExtraCharge."Stripe Invoice ID",
-                                             '',
-                                             '',
-                                             0,
-                                             0,
-                                             0D,
-                                             0D);
+                            InsertLCBillingSchedule(g_OptBillingType::Rent,
+                                           Subtype,
+                                           CRMExtraCharge."Customer No.",
+                                           CRMExtraCharge."Contract No.",
+                                           LineNo,
+                                           DT2DATE(CRMExtraCharge."Created On"),//#Posting Date
+                                           DT2DATE(CRMExtraCharge."Created On"),//#Due Date
+                                           DT2DATE(CRMExtraCharge."Created On"),//#Item Sales Date
+                                           CRMExtraCharge."Item No.",
+                                           1,
+                                          CRMExtraCharge."Total Amount",
+                                          CRMExtraCharge."Total Amount",
+                                          CRMExtraCharge."Total Amount",
+                                           CRMExtraCharge."Stripe Invoice ID",
+                                           '',
+                                           '',
+                                           0,
+                                           0,
+                                           0D,
+                                           0D);
                         end;
                     // >> For extension P2
                     CRMExtraCharge."Charges Type"::Extension:

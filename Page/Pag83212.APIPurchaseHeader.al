@@ -10,7 +10,7 @@ page 83212 "API Purchase Header"
     EntitySetName = 'purchaseheader';
     PageType = API;
     SourceTable = "Purchase Header";
-    
+
     layout
     {
         area(content)
@@ -613,9 +613,9 @@ page 83212 "API Purchase Header"
                 {
                     Caption = 'Price Calculation Method';
                 }
-                field(id; Rec.Id)
+                field(id; Rec.SystemId)
                 {
-                    Caption = 'Id';
+                    Caption = 'SystemId';
                 }
                 field(assignedUserID; Rec."Assigned User ID")
                 {

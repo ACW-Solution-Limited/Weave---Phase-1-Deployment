@@ -10,7 +10,7 @@ page 83208 "API Posted Purchase Inv Head."
     EntitySetName = 'purchaseinvoiceheader';
     PageType = API;
     SourceTable = "Purch. Inv. Header";
-    
+
     layout
     {
         area(content)
@@ -445,9 +445,9 @@ page 83208 "API Posted Purchase Inv Head."
                 {
                     Caption = 'Price Calculation Method';
                 }
-                field(id; Rec.Id)
+                field(id; Rec.SystemId)
                 {
-                    Caption = 'Id';
+                    Caption = 'SystemId';
                 }
                 field(draftInvoiceSystemId; Rec."Draft Invoice SystemId")
                 {

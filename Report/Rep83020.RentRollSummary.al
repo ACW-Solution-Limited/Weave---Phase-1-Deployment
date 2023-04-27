@@ -6,7 +6,6 @@ report 83020 "Rent Roll Summary"
     RDLCLayout = './Layout/Rep83020.RentRollSummary.rdlc';
 
 
-
     dataset
     {
         dataitem(LeaseContractHeader; "Lease Contract Header")
@@ -30,11 +29,15 @@ report 83020 "Rent Roll Summary"
             column(TotalStayPeriodPerLicenseAgreement; g_decTotalStayPeriodPerLicenseAgreement) { }
             column(RemainingStay; g_decRemainingStay) { }
             column(MonthlyRent; g_decMonthlyRent) { }
+            column(ActualRent; g_decActualRent) { }
             column(OccupancyinPeriodDays; g_decOccupancyinPeriodDays) { }
             column(OccupancyDaysAdjusted; g_decOccupancyDaysAdjusted) { }
             column(GrossRevenueToBeRecognised; g_decGrossRevenueToBeRecognised) { }
             trigger OnAfterGetRecord()
             begin
+
+                if LeaseContractHeader."Contract Start Date" > LeaseContractHeader."Contract End Date" then
+                    CurrReport.Skip();
 
                 g_datCheckInDay := GetCheckInDay();
                 g_datCheckOutDay := GetChecOutDay();
@@ -61,9 +64,9 @@ report 83020 "Rent Roll Summary"
                     g_decOccupancyinPeriodDays := g_datEndDate - g_datStartDate + 1;
 
                 g_decMonthlyRent := CalcMonthyRent();
+                g_decActualRent := CalcActualRent(LeaseContractHeader, g_decOccupancyinPeriodDays);
                 g_decOccupancyDaysAdjusted := g_decOccupancyinPeriodDays;
                 g_decGrossRevenueToBeRecognised := LeaseContractHeader."Monthly Rent" * g_decOccupancyinPeriodDays / (g_datEndDate - g_datStartDate + 1);
-
             end;
         }
 
@@ -208,9 +211,47 @@ report 83020 "Rent Roll Summary"
 
     end;
 
+    procedure CalcActualRent(LeaseContractHeader: Record "Lease Contract Header"; OccupancyinPeriodDays: Decimal): Decimal
+    var
+        l_recBillingSchedule: Record "Lease Contract Billing Sched.";
+        l_dateCalculationStart: Date;
+        l_decActualRent: Decimal;
+    begin
+        if LeaseContractHeader."Payment Type" = LeaseContractHeader."Payment Type"::"One-off (ShortStay)" then
+            exit(LeaseContractHeader."Daily Rent" * OccupancyinPeriodDays);
 
 
+        l_decActualRent := 0;
+        l_dateCalculationStart := g_datStartDate;
 
+        repeat
+            l_recBillingSchedule.Reset();
+            l_recBillingSchedule.SetCurrentKey("Contract Start Date");
+            l_recBillingSchedule.SetAscending("Contract Start Date", true);
+            l_recBillingSchedule.SetRange(l_recBillingSchedule.Type, l_recBillingSchedule.Type::Rent);
+            l_recBillingSchedule.SetFilter(l_recBillingSchedule."Contract No.", LeaseContractHeader."No.");
+            l_recBillingSchedule.SetFilter("Contract Start Date", '..%1', l_dateCalculationStart);
+
+            if l_recBillingSchedule.Count = 0 then
+                exit(l_decActualRent);
+
+            if l_recBillingSchedule.FindLast() then begin
+
+                if g_datEndDate > l_recBillingSchedule."Contract End Date" then begin
+                    l_decActualRent += LeaseContractHeader."Monthly Rent" / l_recBillingSchedule."No. of Days Current Month" *
+                                     (l_recBillingSchedule."Contract End Date" - l_dateCalculationStart + 1);
+                    l_dateCalculationStart := l_recBillingSchedule."Contract End Date" + 1;
+                end else begin
+                    l_decActualRent += LeaseContractHeader."Monthly Rent" / l_recBillingSchedule."No. of Days Current Month" *
+                                                         (g_datEndDate - l_dateCalculationStart + 1);
+                    l_dateCalculationStart := g_datEndDate + 1;
+                end;
+
+            end;
+
+        until l_dateCalculationStart >= g_datEndDate;
+        exit(l_decActualRent);
+    end;
 
 
 
@@ -228,6 +269,7 @@ report 83020 "Rent Roll Summary"
         g_decTotalStayPeriodPerLicenseAgreement: Decimal;
         g_decRemainingStay: Decimal;
         g_decMonthlyRent: Decimal;
+        g_decActualRent: Decimal;
         g_decOccupancyinPeriodDays: Decimal;
         g_decOccupancyDaysAdjusted: Decimal;
         g_decGrossRevenueToBeRecognised: Decimal;

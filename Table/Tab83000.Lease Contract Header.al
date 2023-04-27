@@ -189,7 +189,8 @@ table 83000 "Lease Contract Header"
                 l_recBillingSchedule.SetRange("Contract No.", Rec."No.");
                 l_recBillingSchedule.setrange(Type, l_recBillingSchedule.Type::Deposit);
                 l_recBillingSchedule.setrange(Status, l_recBillingSchedule.Status::" ");
-                //l_recBillingSchedule.SetFilter(Amount, '<%1', 0);
+                l_recBillingSchedule.setrange("Stripe Invoice ID", '');
+                l_recBillingSchedule.SetFilter(Amount, '<%1', 0);
                 If l_recBillingSchedule.Findset() then begin
                     repeat
                         l_recBillingSchedule."Posting Date" := CalcDate('+2D', DT2Date("New Contract End Date"));
@@ -327,7 +328,7 @@ table 83000 "Lease Contract Header"
         field(120; Status; Option)
         {
             Caption = 'Status';
-            OptionMembers = " ",ConfirmedWithRoomAllocated,"ReadyForCheck-in",Active,FinishedContract,Terminated;
+            OptionMembers = " ",ConfirmedWithRoomAllocated,"ReadyForCheck-in",Active,FinishedContract,Terminated,"Terminated(beforeMove-in)";
             DataClassification = SystemMetadata;
         }
         field(125; "Prepaid Discount"; Decimal)

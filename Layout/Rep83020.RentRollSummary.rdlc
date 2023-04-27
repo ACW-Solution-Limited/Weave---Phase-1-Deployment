@@ -4115,6 +4115,12 @@ End Function
         <Field Name="MonthlyRentFormat">
           <DataField>MonthlyRentFormat</DataField>
         </Field>
+        <Field Name="ActualRent">
+          <DataField>ActualRent</DataField>
+        </Field>
+        <Field Name="ActualRentFormat">
+          <DataField>ActualRentFormat</DataField>
+        </Field>
         <Field Name="OccupancyinPeriodDays">
           <DataField>OccupancyinPeriodDays</DataField>
         </Field>

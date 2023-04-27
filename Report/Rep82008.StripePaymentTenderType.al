@@ -59,7 +59,7 @@ report 82008 "Stripe Payment - Tender Type"
                 l_SalesLine."Location Code" := l_recLeaseContractSetup."Item Sales Location";
                 l_SalesLine.Validate(Quantity, 1);
                 l_SalesLine.Validate("Unit price", "Tender Discount Amount");
-                l_SalesLine."Deferral Code" := l_recLeaseContractSetup."Rental Income Deferral Templ.";
+                //l_SalesLine."Deferral Code" := l_recLeaseContractSetup."Rental Income Deferral Templ.";
                 l_SalesLine.Insert();
 
                 "Credit Memo No." := l_SalesHeader."No.";
@@ -67,7 +67,7 @@ report 82008 "Stripe Payment - Tender Type"
                 Modify();
 
                 ApplyEntriesforTenderTypeDisc(l_RecPostedSalesInv."Lease Contract No.", "Sales Invoice No.", l_SalesHeader."No.", "Tender Type", "Tender Discount Amount");
-                InsertDeferral(l_SalesLine, l_SalesHeader, "Sales Invoice No.");
+                //InsertDeferral(l_SalesLine, l_SalesHeader, "Sales Invoice No.");
 
             end;
 
@@ -123,6 +123,7 @@ report 82008 "Stripe Payment - Tender Type"
         l_recCustLedgEntry: Record "Cust. Ledger Entry";
         l_recApplyingCustLedgEntryTemp: Record "Cust. Ledger Entry" temporary;
         l_Cdu_CustEntry: Codeunit "Cust. Entry-SetAppl.ID";
+        l_pageApplyCustomerEntries: Page "Apply Customer Entries";
 
     begin
         //Message('%1', SalesInvHeaderNo);
@@ -143,6 +144,7 @@ report 82008 "Stripe Payment - Tender Type"
             //l_recCustLedgEntry.validate("Applies-to ID", CreditMemoNo);
             //  l_recCustLedgEntry.Modify();
             // Message('%1', l_recCustLedgEntry."Document No.");
+            l_pageApplyCustomerEntries.CalcApplnAmount();
         end;
     end;
 

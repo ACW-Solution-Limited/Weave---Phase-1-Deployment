@@ -10,7 +10,7 @@ page 83207 "API Sales Line"
     EntitySetName = 'salesline';
     PageType = API;
     SourceTable = "Sales Line";
-    
+
     layout
     {
         area(content)
@@ -585,19 +585,19 @@ page 83207 "API Sales Line"
                 {
                     Caption = 'Originally Ordered Var. Code';
                 }
-                field(crossReferenceNo; Rec."Cross-Reference No.")
+                field(crossReferenceNo; Rec."Item Reference No.")
                 {
                     Caption = 'Cross-Reference No.';
                 }
-                field(unitOfMeasureCrossRef; Rec."Unit of Measure (Cross Ref.)")
+                field(unitOfMeasureCrossRef; Rec."Item Reference Unit of Measure")
                 {
                     Caption = 'Unit of Measure (Cross Ref.)';
                 }
-                field(crossReferenceType; Rec."Cross-Reference Type")
+                field(crossReferenceType; Rec."Item Reference Type")
                 {
                     Caption = 'Cross-Reference Type';
                 }
-                field(crossReferenceTypeNo; Rec."Cross-Reference Type No.")
+                field(crossReferenceTypeNo; Rec."Item Reference Type No.")
                 {
                     Caption = 'Cross-Reference Type No.';
                 }

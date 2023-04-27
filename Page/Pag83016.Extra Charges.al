@@ -90,6 +90,11 @@ page 83016 "Extra Charges"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the BC Status field.';
                 }
+                field("CRM Status"; Rec."CRM Status")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the CRM Status field.';
+                }
                 field("Created On"; Rec."Created On")
                 {
                     ApplicationArea = All;

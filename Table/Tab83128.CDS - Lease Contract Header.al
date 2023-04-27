@@ -259,8 +259,8 @@
             Description = '';
             Caption = 'Contract Status';
             InitValue = " ";
-            OptionMembers = " ",ConfirmedWithRoomAllocated,"ReadyForCheck-in",Active,FinishedContract,Terminated;
-            OptionOrdinalValues = -1, 557130002, 557130004, 557130000, 557130005, 557130003;
+            OptionMembers = " ",ConfirmedWithRoomAllocated,"ReadyForCheck-in",Active,FinishedContract,Terminated,"Terminated(beforeMove-in)";
+            OptionOrdinalValues = -1, 557130002, 557130004, 557130000, 557130005, 557130003, 557130001;
         }
         field(54; acwapp_OvernightStayVisitorCount; Integer)
         {

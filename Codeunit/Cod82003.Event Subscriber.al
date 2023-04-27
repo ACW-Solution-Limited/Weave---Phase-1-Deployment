@@ -189,6 +189,8 @@ codeunit 83002 EventSubscriber
 
     begin
         //  Message('%1,%2', GenJournalLine."Document No.", GenJournalLine."Applies-to Doc. No.");
+        if GenJournalLine."Document Type" <> GenJournalLine."Document Type"::Payment then
+            exit;
 
         if GenJournalLine."Document No." <> '' then
             UpdateDocumentsStatus(GenJournalLine."Document No.");

@@ -95,6 +95,6 @@ codeunit 83128 CDSPromotion
 
         // IntegrationTableMapping.reset;
         // IntegrationTableMapping.SetFilter(Name, 'CRM to BC Promotion');
-        // CUCreateJob.CreateCustomSyncJobQueueEntry(IntegrationTableMapping);
+        //// CUCreateJob.CreateCustomSyncJobQueueEntry(IntegrationTableMapping);
     end;
 }
