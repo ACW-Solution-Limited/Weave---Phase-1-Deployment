@@ -231,6 +231,7 @@ report 83020 "Rent Roll Summary"
             l_recBillingSchedule.SetRange(l_recBillingSchedule.Type, l_recBillingSchedule.Type::Rent);
             l_recBillingSchedule.SetFilter(l_recBillingSchedule."Contract No.", LeaseContractHeader."No.");
             l_recBillingSchedule.SetFilter("Contract Start Date", '..%1', l_dateCalculationStart);
+            l_recBillingSchedule.SetFilter("Contract End Date", '>%1', l_dateCalculationStart);
 
             if l_recBillingSchedule.Count = 0 then
                 exit(l_decActualRent);
