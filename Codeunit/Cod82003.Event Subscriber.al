@@ -18,6 +18,7 @@ codeunit 83002 EventSubscriber
         l_recSalesInvLine.SetRange("Document No.", SalesInvHdrNo);
         if l_recSalesInvLine.findset then
             repeat
+                UpdateItemForTriggeringCRMIntegration(l_recSalesInvLine."No.");
                 if l_recAsmOrderHeader.get(l_recAsmOrderHeader."Document Type"::Order, l_recSalesInvLine."Linked Assembly Order No.") then
                     Codeunit.run(Codeunit::"Assembly-Post", l_recAsmOrderHeader);
             until l_recSalesInvLine.next = 0;
@@ -53,7 +54,10 @@ codeunit 83002 EventSubscriber
         l_recPurchInvLine.setrange("Document No.", PurchInvHdrNo);
         if l_recPurchInvLine.findset then
             repeat
+
                 if l_recICPartner.get(l_recPurchInvLine."Expense IC Partner") Then begin
+
+                    l_recICTransBuffer.Reset();
                     l_recICTransBuffer."Id" := '{00000000-0000-0000-0000-000000000000}';
                     l_recICTransBuffer.init;
                     l_recICTransBuffer."Document No." := l_recPurchInvLine."Document No.";
@@ -66,7 +70,8 @@ codeunit 83002 EventSubscriber
                     l_recICTransBuffer."Bal. Account Type" := l_recICTransBuffer."Bal. Account Type"::"G/L Account";
                     l_recICTransBuffer."Bal. Account No." := l_recPurchInvLine."No.";
                     l_recICTransBuffer.Amount := -l_recPurchInvLine."Line Amount";
-                    if l_recICTransBuffer.insert(true) then;
+                    l_recICTransBuffer.insert(true);
+
 
                     l_recICTransBuffer.ChangeCompany(l_recICPartner."Inbox Details");
                     l_recICTransBuffer."Id" := '{00000000-0000-0000-0000-000000000000}';
@@ -82,7 +87,7 @@ codeunit 83002 EventSubscriber
                     l_recICSetup.get;
                     l_recICTransBuffer."Bal. Account No." := l_recICSetup."IC Partner Code";
                     l_recICTransBuffer.Amount := l_recPurchInvLine."Line Amount";
-                    if l_recICTransBuffer.insert(true) then;
+                    l_recICTransBuffer.insert(true);
                 end;
 
             until l_recPurchInvLine.next = 0;
@@ -191,7 +196,6 @@ codeunit 83002 EventSubscriber
         //  Message('%1,%2', GenJournalLine."Document No.", GenJournalLine."Applies-to Doc. No.");
         if GenJournalLine."Document Type" <> GenJournalLine."Document Type"::Payment then
             exit;
-
         if GenJournalLine."Document No." <> '' then
             UpdateDocumentsStatus(GenJournalLine."Document No.");
 
@@ -278,6 +282,7 @@ codeunit 83002 EventSubscriber
             l_recSalesInvHdr."Payment Status" := l_recSalesInvHdr."Payment Status"::Paid;
             l_recSalesInvHdr."External Payment Gateway" := GetExternalPaymentGateway();
             UpdateExtraCharge(l_recSalesInvHdr."No.", l_recSalesInvHdr."Stripe Payment Link", l_recSalesInvHdr."Stripe Invoice ID");
+
             l_recSalesInvHdr.Modify();
         end;
 
@@ -379,6 +384,18 @@ codeunit 83002 EventSubscriber
                 l_recLeaseBillingSchedule.Modify();
             until l_recLeaseBillingSchedule.Next() = 0;
 
+    end;
+
+    procedure UpdateItemForTriggeringCRMIntegration(ItemNo: Code[100])
+    var
+        l_recItem: Record Item;
+    begin
+
+
+        if l_recItem.Get(ItemNo) then begin
+            l_recItem.Validate("Last DateTime Modified", CurrentDateTime);
+            l_recItem.Modify();
+        end;
 
     end;
 }

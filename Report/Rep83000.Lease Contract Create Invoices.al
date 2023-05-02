@@ -30,9 +30,6 @@ report 83000 "Lease Contract Create Invoices"
                 if l_contractdate = 0D then
                     l_contractdate := g_datAsOfDate + 8;
 
-                g_property_type := GetPropertyUnitInformation(LeaseContractHeader."No.", l_contractdate, 'RoomTypeName');
-                g_property_rmno := GetPropertyUnitInformation(LeaseContractHeader."No.", l_contractdate, 'RoomUnit');
-                g_property_description := GetPropertyUnitInformation(LeaseContractHeader."No.", l_contractdate, 'Description');
                 //Get Property Unit Value <<
                 // LeaseContractHeader.CalcFields("Customer No.");
                 g_CustomerName := GetCustomerName("Customer No.");
@@ -121,6 +118,12 @@ report 83000 "Lease Contract Create Invoices"
                     l_recSalesHeaderTemp.Validate("Posting Date", g_recLeaseBillingSchedule_Temp."Posting Date");
 
                     l_recLeaseContractHeader.Get(g_recLeaseBillingSchedule_Temp."Contract No.");
+
+                    g_property_type := GetPropertyUnitInformation(l_recLeaseContractHeader."Property CRMGuid", 'RoomTypeName');
+                    g_property_rmno := GetPropertyUnitInformation(l_recLeaseContractHeader."Property CRMGuid", 'RoomUnit');
+                    g_property_description := GetPropertyUnitInformation(l_recLeaseContractHeader."Property CRMGuid", 'Description');
+
+
                     l_recSalesHeaderTemp."Lease Contract No." := g_recLeaseBillingSchedule_Temp."Contract No.";
                     l_recSalesHeaderTemp."Lease Contract Name" := l_recLeaseContractHeader."Contract Name";
                     l_recSalesHeaderTemp."Lease Contract Creation Date" := WorkDate();
@@ -148,6 +151,7 @@ report 83000 "Lease Contract Create Invoices"
                 l_recSalesLineTemp."Line No." := l_intLineNo;
                 l_recSalesLineTemp."Contract No." := g_recLeaseBillingSchedule_Temp."Contract No.";
                 l_recSalesLineTemp."Billing Schedule Line No." := g_recLeaseBillingSchedule_Temp."Line No.";
+
                 if (g_recLeaseBillingSchedule_Temp."Contract Start Date" = 0D) or (g_recLeaseBillingSchedule_Temp."Contract End Date" = 0D) then begin // for credit memo
                     If g_recLeaseBillingSchedule_Temp."Sub-Type" <> 'EXTENSION' then begin
                         l_recSalesLineTemp."Lease From Date" := DT2Date(l_recLeaseContractHeader."Contract Start Date");
@@ -308,7 +312,6 @@ report 83000 "Lease Contract Create Invoices"
                                             l_recSalesLineTemp.Quantity := 1;
                                             l_recSalesLineTemp."Unit Price" := g_recLeaseBillingSchedule_Temp.Amount;
 
-
                                         end;
                                     // Extension <<
                                     // Early Move-in >>
@@ -397,9 +400,10 @@ report 83000 "Lease Contract Create Invoices"
                         case l_recSalesLineTemp.Type of
                             l_recSalesLineTemp.Type::"G/L Account":
                                 begin
-                                    l_recGLAccount.Get(l_recSalesLineTemp."No.");
-                                    l_codeVATBusinessPostingGroup := l_recGLAccount."VAT Bus. Posting Group";
-                                    l_codeVATProductPostingGroup := l_recGLAccount."VAT Prod. Posting Group";
+                                    if l_recGLAccount.Get(l_recSalesLineTemp."No.") then begin
+                                        l_codeVATBusinessPostingGroup := l_recGLAccount."VAT Bus. Posting Group";
+                                        l_codeVATProductPostingGroup := l_recGLAccount."VAT Prod. Posting Group";
+                                    end;
                                 end;
                             l_recSalesLineTemp.Type::Item:
                                 begin
@@ -548,12 +552,12 @@ report 83000 "Lease Contract Create Invoices"
     end;
 
 
-    procedure GetPropertyUnitInformation(PropertyBookID: Code[50]; ContractDate: Date; Type: Text[250]): Text
+    procedure GetPropertyUnitInformation(PropertyCRMGuid: Guid; Type: Text[250]): Text
     var
         l_recPropertyUnit: Record "Property Unit";
     begin
 
-        l_recPropertyUnit.SetRange("CRM Guid", LeaseContractHeader."Property CRMGuid");
+        l_recPropertyUnit.SetRange("CRM Guid", PropertyCRMGuid);
         If l_recPropertyUnit.FindLast() then begin
             case Type of
                 'RoomTypeName':
@@ -675,7 +679,9 @@ report 83000 "Lease Contract Create Invoices"
         SalesLine."Lease From Date" := SalesLineTemp."Lease From Date";
         SalesLine."Lease To Date" := SalesLineTemp."Lease To Date";
         SalesLine."Billing Schedule Type" := SalesLineTemp."Billing Schedule Type";
+
         SalesLine."No. of Days to Bill" := SalesLineTemp."No. of Days to Bill";
+
         //>> Tender Type
         SalesLine."Tender Type" := SalesLineTemp."Tender Type";
         // Tender Type<<
@@ -816,7 +822,7 @@ report 83000 "Lease Contract Create Invoices"
         l_recPropertyUnitRoomType: Record "Property Unit Room Type";
     begin
         l_recPropertyUnitRoomType.Reset();
-        l_recPropertyUnitRoomType.SetFilter(Code, RoomType);
+        l_recPropertyUnitRoomType.SetFilter(Code, '%1', RoomType);
         if l_recPropertyUnitRoomType.FindFirst() then begin
             l_recPropertyUnitRoomType.TestField("G/L Account");
             exit(l_recPropertyUnitRoomType."G/L Account")
