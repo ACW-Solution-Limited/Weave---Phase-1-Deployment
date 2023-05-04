@@ -18,6 +18,11 @@ page 83002 "Lease Contract List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the No. field.';
                 }
+                field("Contract Name"; Rec."Contract Name")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Contract Name field.';
+                }
                 field(Status; Rec.Status)
                 {
                     ApplicationArea = All;
@@ -33,21 +38,48 @@ page 83002 "Lease Contract List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Customer Name field.';
                 }
+                field("Contract Start Date"; DT2Date(Rec."Contract Start Date"))
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Contract Start Date field.';
+                }
+                field("Contract End Date"; DT2Date(Rec."Contract End Date"))
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Contract End Date field.';
+                }
                 field("Property No."; Rec."Property No.")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Property No. field.';
                 }
-                field("Contract Start Date"; Rec."Contract Start Date")
+                field("Property Name"; Rec."Property Name")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Contract Start Date field.';
+                    ToolTip = 'Specifies the value of the Property Name field.';
                 }
-                field("Contract End Date"; Rec."Contract End Date")
+
+                field("Room No."; Rec."Room No.")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Contract End Date field.';
+                    ToolTip = 'Specifies the value of the Room No. field.';
                 }
+                field("Room Type"; Rec."Room Type")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Room Type field.';
+                }
+                field("Room Name"; Rec."Room Name")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Room Name field.';
+                }
+                field("Deposit Returned"; Rec."Deposit Returned")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Deposit Returnedfield.';
+                }
+
                 field("Automatically Extend"; Rec."Automatically Extend")
                 {
                     ApplicationArea = All;

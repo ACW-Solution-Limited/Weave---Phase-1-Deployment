@@ -21,6 +21,7 @@ page 83021 "Property Unit Room Type"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Property No. field.';
+                    Visible = false;
                 }
                 field(Description; Rec.Description)
                 {

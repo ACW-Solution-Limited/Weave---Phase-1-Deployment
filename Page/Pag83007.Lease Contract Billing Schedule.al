@@ -3,7 +3,6 @@ page 83007 "Lease Contract Billing Sched."
     Caption = 'Lease Contract Billing Schedule';
     PageType = List;
     SourceTable = "Lease Contract Billing Sched.";
-    SourceTableView = sorting("Line No.") order(ascending);
 
     layout
     {
@@ -16,6 +15,7 @@ page 83007 "Lease Contract Billing Sched."
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Line No. field.';
+                    Visible = false;
                 }
                 field("Type"; Rec."Type")
                 {
@@ -210,9 +210,18 @@ page 83007 "Lease Contract Billing Sched."
 
                 end;
             }
+
         }
     }
 
+    trigger OnOpenPage()
+    begin
+        Rec.SetCurrentKey("Posting Date");
+        Rec.SetAscending("Posting Date", true);
+    end;
+
     var
         g_booEditable: Boolean;
+
+
 }

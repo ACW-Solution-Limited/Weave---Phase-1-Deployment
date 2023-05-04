@@ -124,23 +124,27 @@ table 83000 "Lease Contract Header"
         }
         field(23; "Property CRMGuid"; Guid)
         {
-            Caption = 'Property CRMGuid';
+            Caption = 'Property CRMGuid'; // Room Guid
             DataClassification = SystemMetadata;
 
             trigger OnValidate()
             var
+                l_recPropertyRoomUnit: Record "Property Unit";
                 l_recPropertyUnit: Record "Property Unit";
             begin
-                l_recPropertyUnit.Reset();
-                //if l_recPropertyUnit.Get("Property No.") then
-                l_recPropertyUnit.SetRange("CRM GUID", "Property CRMGuid");
-                If l_recPropertyUnit.FindFirst() then begin
-                    "Property Name" := l_recPropertyUnit.Description;
-                    "Property No." := l_recPropertyUnit."No.";
-                    "Property Unit Name" := l_recPropertyUnit.Description;
-                    "Room No." := l_recPropertyUnit."Room No.";
-                    "Room Name" := l_recPropertyUnit.Description;
-                    "Room Type" := l_recPropertyUnit."Room Type Name";
+                l_recPropertyRoomUnit.Reset();
+                l_recPropertyRoomUnit.SetRange("CRM GUID", "Property CRMGuid");
+                If l_recPropertyRoomUnit.FindFirst() then begin
+                    //Room Information >>
+                    "Room No." := l_recPropertyRoomUnit."Room No.";
+                    "Room Name" := l_recPropertyRoomUnit.Description;
+                    "Room Type" := l_recPropertyRoomUnit."Room Type Name";
+                    "Property No." := l_recPropertyRoomUnit."Property No.";
+                    //Room Information <<
+
+                    if l_recPropertyUnit.Get(l_recPropertyRoomUnit."Property No.") then
+                        "Property Name" := l_recPropertyUnit.Description; // Building Information
+
                 end;
             end;
 
@@ -150,23 +154,6 @@ table 83000 "Lease Contract Header"
             Caption = 'Property No.';
             DataClassification = SystemMetadata;
             TableRelation = "Property Unit"."No.";
-            trigger OnValidate()
-            var
-                l_recPropertyUnit: Record "Property Unit";
-            begin
-                // l_recPropertyUnit.Reset();
-                // l_recPropertyUnit.SetRange("No.", "Property No.");
-                // If l_recPropertyUnit.FindFirst() then begin
-                //     "Property Name" := l_recPropertyUnit.Description;
-                //     "Property No." := l_recPropertyUnit."No.";
-                //     "Property Unit Name" := l_recPropertyUnit.Description;
-                //     "Room No." := l_recPropertyUnit."Room No.";
-                //     "Room Name" := l_recPropertyUnit.Description;
-                //     "Room Type" := l_recPropertyUnit."Room Type Name";
-                // end;
-            end;
-
-
         }
         field(30; "Deposit Amount"; Decimal)
         {
@@ -299,12 +286,12 @@ table 83000 "Lease Contract Header"
         field(90; "Room Type"; Text[100])
         {
             DataClassification = ToBeClassified;
-            TableRelation = "Property Unit"."Room Type Name" where("CRM GUID" = Field("Property CRMGuid"));
+            //TableRelation = "Property Unit"."Room Type Name" where("CRM GUID" = Field("Property CRMGuid"));
         }
         field(95; "Room No."; Code[20])
         {
             DataClassification = ToBeClassified;
-            TableRelation = "Property Unit"."Room No." where("CRM GUID" = Field("Property CRMGuid"));
+            // TableRelation = "Property Unit"."Room No." where("CRM GUID" = Field("Property CRMGuid"));
         }
         field(100; "Room Name"; Text[100])
         {
@@ -329,6 +316,7 @@ table 83000 "Lease Contract Header"
         {
             Caption = 'Status';
             OptionMembers = " ",ConfirmedWithRoomAllocated,"ReadyForCheck-in",Active,FinishedContract,Terminated,"Terminated(beforeMove-in)";
+            OptionCaption = ' ,Confirmed With Room Allocated,Ready For Check-in,Active,Finished Contract,Terminated,Terminated (before Move-in)';
             DataClassification = SystemMetadata;
         }
         field(125; "Prepaid Discount"; Decimal)

@@ -58,6 +58,14 @@ tableextension 83037 SalesLineExt extends "Sales Line"
             DataClassification = ToBeClassified;
 
         }
+
+        field(83030; "Billing Schedule Sub-Type"; Code[100])
+        {
+            Caption = 'Billing Schedule Sub-Type';
+        }
+
+        field(83031; "Extension Start Date"; Date) { }
+        field(83032; "Extension End Date"; Date) { }
     }
     trigger OnDelete()
     var
