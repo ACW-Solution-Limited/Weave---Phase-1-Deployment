@@ -129,7 +129,7 @@
             ExternalName = 'acwapp_companyid';
             ExternalType = 'String';
             Description = '';
-            Caption = 'Company ID';
+            Caption = 'BC Company ID';
         }
         field(50041; acwapp_Type; Option)
         {

@@ -203,6 +203,13 @@ codeunit 83002 EventSubscriber
             UpdateDocumentsStatus(GenJournalLine."Applies-to Doc. No.");
     end;
 
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"IC Auto Accept Feature Mgt.", 'OnAfterIsICAutoAcceptTransactionEnabled', '', false, false)]
+    local procedure OnAfterIsICAutoAcceptTransactionEnabled(var Result: Boolean)
+    begin
+        Result := true;// For BC Version 21 to skip the checking
+    end;
+
     procedure UpdateDocumentsStatus(DocumentNo: Code[250])
     var
         l_recExtraCharge: Record "Extra Charge";
