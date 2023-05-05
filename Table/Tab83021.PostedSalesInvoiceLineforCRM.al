@@ -628,6 +628,13 @@ table 83021 "Posted Sales Inv. Line for CRM"
             CalcFormula = lookup("CDS acwapp_salesinvoice".acwapp_salesinvoiceId where(acwapp_name = field("Document No.")));
         }
 
+        field(83030; "Billing Schedule Sub-Type"; Code[100])
+        {
+            Caption = 'Billing Schedule Sub-Type';
+        }
+        field(83031; "Extension Start Date"; Date) { }
+        field(83032; "Extension End Date"; Date) { }
+
     }
     keys
     {

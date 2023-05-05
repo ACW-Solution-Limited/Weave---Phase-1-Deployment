@@ -5,7 +5,7 @@ codeunit 82004 "PowerApp Po Approval"
     var
         l_recCompanyInfo: Record "Company Information";
     begin
-        Message('%1 / %2 / %3 OnBeforeCheckUserAsApprovalAdministrator', ApprovalEntry.count, ApprovalEntry.GetFilters, ApprovalEntry."Sequence No.");
+        //  Message('%1 / %2 / %3 OnBeforeCheckUserAsApprovalAdministrator', ApprovalEntry.count, ApprovalEntry.GetFilters, ApprovalEntry."Sequence No.");
         /*l_recCompanyInfo.Get;
         If (l_recCompanyInfo."HK Master Company") or (l_recCompanyInfo."SG Master Company") then
             IsHandled := true;*/
@@ -15,7 +15,7 @@ codeunit 82004 "PowerApp Po Approval"
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnBeforeApproveApprovalRequests', '', true, true)]
     local procedure OnBeforeApproveApprovalRequests(var ApprovalEntry: Record "Approval Entry"; var IsHandled: Boolean)
     begin
-        Message('%1 %2 OnBeforeApproveApprovalRequests', ApprovalEntry.count, ApprovalEntry.GetFilters, ApprovalEntry."Sequence No.");
+        //Message('%1 %2 OnBeforeApproveApprovalRequests', ApprovalEntry.count, ApprovalEntry.GetFilters, ApprovalEntry."Sequence No.");
 
     end;
 

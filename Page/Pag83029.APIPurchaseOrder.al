@@ -662,6 +662,14 @@ page 83029 APIPurchaseOrder
                 {
                     Caption = 'Your Reference';
                 }
+                field(Type; Rec.Type)
+                {
+                    Caption = 'Type';
+                }
+                field(Subtype; Rec.Subtype)
+                {
+                    Caption = 'Subtype';
+                }
             }
         }
     }

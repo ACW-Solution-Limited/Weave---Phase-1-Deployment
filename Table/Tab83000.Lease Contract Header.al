@@ -355,6 +355,12 @@ table 83000 "Lease Contract Header"
             Caption = 'Deposit Returned';
             DataClassification = SystemMetadata;
         }
+
+        field(156; "Opening Contract"; Boolean)
+        {
+            Caption = 'Opening Contract';
+            DataClassification = SystemMetadata;
+        }
         field(160; "Billing Schedule Created"; Boolean)
         {
             Caption = 'Billing Scheduled Created';
@@ -439,7 +445,16 @@ table 83000 "Lease Contract Header"
             l_cduRefreshBillingSched.RefreshBillingSchedule(Rec, true);*/
     end;
 
-
+    trigger OnDelete()
+    var
+        l_recBillingSchdeule: Record "Lease Contract Billing Sched.";
+    begin
+        l_recBillingSchdeule.Reset();
+        l_recBillingSchdeule.SetFilter("Contract No.", "No.");
+        l_recBillingSchdeule.SetFilter(Status, '<>%1', l_recBillingSchdeule.Status::" ");
+        if l_recBillingSchdeule.Count > 0 then
+            Error('Deletion of the contract is not permitted if an invoice has been created.');
+    end;
 
     var
         PostCode: Record "Post Code";

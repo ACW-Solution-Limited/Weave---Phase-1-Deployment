@@ -60,6 +60,13 @@ table 83028 "Approval Record for PowerApp"
             Caption = 'Sequence No.';
             DataClassification = ToBeClassified;
         }
+        field(11; "Comment"; Text[80])
+        {
+            Caption = 'Comment';
+            DataClassification = ToBeClassified;
+        }
+
+
 
     }
     keys

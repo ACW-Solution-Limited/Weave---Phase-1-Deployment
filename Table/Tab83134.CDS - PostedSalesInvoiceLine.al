@@ -305,6 +305,37 @@
             Description = '';
             Caption = 'Invoice Period To';
         }
+ field(58; acwapp_BillingScheduleType; Option)
+    {
+      ExternalName = 'acwapp_billingscheduletype';
+      ExternalType = 'Picklist';
+      Description = '';
+      Caption = 'Billing Schedule Type';
+      InitValue = " ";
+      OptionMembers = " ", Deposit, Rent, Item;
+      OptionOrdinalValues = -1, 557130000, 557130001, 557130002;
+    }
+    field(60; acwapp_BillingScheduleSubType; Text[100])
+    {
+      ExternalName = 'acwapp_billingschedulesubtype';
+      ExternalType = 'String';
+      Description = '';
+      Caption = 'Billing Schedule Sub-Type';
+    }
+    field(61; acwapp_ExtensionStartDate; Date)
+    {
+      ExternalName = 'acwapp_extensionstartdate';
+      ExternalType = 'DateTime';
+      Description = '';
+      Caption = 'Extension Start Date';
+    }
+    field(62; acwapp_ExtensionEndDate; Date)
+    {
+      ExternalName = 'acwapp_extensionenddate';
+      ExternalType = 'DateTime';
+      Description = '';
+      Caption = 'Extension End Date';
+    }
         field(67; acwapp_PaymentReferenceID; Text[100])
         {
             ExternalName = 'acwapp_paymentreferenceid';

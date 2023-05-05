@@ -1,7 +1,10 @@
 tableextension 83014 LocationExt extends Location
 {
+
+
     fields
     {
+
         field(80000; "Company Name"; Text[250])
         {
             Caption = 'Company Name';
@@ -19,4 +22,5 @@ tableextension 83014 LocationExt extends Location
         }
 
     }
+
 }

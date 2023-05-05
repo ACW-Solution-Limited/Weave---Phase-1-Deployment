@@ -44,6 +44,10 @@ page 83032 APIApproveRecord
                 {
                     Caption = 'Completed';
                 }
+                field(comment; Rec.Comment)
+                {
+                    Caption = 'Comment';
+                }
 
                 field(sequenceNo; Rec."Sequence No.")
                 {
@@ -53,6 +57,7 @@ page 83032 APIApproveRecord
                 {
                     Caption = 'SystemCreatedAt';
                 }
+
 
 
             }

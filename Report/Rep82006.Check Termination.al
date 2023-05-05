@@ -21,6 +21,8 @@ report 82006 "Check Term/Create Sales Inv"
                 If "Deposit Returned" = true then
                     CurrReport.Skip();
 
+
+
                 CreateInvoiceCreditMemo.SetTableView(p_recLeaseContractHeader);
                 CreateInvoiceCreditMemo.UseRequestPage := false;
                 l_recBillingSchedule.reset;
@@ -30,7 +32,8 @@ report 82006 "Check Term/Create Sales Inv"
                     CreateInvoiceCreditMemo.Run;
                 end else begin
                     If DT2date("Contract Termination Date") <> 0D then begin
-                        TerminationDateCodunit.TerminateContract(p_recLeaseContractHeader, true);
+                        if NOT ("Opening Contract") then
+                            TerminationDateCodunit.TerminateContract(p_recLeaseContractHeader, true);
                         //p_recLeaseContractHeader."Run Terminated Billing Sched." := CurrentDateTime;
                         //p_recLeaseContractHeader.Modify;
                         /*l_recBillingSchedule.SetRange("Contract No.", p_recLeaseContractHeader."No.");

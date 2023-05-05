@@ -151,7 +151,7 @@ report 83000 "Lease Contract Create Invoices"
                 l_recSalesLineTemp."Line No." := l_intLineNo;
                 l_recSalesLineTemp."Contract No." := g_recLeaseBillingSchedule_Temp."Contract No.";
                 l_recSalesLineTemp."Billing Schedule Line No." := g_recLeaseBillingSchedule_Temp."Line No.";
-
+                l_recSalesLineTemp."Billing Schedule Sub-Type" := g_recLeaseBillingSchedule_Temp."Sub-Type";
                 if (g_recLeaseBillingSchedule_Temp."Contract Start Date" = 0D) or (g_recLeaseBillingSchedule_Temp."Contract End Date" = 0D) then begin // for credit memo
                     If g_recLeaseBillingSchedule_Temp."Sub-Type" <> 'EXTENSION' then begin
                         l_recSalesLineTemp."Lease From Date" := DT2Date(l_recLeaseContractHeader."Contract Start Date");
@@ -311,6 +311,8 @@ report 83000 "Lease Contract Create Invoices"
                                                                           );
                                             l_recSalesLineTemp.Quantity := 1;
                                             l_recSalesLineTemp."Unit Price" := g_recLeaseBillingSchedule_Temp.Amount;
+                                            l_recSalesLineTemp."Extension Start Date" := CalcDate('1D', DT2Date(l_recLeaseContractHeader."Contract End Date"));
+                                            l_recSalesLineTemp."Extension End Date" := DT2Date(l_recLeaseContractHeader."New Contract End Date");
 
                                         end;
                                     // Extension <<
@@ -679,9 +681,10 @@ report 83000 "Lease Contract Create Invoices"
         SalesLine."Lease From Date" := SalesLineTemp."Lease From Date";
         SalesLine."Lease To Date" := SalesLineTemp."Lease To Date";
         SalesLine."Billing Schedule Type" := SalesLineTemp."Billing Schedule Type";
-
+        SalesLine."Billing Schedule Sub-Type" := SalesLineTemp."Billing Schedule Sub-Type";
         SalesLine."No. of Days to Bill" := SalesLineTemp."No. of Days to Bill";
-
+        SalesLine."Extension Start Date" := SalesLineTemp."Extension Start Date";
+        SalesLine."Extension End Date" := SalesLineTemp."Extension End Date";
         //>> Tender Type
         SalesLine."Tender Type" := SalesLineTemp."Tender Type";
         // Tender Type<<

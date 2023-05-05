@@ -53,6 +53,7 @@ tableextension 83113 SalesInvoiceLineExt extends "Sales Invoice Line"
 
         }
 
+
         field(83020; "Company Name"; Text[250]) { }
         field(83021; "Company Guid for CRM"; Guid)
         {
@@ -66,11 +67,22 @@ tableextension 83113 SalesInvoiceLineExt extends "Sales Invoice Line"
             CalcFormula = lookup("CDS acwapp_salesinvoice".acwapp_salesinvoiceId where(acwapp_name = field("Document No.")));
         }
 
+
+
         field(83009; "No. of Days to Bill"; Integer)
         {
             DataClassification = ToBeClassified;
 
         }
+
+
+
+        field(83030; "Billing Schedule Sub-Type"; Code[100])
+        {
+            Caption = 'Billing Schedule Sub-Type';
+        }
+        field(83031; "Extension Start Date"; Date) { }
+        field(83032; "Extension End Date"; Date) { }
 
     }
 }

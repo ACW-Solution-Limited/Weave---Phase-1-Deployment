@@ -3111,7 +3111,7 @@
               <Width>9.11743cm</Width>
               <ZIndex>9</ZIndex>
               <Visibility>
-                <Hidden>true</Hidden>
+                <Hidden>=Globals!PageNumber&lt;&gt;Globals!OverallTotalPages</Hidden>
               </Visibility>
               <Style>
                 <Border>

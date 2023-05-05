@@ -45,6 +45,10 @@ page 83033 "Approval Record"
                 {
                     ToolTip = 'Specifies the value of the Completed field.';
                 }
+                field(Comment; Rec.Comment)
+                {
+                    ToolTip = 'Specifies the value of the Comment field.';
+                }
                 field(SystemCreatedAt; Rec.SystemCreatedAt)
                 {
                     ToolTip = 'Specifies the value of the SystemCreatedAt field.';

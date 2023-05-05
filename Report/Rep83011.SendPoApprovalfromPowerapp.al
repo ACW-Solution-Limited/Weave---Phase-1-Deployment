@@ -24,7 +24,7 @@ report 83011 "Send Po Approval from Powerapp"
                             ApprovalsMgmt.OnSendPurchaseDocForApproval(PurchaseHeader);
                     end;
                 end else begin
-                    If "Request Approval" = false then begin
+                    If ("Request Approval" = false) And (Status = Status::"Pending Approval") then begin
                         ApprovalsMgmt.OnCancelPurchaseApprovalRequest(PurchaseHeader);
                         WorkflowWebhookMgt.FindAndCancel(RecordId);
                     end;

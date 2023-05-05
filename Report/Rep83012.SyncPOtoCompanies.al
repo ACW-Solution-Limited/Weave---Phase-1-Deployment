@@ -47,11 +47,18 @@ report 83012 "Sync PO to Companies"
                 l_recLocation: Record Location;
                 l_PurchasesPayablesSetup: Record "Purchases & Payables Setup";
                 NoSeriesMgt: Codeunit NoSeriesManagement;
+                l_NoSeriesLine: Record "No. Series Line";
+                l_PoNumber: Integer;
+                l_l_PoNumberCode: Code[20];
 
             begin
                 Clear(g_Purchase_No);
+                Clear(g_Companyfilter);
+                Clear(l_PoNumber);
+                Clear(l_l_PoNumberCode);
                 l_PurchasesPayablesSetup.reset;
                 l_recLocation.reset;
+                l_NoSeriesLine.reset;
                 If ("Sync to Companies" = true) OR ("Assigned PO No." <> '') then
                     CurrReport.skip;
 
@@ -60,16 +67,31 @@ report 83012 "Sync PO to Companies"
 
                 l_recLocation.Get("Company Filter");
                 g_Companyfilter := l_recLocation."Company Name";
+
                 // g_Companyfilter := "Company Filter".TrimEnd().TrimStart();
-                l_recPurchaseHeader.reset;
+
                 l_recPurchaseHeader.ChangeCompany(g_Companyfilter);
+                l_recPurchaseHeader.reset;
                 l_PurchasesPayablesSetup.ChangeCompany(g_Companyfilter);
+                l_NoSeriesLine.ChangeCompany(g_Companyfilter);
                 l_PurchasesPayablesSetup.Get;
                 l_recPurchaseHeader.Init();
-                //l_recPurchaseHeader := PurchaseHeader;
                 l_recPurchaseHeader.TransferFields(PurchaseHeader);
-                l_recPurchaseHeader."No." := NoSeriesMgt.GetNextNo(l_PurchasesPayablesSetup."Order Nos.", WorkDate(), true);
-                g_Purchase_No := l_recPurchaseHeader."No.";
+                l_NoSeriesLine.reset;
+                l_NoSeriesLine.SetRange("Series Code", l_PurchasesPayablesSetup."Order Nos.");
+                l_NoSeriesLine.SetFilter("Starting Date", '<=%1', "Posting Date");
+                If l_NoSeriesLine.findlast then begin
+                    If l_NoSeriesLine."Last No. Used" <> '' then begin
+                        g_Purchase_No := INCSTR(l_NoSeriesLine."Last No. Used");
+                    end else begin
+                        g_Purchase_No := l_NoSeriesLine."Starting No.";
+                    end;
+                end else begin
+                    g_Purchase_No := "No.";
+                end;
+                //  g_Purchase_No := "No.";
+                l_recPurchaseHeader."No." := g_Purchase_No;
+                //Message('%1', l_recPurchaseHeader."No.");
                 l_recPurchaseHeader."Assigned PO No." := PurchaseHeader."No.";
                 l_recPurchaseHeader.Insert();
                 // Message('%1 :%2', "No.", g_Companyfilter);

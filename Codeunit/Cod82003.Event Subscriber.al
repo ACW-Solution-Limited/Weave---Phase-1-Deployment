@@ -301,6 +301,7 @@ codeunit 83002 EventSubscriber
     begin
         if l_recSalesInvHdr.get(SalesInvHdrNo) then begin
             l_recSalesInvHdr."Payment Status" := l_recSalesInvHdr."Payment Status"::Pending;
+            UpdateExtraCharge(l_recSalesInvHdr."No.", l_recSalesInvHdr."Stripe Payment Link", l_recSalesInvHdr."Stripe Invoice ID");
             l_recSalesInvHdr.Modify();
         end;
 

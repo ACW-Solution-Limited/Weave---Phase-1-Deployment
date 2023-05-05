@@ -629,7 +629,7 @@ page 83050 "Customer List (Editable)"
                 {
                     ToolTip = 'Specifies the value of the Validate EU VAT Reg. No. field.';
                 }
-                field(Id; Rec.Id)
+                field(Id; Rec.SystemId)
                 {
                     ToolTip = 'Specifies the value of the Id field.';
                 }

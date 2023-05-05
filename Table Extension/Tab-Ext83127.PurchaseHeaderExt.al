@@ -32,15 +32,21 @@ tableextension 83127 "Purchase Header Ext" extends "Purchase Header"
             // end;
 
         }
-        // trigger on()
-        // var
-        //     myInt: Integer;
-        // begin
 
-        // end;
         field(80004; "Sync to Companies"; Boolean)
         {
             Caption = 'Sync to Companies';
+        }
+
+        field(80005; "Type"; code[30])
+        {
+            Caption = 'Type';
+            TableRelation = "Purchase Order Type".Type;
+        }
+        field(80006; "Subtype"; code[30])
+        {
+            Caption = 'Subtype';
+            TableRelation = "Purchase Order Type".Subtype where(Type = field(Type));
         }
 
 

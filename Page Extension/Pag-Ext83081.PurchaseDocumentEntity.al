@@ -27,6 +27,17 @@ pageextension 83081 "Purchase Document Entity" extends "Purchase Document Entity
                 ApplicationArea = All;
                 Caption = 'Request Approval', Locked = true;
             }
+            field(Type; Rec.Type)
+            {
+                ApplicationArea = All;
+                Caption = 'Type', Locked = true;
+            }
+            field(Subtype; Rec.Subtype)
+            {
+                ApplicationArea = All;
+                Caption = 'Subtype', Locked = true;
+            }
+
         }
 
     }

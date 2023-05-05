@@ -700,10 +700,10 @@ report 83001 "Lease Contract Sales Invoice"
                 column(LineCustomerName; g_Customer_Name)
                 {
                 }
-                column(Lease_From_Date; format("Lease From Date", 0, '<Day,2>/<Month,2>/<Year4>'))
+                column(Lease_From_Date; g_txtLeaseFromDate)
                 {
                 }
-                column(Lease_To_Date; format("Lease To Date", 0, '<Day,2>/<Month,2>/<Year4>'))
+                column(Lease_To_Date; g_txtLeaseToDate)
                 {
                 }
                 column(Nosbillingdays; g_calcbillingdaysTxt)
@@ -804,6 +804,16 @@ report 83001 "Lease Contract Sales Invoice"
                     l_recCustomer.reset;
                     l_recCustomer.Get("Sell-to Customer No.");
                     g_Customer_Name := l_recCustomer.Name;
+
+                    g_txtLeaseFromDate := format("Lease From Date", 0, '<Day,2>/<Month,2>/<Year4>');
+                    g_txtLeaseToDate := format("Lease To Date", 0, '<Day,2>/<Month,2>/<Year4>');
+
+                    if "Billing Schedule Sub-Type" = 'EXTENSION' then begin
+                        g_txtLeaseFromDate := format("Extension Start Date", 0, '<Day,2>/<Month,2>/<Year4>');
+                        g_txtLeaseToDate := format("Extension End Date", 0, '<Day,2>/<Month,2>/<Year4>');
+                    end;
+
+
                     LeaseContractHeader.reset();
                     LeaseContractHeader.Setrange("No.", "Contract No.");
                     If LeaseContractHeader.Findfirst() then
@@ -1667,6 +1677,9 @@ report 83001 "Lease Contract Sales Invoice"
         g_lineAmount: Decimal;
 
         g_linetype: Text;
+
+        g_txtLeaseFromDate: Text;
+        g_txtLeaseToDate: Text;
 
 
 

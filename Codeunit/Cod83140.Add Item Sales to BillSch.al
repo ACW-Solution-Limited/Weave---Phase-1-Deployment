@@ -13,6 +13,7 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
         CreateExtraCharge(CRMExtraCharge);
     end;
 
+
     //procedure CreateWelcomeAmentities(var CRMWelcomeAmentities: Record "CDS acwapp_welcomeamenities"; LineNo: Integer; PostingDate: Date; DueDate: Date; PaymentReferenceID: Text[250]): Integer
     procedure CreateWelcomeAmentities(var CRMWelcomeAmentities: Record "Welcome Amenities"; ContractNo: Text[100]; LineNo: Integer; PostingDate: Date; DueDate: Date; PaymentReferenceID: Text[250]): Integer
     var

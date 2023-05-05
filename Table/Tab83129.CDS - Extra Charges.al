@@ -424,26 +424,26 @@
             Caption = 'New Contract End Date';
         }
         field(82; acwapp_AmountIncludeGST; Decimal)
-    {
-      ExternalName = 'acwapp_amountincludegst';
-      ExternalType = 'Money';
-      Description = '';
-      Caption = 'Amount Include GST';
-    }
-    field(83; acwapp_amountincludegst_Base; Decimal)
-    {
-      ExternalName = 'acwapp_amountincludegst_base';
-      ExternalType = 'Money';
-      ExternalAccess = Read;
-      Description = 'Value of the Amount Include GST in base currency.';
-      Caption = 'Amount Include GST (Base)';
-    }
+        {
+            ExternalName = 'acwapp_amountincludegst';
+            ExternalType = 'Money';
+            Description = '';
+            Caption = 'Amount Include GST';
+        }
+        field(83; acwapp_amountincludegst_Base; Decimal)
+        {
+            ExternalName = 'acwapp_amountincludegst_base';
+            ExternalType = 'Money';
+            ExternalAccess = Read;
+            Description = 'Value of the Amount Include GST in base currency.';
+            Caption = 'Amount Include GST (Base)';
+        }
         field(84; acwapp_Status; Option)
         {
             ExternalName = 'acwapp_status';
             ExternalType = 'Picklist';
             Description = '';
-            Caption = 'Status';
+            Caption = 'Approval Status';
             InitValue = Pending;
             OptionMembers = Pending,Confirmed;
             OptionOrdinalValues = 557130000, 557130001;

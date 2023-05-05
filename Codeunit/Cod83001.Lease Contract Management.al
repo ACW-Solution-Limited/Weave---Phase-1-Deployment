@@ -516,7 +516,9 @@ codeunit 83001 "Lease Contract Management"
         l_recLeaseContractBillingSchedule.setrange("Contract No.", p_recLeaseContractHeader."No.");
         l_recLeaseContractBillingSchedule.setrange(Type, l_recLeaseContractBillingSchedule.Type::Deposit);
         l_recLeaseContractBillingSchedule.setrange(Status, l_recLeaseContractBillingSchedule.Status::" ");
-        //l_recLeaseContractBillingSchedule.SetFilter(Amount, '<%1', 0);
+        l_recLeaseContractBillingSchedule.setrange("Stripe Invoice ID", '');
+        l_recLeaseContractBillingSchedule.SetFilter(Amount, '<%1', 0);
+
         If l_recLeaseContractBillingSchedule.FindSet() then begin
             repeat
                 l_recLeaseContractBillingSchedule."Posting Date" := CalcDate('2D', DT2DATE(p_recLeaseContractHeader."Contract Termination Date"));

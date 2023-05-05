@@ -105,6 +105,10 @@ codeunit 83127 "CDS Posted Sales Invoice Line"
         InsertIntegrationFieldMapping('BC to CRM PSHL', PostedSalesInvoiceLine.FieldNo("VAT %"), CRMPostedSalesInvoiceLine.FieldNo(acwapp_gst), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('BC to CRM PSHL', PostedSalesInvoiceLine.FieldNo("Lease From Date"), CRMPostedSalesInvoiceLine.FieldNo(acwapp_invoiceperiodfrom), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('BC to CRM PSHL', PostedSalesInvoiceLine.FieldNo("Lease To Date"), CRMPostedSalesInvoiceLine.FieldNo(acwapp_invoiceperiodto), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+        InsertIntegrationFieldMapping('BC to CRM PSHL', PostedSalesInvoiceLine.FieldNo("Billing Schedule Type"), CRMPostedSalesInvoiceLine.FieldNo(acwapp_BillingScheduleType), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+        InsertIntegrationFieldMapping('BC to CRM PSHL', PostedSalesInvoiceLine.FieldNo("Billing Schedule Sub-Type"), CRMPostedSalesInvoiceLine.FieldNo(acwapp_BillingScheduleSubType), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+        InsertIntegrationFieldMapping('BC to CRM PSHL', PostedSalesInvoiceLine.FieldNo("Extension Start Date"), CRMPostedSalesInvoiceLine.FieldNo(acwapp_ExtensionStartDate), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+        InsertIntegrationFieldMapping('BC to CRM PSHL', PostedSalesInvoiceLine.FieldNo("Extension End Date"), CRMPostedSalesInvoiceLine.FieldNo(acwapp_ExtensionEndDate), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
 
         IntegrationTableMapping."Table Filter".CreateOutStream(FilterStr);
         FilterText := 'VERSION(1) SORTING(Field3,Field4) WHERE(Field83023=1(<>{00000000-0000-0000-0000-000000000000}))';

@@ -4,6 +4,11 @@ pageextension 83013 "Purchase Order List Ext" extends "Purchase Order List"
     {
         addlast(Control1)
         {
+            field(type; rec.Type)
+            { ApplicationArea = All; }
+
+            field(SubType; rec.SubType)
+            { ApplicationArea = All; }
 
             field("Company Filter"; Rec."Company Filter")
             {

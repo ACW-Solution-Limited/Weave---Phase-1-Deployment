@@ -2,7 +2,16 @@ pageextension 83012 "Purchase Order Ext" extends "Purchase Order"
 {
     layout
     {
+        addafter("Due Date")
+        {
 
+            field(type; rec.Type)
+            { ApplicationArea = All; }
+
+            field(SubType; rec.SubType)
+            { ApplicationArea = All; }
+
+        }
         addafter(Status)
         {
             field("Company Filter"; Rec."Company Filter")
@@ -30,8 +39,12 @@ pageextension 83012 "Purchase Order Ext" extends "Purchase Order"
 
 
         }
+        modify(Control1900383207)
+        {
+            Visible = true;
+        }
+
 
     }
-
 
 }
