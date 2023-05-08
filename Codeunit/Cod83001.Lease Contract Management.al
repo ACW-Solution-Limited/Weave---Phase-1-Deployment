@@ -27,6 +27,7 @@ codeunit 83001 "Lease Contract Management"
     begin
 
         if p_recLeaseContractHeader."No." = 'PB-230223-005' then exit;
+        if p_recLeaseContractHeader."Opening Contract" then exit;
 
         l_intLineNo := 0;
         g_deposit := 0;

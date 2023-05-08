@@ -13,10 +13,24 @@ report 83150 "Billing Schedule Data Patch"
             {
             }
 
+            trigger OnPreDataItem()
+            var
+                l_recBillingScheduleDelete: Record "Lease Contract Billing Sched.";
+            begin
+                l_recBillingScheduleDelete.Reset();
+                l_recBillingScheduleDelete.SetRange("Line No.", 9999999);
+                if l_recBillingScheduleDelete.FindFirst() then
+                    repeat
+                        l_recBillingScheduleDelete.Delete();
+                    until l_recBillingScheduleDelete.Next() = 0;
+
+            end;
+
             trigger OnAfterGetRecord()
             var
                 l_recBillingSchedule: Record "Lease Contract Billing Sched.";
                 l_recBillingScheduleChecking: Record "Lease Contract Billing Sched.";
+                l_recBillingScheduleCheckingNoOfDepost: Record "Lease Contract Billing Sched.";
 
             begin
 
@@ -27,17 +41,22 @@ report 83150 "Billing Schedule Data Patch"
                 l_recBillingScheduleChecking.SetFilter("Contract No.", LeaseContractHeader."No.");
                 l_recBillingScheduleChecking.SetRange(Type, l_recBillingScheduleChecking.Type::Deposit);
                 l_recBillingScheduleChecking.SetFilter(Amount, '>0');
-                if l_recBillingScheduleChecking.FindFirst() and (l_recBillingScheduleChecking.Count = 1) then begin
-                    l_recBillingSchedule.Init();
-                    l_recBillingSchedule.TransferFields(l_recBillingScheduleChecking);
-                    l_recBillingSchedule."Line No." := 9999999;
-                    l_recBillingSchedule."Posting Date" := CalcDate('+2D', DT2Date(LeaseContractHeader."Contract End Date"));
-                    l_recBillingSchedule."Due Date" := l_recBillingSchedule."Posting Date";
-                    l_recBillingSchedule."Document No." := '';
-                    l_recBillingSchedule.Status := l_recBillingSchedule.Status::" ";
-                    l_recBillingSchedule."Sales Invoice Creation Date" := 0DT;
-                    l_recBillingSchedule.Amount := l_recBillingScheduleChecking.Amount * -1;
-                    l_recBillingSchedule.Insert();
+                if l_recBillingScheduleChecking.FindFirst() then begin
+                    l_recBillingScheduleCheckingNoOfDepost.Reset();
+                    l_recBillingScheduleCheckingNoOfDepost.SetFilter("Contract No.", LeaseContractHeader."No.");
+                    l_recBillingScheduleCheckingNoOfDepost.SetRange(Type, l_recBillingScheduleCheckingNoOfDepost.Type::Deposit);
+                    if l_recBillingScheduleCheckingNoOfDepost.Count = 1 then begin
+                        l_recBillingSchedule.Init();
+                        l_recBillingSchedule.TransferFields(l_recBillingScheduleChecking);
+                        l_recBillingSchedule."Line No." := 9999999;
+                        l_recBillingSchedule."Posting Date" := CalcDate('+2D', DT2Date(LeaseContractHeader."Contract End Date"));
+                        l_recBillingSchedule."Due Date" := l_recBillingSchedule."Posting Date";
+                        l_recBillingSchedule."Document No." := '';
+                        l_recBillingSchedule.Status := l_recBillingSchedule.Status::" ";
+                        l_recBillingSchedule."Sales Invoice Creation Date" := 0DT;
+                        l_recBillingSchedule.Amount := l_recBillingScheduleChecking.Amount * -1;
+                        l_recBillingSchedule.Insert();
+                    end;
                 end
 
             end;
