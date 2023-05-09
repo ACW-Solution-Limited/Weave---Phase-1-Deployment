@@ -71,6 +71,7 @@ report 83000 "Lease Contract Create Invoices"
     var
 
         l_codCustomerNo: code[20];
+        l_codContractNo: Code[20];
         l_textPaymentReferenceID: Text[250];
         l_recSalesHeaderTemp: Record "Sales Header" temporary;
         l_recSalesLineTemp: Record "Sales Line" temporary;
@@ -96,14 +97,15 @@ report 83000 "Lease Contract Create Invoices"
         l_codDocNo := 'INV-0000001';
         l_textPaymentReferenceID := 'ANYTHING';
         g_recLeaseBillingSchedule_Temp.reset;
-        g_recLeaseBillingSchedule_Temp.SetCurrentKey("Customer No.", "Posting Date", "Contract No.", "Line No.");
+        g_recLeaseBillingSchedule_Temp.SetCurrentKey("Contract No.", "Customer No.", "Posting Date", "Line No.");
 
         If g_recLeaseBillingSchedule_Temp.FindSet() then
             repeat
 
                 //Message('%1', g_recLeaseBillingSchedule_Temp."Customer No.");
-                if (l_codCustomerNo <> g_recLeaseBillingSchedule_Temp."Customer No.") or (l_textPaymentReferenceID <> g_recLeaseBillingSchedule_Temp."Stripe Invoice ID") then begin
+                if (l_codContractNo <> g_recLeaseBillingSchedule_Temp."Contract No.") or (l_textPaymentReferenceID <> g_recLeaseBillingSchedule_Temp."Stripe Invoice ID") then begin
                     l_codCustomerNo := g_recLeaseBillingSchedule_Temp."Customer No.";
+                    l_codContractNo := g_recLeaseBillingSchedule_Temp."Contract No.";
                     //Message('Customer No: %1', g_recLeaseBillingSchedule_Temp."Customer No.");
                     //    if (l_textPaymentReferenceID <> g_recLeaseBillingSchedule_Temp."Stripe Invoice ID") then begin
 

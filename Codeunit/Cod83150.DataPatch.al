@@ -9,29 +9,20 @@ codeunit 83150 "Data Patch"
         ModifyAllContractPropertyUnit();
 
 
-        ModifySalesInvoiceLineByBillingSchedule('SI-2023040053', 10000, 10000, 'PB-230424-001', 1);
-        ModifySalesInvoiceLineByBillingSchedule('SI-2023040053', 20000, 20000, 'PB-230424-001', 3);
-
-
-
-        ModifySalesInvoiceLineByBillingSchedule('SI-2023040045', 10000);
-        ModifySalesInvoiceLineByBillingSchedule('SI-2023040046', 10000);
-        ModifySalesInvoiceLineByBillingSchedule('SI-2023040047', 10000);
-        ModifySalesInvoiceLineByBillingSchedule('SI-2023040048', 10000);
-        ModifySalesInvoiceLineByBillingSchedule('SI-2023040049', 10000);
-        ModifySalesInvoiceLineByBillingSchedule('SI-2023040050', 10000);
-        ModifySalesInvoiceLineByBillingSchedule('SI-2023040050', 20000);
-        ModifySalesInvoiceLineByBillingSchedule('SI-2023040051', 10000);
-        ModifySalesInvoiceLineByBillingSchedule('SI-2023040052', 10000);
-        ModifySalesInvoiceLineByBillingSchedule('SI-2023040053', 10000);
-        ModifySalesInvoiceLineByBillingSchedule('SI-2023040053', 20000);
-        ModifySalesInvoiceLineByBillingSchedule('SI-2023040055', 10000);
-        ModifySalesInvoiceLineByBillingSchedule('SI-2023040055', 20000);
-        ModifySalesInvoiceLineByBillingSchedule('SI-2023040056', 10000);
-        ModifySalesInvoiceLineByBillingSchedule('SI-2023040056', 20000);
-        ModifySalesInvoiceLineByBillingSchedule('SI-2023040058', 10000);
-        ModifySalesInvoiceLineByBillingSchedule('SI-2023040058', 20000);
-        ModifySalesInvoiceLineByBillingSchedule('SI-2023040060', 10000);
+        ModifySalesInvoiceHeader('SI-2023040045');
+        ModifySalesInvoiceHeader('SI-2023040046');
+        ModifySalesInvoiceHeader('SI-2023040047');
+        ModifySalesInvoiceHeader('SI-2023040048');
+        ModifySalesInvoiceHeader('SI-2023040049');
+        ModifySalesInvoiceHeader('SI-2023040050');
+        ModifySalesInvoiceHeader('SI-2023040050');
+        ModifySalesInvoiceHeader('SI-2023040051');
+        ModifySalesInvoiceHeader('SI-2023040052');
+        ModifySalesInvoiceHeader('SI-2023040053');
+        ModifySalesInvoiceHeader('SI-2023040055');
+        ModifySalesInvoiceHeader('SI-2023040056');
+        ModifySalesInvoiceHeader('SI-2023040058');
+        ModifySalesInvoiceHeader('SI-2023040060');
 
     end;
 
@@ -50,14 +41,17 @@ codeunit 83150 "Data Patch"
 
 
 
-    procedure ModifySalesInvoiceHeader(DocumentNo: Code[250]; NewLeaseContractNo: Text; NewLeaseContractName: Text)
+    procedure ModifySalesInvoiceHeader(DocumentNo: Code[250])
     var
         l_recSalesInvoiceHeader: Record "Sales Invoice Header";
+        l_recLeaseContractHeader: Record "Lease Contract Header";
     begin
         if l_recSalesInvoiceHeader.Get(DocumentNo) then begin
-            l_recSalesInvoiceHeader."Lease Contract No." := NewLeaseContractNo;
-            l_recSalesInvoiceHeader."Lease Contract Name" := NewLeaseContractName;
-            l_recSalesInvoiceHeader.Modify();
+            if l_recLeaseContractHeader.Get(l_recSalesInvoiceHeader."Lease Contract No.") then begin
+                l_recSalesInvoiceHeader."Contract Start Date" := DT2Date(l_recLeaseContractHeader."Contract Start Date");
+                l_recSalesInvoiceHeader."Contract End Date" := DT2Date(l_recLeaseContractHeader."Contract End Date");
+                l_recSalesInvoiceHeader.Modify();
+            end;
         end;
     end;
 

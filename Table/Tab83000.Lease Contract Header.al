@@ -44,7 +44,7 @@ table 83000 "Lease Contract Header"
             end;
 
         }
-        field(5; "Customer Name"; Text[50])
+        field(5; "Customer Name"; Text[250])
         {
             Caption = 'Customer Name';
             DataClassification = CustomerContent;

@@ -1004,6 +1004,4 @@ codeunit 83001 "Lease Contract Management"
         g_intoriginalLineNo: Integer;
 
 
-
-
 }

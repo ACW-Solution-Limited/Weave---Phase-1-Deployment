@@ -40,7 +40,7 @@
             "request": "launch",
             "type": "al",
             "environmentType": "Sandbox",
-            "environmentName": "EndToEndTesting",
+            "environmentName": "Pre-Production",
             "startupObjectId": 82011,
             "startupObjectType": "Page",
             "breakOnError": true,
