@@ -7,22 +7,8 @@ codeunit 83150 "Data Patch"
     trigger OnRun()
     begin
         ModifyAllContractPropertyUnit();
-
-
-        ModifySalesInvoiceHeader('SI-2023040045');
-        ModifySalesInvoiceHeader('SI-2023040046');
-        ModifySalesInvoiceHeader('SI-2023040047');
-        ModifySalesInvoiceHeader('SI-2023040048');
-        ModifySalesInvoiceHeader('SI-2023040049');
-        ModifySalesInvoiceHeader('SI-2023040050');
-        ModifySalesInvoiceHeader('SI-2023040050');
-        ModifySalesInvoiceHeader('SI-2023040051');
-        ModifySalesInvoiceHeader('SI-2023040052');
-        ModifySalesInvoiceHeader('SI-2023040053');
-        ModifySalesInvoiceHeader('SI-2023040055');
-        ModifySalesInvoiceHeader('SI-2023040056');
-        ModifySalesInvoiceHeader('SI-2023040058');
-        ModifySalesInvoiceHeader('SI-2023040060');
+        ModifySalesInvoiceLineByBillingSchedule('SI-2023040058', 10000);
+        ModifySalesInvoiceLineByBillingSchedule('SI-2023040058', 20000);
 
     end;
 
