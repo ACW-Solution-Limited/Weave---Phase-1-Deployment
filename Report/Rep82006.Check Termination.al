@@ -22,14 +22,14 @@ report 82006 "Check Term/Create Sales Inv"
                     CurrReport.Skip();
 
 
-
+                Clear(CreateInvoiceCreditMemo);
                 CreateInvoiceCreditMemo.SetTableView(p_recLeaseContractHeader);
                 CreateInvoiceCreditMemo.UseRequestPage := false;
                 l_recBillingSchedule.reset;
                 l_recBillingSchedule2.reset;
                 //Check whether the termination is run 
                 If p_recLeaseContractHeader."Run Terminated Billing Sched." <> 0DT then begin
-                    CreateInvoiceCreditMemo.Run;
+                    // CreateInvoiceCreditMemo.Run;
                 end else begin
                     If DT2date("Contract Termination Date") <> 0D then begin
                         if NOT ("Opening Contract") then
@@ -43,7 +43,7 @@ report 82006 "Check Term/Create Sales Inv"
                             l_recBillingSchedule."Posting Date" := CalcDate('2D', DT2Date("Contract Termination Date"));
                             l_recBillingSchedule.Modify;
                         end;*/
-                        CreateInvoiceCreditMemo.Run;
+                        // CreateInvoiceCreditMemo.Run;
                     end;
                     //end else begin
 
@@ -70,6 +70,8 @@ report 82006 "Check Term/Create Sales Inv"
                     //  p_recLeaseContractHeader.Terminated := True;
                     //p_recLeaseContractHeader.Modify;
                 end;
+                //
+                CreateInvoiceCreditMemo.Run;
 
                 l_recBillingSchedule2.SetRange("Contract No.", p_recLeaseContractHeader."No.");
                 l_recBillingSchedule2.setrange(Type, l_recBillingSchedule.Type::Deposit);

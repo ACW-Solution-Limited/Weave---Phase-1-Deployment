@@ -144,7 +144,7 @@ report 83020 "Rent Roll Summary"
     procedure GetChecOutDay(): Date;
     begin
         if LeaseContractHeader."Contract Termination Date" <> 0DT then
-            exit(DT2Date(LeaseContractHeader."New Contract Start Date"));
+            exit(DT2Date(LeaseContractHeader."Contract Termination Date"));
 
         if LeaseContractHeader."New Contract End Date" <> 0DT then
             exit(DT2Date(LeaseContractHeader."New Contract End Date"));
@@ -239,12 +239,14 @@ report 83020 "Rent Roll Summary"
             if l_recBillingSchedule.FindLast() then begin
 
                 if g_datEndDate > l_recBillingSchedule."Contract End Date" then begin
-                    l_decActualRent += LeaseContractHeader."Monthly Rent" / l_recBillingSchedule."No. of Days Current Month" *
-                                     (l_recBillingSchedule."Contract End Date" - l_dateCalculationStart + 1);
+                    if LeaseContractHeader."Monthly Rent" <> 0 then
+                        l_decActualRent += LeaseContractHeader."Monthly Rent" / l_recBillingSchedule."No. of Days Current Month" *
+                                         (l_recBillingSchedule."Contract End Date" - l_dateCalculationStart + 1);
                     l_dateCalculationStart := l_recBillingSchedule."Contract End Date" + 1;
                 end else begin
-                    l_decActualRent += LeaseContractHeader."Monthly Rent" / l_recBillingSchedule."No. of Days Current Month" *
-                                                         (g_datEndDate - l_dateCalculationStart + 1);
+                    if LeaseContractHeader."Monthly Rent" <> 0 then
+                        l_decActualRent += LeaseContractHeader."Monthly Rent" / l_recBillingSchedule."No. of Days Current Month" *
+                                                             (g_datEndDate - l_dateCalculationStart + 1);
                     l_dateCalculationStart := g_datEndDate + 1;
                 end;
 

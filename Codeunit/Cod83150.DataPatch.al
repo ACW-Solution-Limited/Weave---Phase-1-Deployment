@@ -7,9 +7,6 @@ codeunit 83150 "Data Patch"
     trigger OnRun()
     begin
         ModifyAllContractPropertyUnit();
-        ModifySalesInvoiceLineByBillingSchedule('SI-2023040058', 10000);
-        ModifySalesInvoiceLineByBillingSchedule('SI-2023040058', 20000);
-
     end;
 
     procedure ModifyAllContractPropertyUnit()

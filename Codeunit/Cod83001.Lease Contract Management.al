@@ -242,7 +242,9 @@ codeunit 83001 "Lease Contract Management"
                             end;
                         end;
 
-                        l_recLeaseContractBillingSchedule.Insert;
+                        if l_recLeaseContractBillingSchedule.Amount <> 0 then//for zero rental checking
+                            l_recLeaseContractBillingSchedule.Insert;
+
                         If l_recLeaseContractBillingSchedule."Contract Start Date" = DT2date(p_recLeaseContractHeader."Contract Start Date") then begin
                             l_intLineNo := l_CodAddItem.CreateWelcomeAmentities(l_recCRMWelcomeAmentities, p_recLeaseContractHeader."No.", l_recLeaseContractBillingSchedule."Line No.", l_recLeaseContractBillingSchedule."Posting Date", l_recLeaseContractBillingSchedule."Due Date", p_recLeaseContractHeader."1st Payment Stripe Invoice ID");
                         end;

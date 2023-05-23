@@ -416,11 +416,15 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
         l_recLCBillingSchedule.SetCurrentKey("Posting Date");
         l_recLCBillingSchedule.SetAscending("Posting Date", true);
         l_recLCBillingSchedule.SetRange("Posting Date", Date, 99991231D);
-        if l_recLCBillingSchedule.FindFirst() then
+        if l_recLCBillingSchedule.FindFirst() then begin
             if l_recLCBillingSchedule.Type = l_recLCBillingSchedule.Type::Deposit then
                 exit(Date)
             else
-                exit(l_recLCBillingSchedule."Posting Date");
+                exit(l_recLCBillingSchedule."Posting Date")
+        end
+        else
+            exit(Date)
+
     end;
 
 
