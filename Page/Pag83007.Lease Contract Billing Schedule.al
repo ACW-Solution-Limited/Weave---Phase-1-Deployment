@@ -100,6 +100,11 @@ page 83007 "Lease Contract Billing Sched."
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Status field.';
                 }
+                field(Settled; Rec.Settled)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Settled field.';
+                }
                 field("Contract No."; rec."Contract No.")
                 {
                     ApplicationArea = All;

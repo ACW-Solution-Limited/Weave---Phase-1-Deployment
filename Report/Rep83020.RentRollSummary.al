@@ -33,6 +33,11 @@ report 83020 "Rent Roll Summary"
             column(OccupancyinPeriodDays; g_decOccupancyinPeriodDays) { }
             column(OccupancyDaysAdjusted; g_decOccupancyDaysAdjusted) { }
             column(GrossRevenueToBeRecognised; g_decGrossRevenueToBeRecognised) { }
+            trigger OnPreDataItem()
+            begin
+                //    LeaseContractHeader.SetFilter("No.", '20221118-00002/6660');
+            end;
+
             trigger OnAfterGetRecord()
             begin
 
@@ -222,7 +227,10 @@ report 83020 "Rent Roll Summary"
 
 
         l_decActualRent := 0;
-        l_dateCalculationStart := g_datStartDate;
+        if g_datStartDate > DT2Date(LeaseContractHeader."Contract Start Date") then
+            l_dateCalculationStart := g_datStartDate
+        else
+            l_dateCalculationStart := DT2Date(LeaseContractHeader."Contract Start Date");
 
         repeat
             l_recBillingSchedule.Reset();
@@ -230,24 +238,26 @@ report 83020 "Rent Roll Summary"
             l_recBillingSchedule.SetAscending("Contract Start Date", true);
             l_recBillingSchedule.SetRange(l_recBillingSchedule.Type, l_recBillingSchedule.Type::Rent);
             l_recBillingSchedule.SetFilter(l_recBillingSchedule."Contract No.", LeaseContractHeader."No.");
-            l_recBillingSchedule.SetFilter("Contract Start Date", '..%1', l_dateCalculationStart);
+            // l_recBillingSchedule.SetFilter("Contract Start Date", '..%1', l_dateCalculationStart);
             l_recBillingSchedule.SetFilter("Contract End Date", '>%1', l_dateCalculationStart);
 
             if l_recBillingSchedule.Count = 0 then
                 exit(l_decActualRent);
 
-            if l_recBillingSchedule.FindLast() then begin
+            if l_recBillingSchedule.FindFirst() then begin
 
                 if g_datEndDate > l_recBillingSchedule."Contract End Date" then begin
                     if LeaseContractHeader."Monthly Rent" <> 0 then
-                        l_decActualRent += LeaseContractHeader."Monthly Rent" / l_recBillingSchedule."No. of Days Current Month" *
+                        l_decActualRent += LeaseContractHeader."Monthly Rent" - LeaseContractHeader."Monthly Discount" / l_recBillingSchedule."No. of Days Current Month" *
                                          (l_recBillingSchedule."Contract End Date" - l_dateCalculationStart + 1);
                     l_dateCalculationStart := l_recBillingSchedule."Contract End Date" + 1;
+
                 end else begin
                     if LeaseContractHeader."Monthly Rent" <> 0 then
-                        l_decActualRent += LeaseContractHeader."Monthly Rent" / l_recBillingSchedule."No. of Days Current Month" *
+                        l_decActualRent += LeaseContractHeader."Monthly Rent" - LeaseContractHeader."Monthly Discount" / l_recBillingSchedule."No. of Days Current Month" *
                                                              (g_datEndDate - l_dateCalculationStart + 1);
                     l_dateCalculationStart := g_datEndDate + 1;
+
                 end;
 
             end;

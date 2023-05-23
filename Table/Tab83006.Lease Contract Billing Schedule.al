@@ -147,6 +147,8 @@ table 83006 "Lease Contract Billing Sched."
         {
             DataClassification = ToBeClassified;
         }
+
+        field(30; "Settled"; Boolean) { }
     }
 
     keys

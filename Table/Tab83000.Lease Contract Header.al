@@ -386,7 +386,7 @@ table 83000 "Lease Contract Header"
 
         field(180; "Commission Type"; Option)
         {
-            Caption = 'Comission Type';
+            Caption = 'Commission Type';
             OptionMembers = " ",DirectBooking,B2COutreach,B2BOutreach,B2CCompanyAssign,B2BRenewal,B2CRenewal,"B2CCompanyAssign-PropertyViewing(OperationTeam)";
             DataClassification = ToBeClassified;
         }
