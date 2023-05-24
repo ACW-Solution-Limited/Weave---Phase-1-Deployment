@@ -235,7 +235,8 @@ page 83027 "Sales Commission"
 
         // Get Posted Sales Invoice >>
         //l_recPostedSalesInvoice.SetFilter("Posting Date", '%1..%2', DateStartfilter, DateEndfilter);
-        l_recPostedSalesInvoice.SetFilter("Salesperson Code", '<>%1', '');
+        // l_recPostedSalesInvoice.SetFilter("Salesperson Code", '<>%1', '');
+        l_recPostedSalesInvoice.SetFilter("Commission Type", '<>%1', l_recPostedSalesInvoice."Commission Type"::" ");
         If l_recPostedSalesInvoice.findset then
             repeat
                 l_sequence := 0;
@@ -263,7 +264,8 @@ page 83027 "Sales Commission"
                             l_recCommissionTemp."Commission Type" := l_recPostedSalesInvoice."Commission Type";
                             l_recCommissionTemp."Document Type" := l_recCommissionTemp."Document Type"::Invoice;
                             l_recCommissionTemp."Document No." := l_recPostedSalesInvoice."No.";
-                            l_recCommissionTemp.validate(Salesperson, l_recPostedSalesInvoice."Salesperson Code");
+                            If l_recPostedSalesInvoice."Salesperson Code" <> '' then
+                                l_recCommissionTemp.validate(Salesperson, l_recPostedSalesInvoice."Salesperson Code");
 
                             If l_recPostedSalesInvoice."Calculation Type" = l_recPostedSalesInvoice."Calculation Type"::ByPrecentage then
                                 l_recCommissionTemp."Commission Amount" += l_PostedDeferralLine.Amount * l_Commission
@@ -315,7 +317,8 @@ page 83027 "Sales Commission"
                             l_recCommissionTemp."Document Type" := l_recCommissionTemp."Document Type"::Invoice;
                             l_recCommissionTemp."Document No." := l_recPostedSalesInvoice."No.";
                             l_recCommissionTemp.Date := l_recPostedSalesInvoice."Posting Date";
-                            l_recCommissionTemp.validate(Salesperson, l_recPostedSalesInvoice."Salesperson Code");
+                            If l_recPostedSalesInvoice."Salesperson Code" <> '' then
+                                l_recCommissionTemp.validate(Salesperson, l_recPostedSalesInvoice."Salesperson Code");
 
                             l_recCommissionTemp."Commission Amount" := l_Commission;
                         end;
@@ -337,7 +340,8 @@ page 83027 "Sales Commission"
         // Get Posted Sales Credit Memo >>
 
         //l_recPostedCreditMemo.SetFilter("Posting Date", '%1..%2', DateStartfilter, DateEndfilter);
-        l_recPostedCreditMemo.SetFilter("Salesperson Code", '<>%1', '');
+        // l_recPostedCreditMemo.SetFilter("Salesperson Code", '<>%1', '');
+        l_recPostedCreditMemo.SetFilter("Commission Type", '<>%1', l_recPostedCreditMemo."Commission Type"::" ");
         If l_recPostedCreditMemo.findset then
             repeat
                 l_sequence := 0;
@@ -363,7 +367,8 @@ page 83027 "Sales Commission"
                             l_recCommissionTemp."Commission Type" := l_recPostedCreditMemo."Commission Type";
                             l_recCommissionTemp."Document Type" := l_recCommissionTemp."Document Type"::"Credit Memo";
                             l_recCommissionTemp."Document No." := l_recPostedCreditMemo."No.";
-                            l_recCommissionTemp.validate(Salesperson, l_recPostedCreditMemo."Salesperson Code");
+                            If l_recPostedCreditMemo."Salesperson Code" <> '' then
+                                l_recCommissionTemp.validate(Salesperson, l_recPostedCreditMemo."Salesperson Code");
 
                             If l_recPostedCreditMemo."Calculation Type" = l_recPostedCreditMemo."Calculation Type"::ByPrecentage then
                                 l_recCommissionTemp."Commission Amount" -= l_PostedDeferralLine.Amount * l_Commission
@@ -416,7 +421,8 @@ page 83027 "Sales Commission"
                             l_recCommissionTemp."Document Type" := l_recCommissionTemp."Document Type"::Invoice;
                             l_recCommissionTemp."Document No." := l_recPostedCreditMemo."No.";
                             l_recCommissionTemp.Date := l_recPostedCreditMemo."Posting Date";
-                            l_recCommissionTemp.validate(Salesperson, l_recPostedCreditMemo."Salesperson Code");
+                            If l_recPostedCreditMemo."Salesperson Code" <> '' then
+                                l_recCommissionTemp.validate(Salesperson, l_recPostedCreditMemo."Salesperson Code");
 
                             l_recCommissionTemp."Commission Amount" := -l_Commission;
                             l_recCommissionTemp."invoice Amount" := l_recPostedCreditMemo."Amount Including VAT";

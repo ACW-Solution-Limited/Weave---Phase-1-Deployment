@@ -52,8 +52,12 @@ report 83013 "Approve/Reject PO PowerApp"
                     l_recPurchaseHeader.FindFirst();
 
                     l_recApprCommentLine.reset;
-                    l_recApprCommentLine.FindLast();
-                    entryNo := l_recApprCommentLine."Entry No.";
+                    if l_recApprCommentLine.FindLast() then
+                        entryNo := l_recApprCommentLine."Entry No."
+                    else
+                        entryNo := 0;
+
+
                     If Comment <> '' then begin
                         l_recApprCommentLine.reset;
                         l_recApprCommentLine."Entry No." := entryNo + 1;

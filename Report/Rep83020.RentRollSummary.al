@@ -223,7 +223,7 @@ report 83020 "Rent Roll Summary"
         l_decActualRent: Decimal;
     begin
         if LeaseContractHeader."Payment Type" = LeaseContractHeader."Payment Type"::"One-off (ShortStay)" then
-            exit(LeaseContractHeader."Daily Rent" * OccupancyinPeriodDays);
+            exit(LeaseContractHeader."Net Amount" / (DT2Date(LeaseContractHeader."Contract End Date") - DT2Date(LeaseContractHeader."Contract Start Date") + 1) * OccupancyinPeriodDays);
 
 
         l_decActualRent := 0;

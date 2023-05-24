@@ -13,7 +13,7 @@ table 83024 "Sales Commission Setup"
         }
         field(2; "Calculation Type"; Enum "Calculation Type")
         {
-            Caption = 'Commission Type';
+            Caption = 'Calculation Type';
             DataClassification = ToBeClassified;
             NotBlank = True;
             // OptionMembers = "","By Percentage","By Amount";
