@@ -248,13 +248,13 @@ report 83020 "Rent Roll Summary"
 
                 if g_datEndDate > l_recBillingSchedule."Contract End Date" then begin
                     if LeaseContractHeader."Monthly Rent" <> 0 then
-                        l_decActualRent += LeaseContractHeader."Monthly Rent" - LeaseContractHeader."Monthly Discount" / l_recBillingSchedule."No. of Days Current Month" *
+                        l_decActualRent += (LeaseContractHeader."Monthly Rent" - LeaseContractHeader."Monthly Discount") / l_recBillingSchedule."No. of Days Current Month" *
                                          (l_recBillingSchedule."Contract End Date" - l_dateCalculationStart + 1);
                     l_dateCalculationStart := l_recBillingSchedule."Contract End Date" + 1;
 
                 end else begin
                     if LeaseContractHeader."Monthly Rent" <> 0 then
-                        l_decActualRent += LeaseContractHeader."Monthly Rent" - LeaseContractHeader."Monthly Discount" / l_recBillingSchedule."No. of Days Current Month" *
+                        l_decActualRent += (LeaseContractHeader."Monthly Rent" - LeaseContractHeader."Monthly Discount") / l_recBillingSchedule."No. of Days Current Month" *
                                                              (g_datEndDate - l_dateCalculationStart + 1);
                     l_dateCalculationStart := g_datEndDate + 1;
 
