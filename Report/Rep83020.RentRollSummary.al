@@ -71,7 +71,7 @@ report 83020 "Rent Roll Summary"
                 g_decMonthlyRent := CalcMonthyRent();
                 g_decActualRent := CalcActualRent(LeaseContractHeader, g_decOccupancyinPeriodDays);
                 g_decOccupancyDaysAdjusted := g_decOccupancyinPeriodDays;
-                g_decGrossRevenueToBeRecognised := LeaseContractHeader."Monthly Rent" * g_decOccupancyinPeriodDays / (g_datEndDate - g_datStartDate + 1);
+                g_decGrossRevenueToBeRecognised := g_decMonthlyRent * g_decOccupancyinPeriodDays / (g_datEndDate - g_datStartDate + 1);
             end;
         }
 
