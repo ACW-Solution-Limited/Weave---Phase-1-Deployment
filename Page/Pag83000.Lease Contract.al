@@ -224,6 +224,7 @@ page 83000 "Lease Contract"
 
                     field("Run Terminated Billing Sched."; Rec."Run Terminated Billing Sched.") { ApplicationArea = All; }
                     field("Deposit Returned"; Rec."Deposit Returned") { ApplicationArea = All; }
+                    field("Opening Contract"; Rec."Opening Contract") { ApplicationArea = All; }
 
                 }
                 group("Sales Commission")
@@ -233,6 +234,10 @@ page 83000 "Lease Contract"
                     field("Salesperson Name"; Rec."Salesperson Name")
                     { ApplicationArea = All; Editable = false; }
                     field("Commission Type"; Rec."Commission Type")
+                    { ApplicationArea = All; }
+                    field("Viewing By"; Rec."Viewing By")
+                    { ApplicationArea = All; }
+                    field("Renewal By"; Rec."Renewal By")
                     { ApplicationArea = All; }
 
                 }

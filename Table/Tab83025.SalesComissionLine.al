@@ -65,6 +65,17 @@ table 83025 "Sales Commission Line"
             Caption = 'Salesperson Name';
             DataClassification = ToBeClassified;
         }
+
+        field(20; "Viewing By"; Text[100])
+        {
+            Caption = 'Viewing By';
+            DataClassification = ToBeClassified;
+        }
+        field(30; "Renewal By"; Text[100])
+        {
+            Caption = 'Renewal By';
+            DataClassification = ToBeClassified;
+        }
     }
     keys
     {

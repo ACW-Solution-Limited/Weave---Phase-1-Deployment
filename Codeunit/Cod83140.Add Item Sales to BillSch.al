@@ -290,13 +290,13 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
         end else begin
 
             TenderTypeDiscount.SetFilter("Credit Memo No.", '<>%1', '');
-            Message('%1', TenderTypeDiscount."Credit Memo No.");
+            // Message('%1', TenderTypeDiscount."Credit Memo No.");
         end;
         TenderTypeDiscount.SetFilter(status, '<>%1', TenderTypeDiscount.Status::Inserted);
-        Message('%1', TenderTypeDiscount."Sales Invoice No.");
+        //  Message('%1', TenderTypeDiscount."Sales Invoice No.");
         if TenderTypeDiscount.FindFirst() then
             repeat
-                Message('%1', TenderTypeDiscount."Sales Invoice No.");
+                // Message('%1', TenderTypeDiscount."Sales Invoice No.");
                 l_recLCBillingSchedule.setrange("Document No.", TenderTypeDiscount."Sales Invoice No.");
                 l_recLCBillingSchedule.setrange(Type, l_recLCBillingSchedule.Type::Rent);
                 If l_recLCBillingSchedule.FindFirst() then begin
@@ -397,8 +397,9 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
         l_recLCBillingSchedule.SetRange("Contract No.", ContractNo);
         l_recLCBillingSchedule.SetRange("Posting Date", PostingDate, 99991231D);
         l_recLCBillingSchedule.SetRange(Status, l_recLCBillingSchedule.Status::" ");
-        l_recLCBillingSchedule.SetCurrentKey("Due Date");
-        l_recLCBillingSchedule.SetAscending("Due Date", true);
+        l_recLCBillingSchedule.SetRange(Type, l_recLCBillingSchedule.Type::Rent);
+        l_recLCBillingSchedule.SetCurrentKey("Posting Date");
+        l_recLCBillingSchedule.SetAscending("Posting Date", true);
 
         if l_recLCBillingSchedule.FindFirst() then
             exit(l_recLCBillingSchedule."Due Date")

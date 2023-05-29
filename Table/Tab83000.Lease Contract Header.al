@@ -418,6 +418,22 @@ table 83000 "Lease Contract Header"
             DataClassification = ToBeClassified;
             TableRelation = "Salesperson/Purchaser".Name;
         }
+        //>> Add field for Commission
+        field(200; "Viewing By"; Text[100])
+        {
+            Caption = 'Viewing By';
+            DataClassification = ToBeClassified;
+        }
+        field(205; "Renewal By"; Text[100])
+        {
+            Caption = 'Renewal By';
+            DataClassification = ToBeClassified;
+        }
+
+        //<< Add field for Commission
+
+
+
 
 
     }

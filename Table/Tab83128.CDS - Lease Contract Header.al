@@ -1203,6 +1203,75 @@
         }
 
 
+        field(301; acwapp_LatestDepositAmount; Decimal)
+        {
+            ExternalName = 'acwapp_latestdepositamount';
+            ExternalType = 'Money';
+            Description = '';
+            Caption = 'Latest Deposit Amount';
+        }
+        field(302; acwapp_latestdepositamount_Base; Decimal)
+        {
+            ExternalName = 'acwapp_latestdepositamount_base';
+            ExternalType = 'Money';
+            ExternalAccess = Read;
+            Description = 'Value of the Latest Deposit Amount in base currency.';
+            Caption = 'Latest Deposit Amount (Base)';
+        }
+        field(303; acwapp_OldContractNo; Text[100])
+        {
+            ExternalName = 'acwapp_oldcontractno';
+            ExternalType = 'String';
+            Description = '';
+            Caption = 'Old Contract No.';
+        }
+        field(304; acwapp_OldPropertyBooking; GUID)
+        {
+            ExternalName = 'acwapp_oldpropertybooking';
+            ExternalType = 'Lookup';
+            Description = '';
+            Caption = 'Old Property Booking';
+            TableRelation = "CDS acwapp_propertybooking".acwapp_propertybookingId;
+        }
+        field(305; acwapp_OldPropertyBookingName; Text[200])
+        {
+            FieldClass = FlowField;
+            CalcFormula = lookup("CDS acwapp_propertybooking".acwapp_name where(acwapp_propertybookingId = field(acwapp_OldPropertyBooking)));
+            ExternalName = 'acwapp_oldpropertybookingname';
+            ExternalType = 'String';
+            ExternalAccess = Read;
+        }
+        field(312; acwapp_ViewingBy; GUID)
+        {
+            ExternalName = 'acwapp_viewingby';
+            ExternalType = 'Lookup';
+            Description = '';
+            Caption = 'Viewing By';
+            TableRelation = "CRM Systemuser".SystemUserId;
+        }
+        field(315; acwapp_ViewingByFullname; Text[100])
+        {
+            ExternalName = 'acwapp_viewingbyfullname';
+            ExternalType = 'String';
+            Description = '';
+            Caption = 'Viewing By Fullname';
+        }
+        field(316; acwapp_RenewalBy; GUID)
+        {
+            ExternalName = 'acwapp_renewalby';
+            ExternalType = 'Lookup';
+            Description = '';
+            Caption = 'Renewal By';
+            TableRelation = "CRM Systemuser".SystemUserId;
+        }
+        field(319; acwapp_RenewalByFullname; Text[100])
+        {
+            ExternalName = 'acwapp_renewalbyfullname';
+            ExternalType = 'String';
+            Description = '';
+            Caption = 'Renewal By Fullname';
+        }
+
 
     }
 

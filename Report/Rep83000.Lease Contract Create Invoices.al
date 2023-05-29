@@ -445,7 +445,8 @@ report 83000 "Lease Contract Create Invoices"
                                 InsertAssemblyOrder(l_recSalesHeader, l_recSalesLine);
 
                             if l_recSalesLine."Billing Schedule Type" = l_recSalesLine."Billing Schedule Type"::Rent then
-                                InsertDeferral(l_recSalesLine, l_recSalesHeader);
+                                if not (l_recLeaseContractHeader."Opening Contract") then
+                                    InsertDeferral(l_recSalesLine, l_recSalesHeader);
 
                             l_recSalesLine.Modify(True);
 
@@ -465,7 +466,8 @@ report 83000 "Lease Contract Create Invoices"
 
 
                             if l_recSalesLine."Billing Schedule Type" = l_recSalesLine."Billing Schedule Type"::Rent then
-                                InsertDeferral(l_recSalesLine, l_recSalesHeader);
+                                if not (l_recLeaseContractHeader."Opening Contract") then
+                                    InsertDeferral(l_recSalesLine, l_recSalesHeader);
                             // Tender Type >>
                             //If l_recSalesLineTemp."Tender Type" <> '' then
                             //ApplyEntriesforTenderType(LeaseContractHeader, l_recSalesHeader."No.", l_recSalesLineTemp."Tender Type", l_recSalesLineTemp."Unit Price");

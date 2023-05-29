@@ -187,9 +187,12 @@ codeunit 83120 "CDS Property Booking"
         InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("Tender Type Discount Amount"), CRMPropertybooking.FieldNo(acwapp_discountamount), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("Commission Type"), CRMPropertybooking.FieldNo(acwapp_CommissionType), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("Salesperson Email"), CRMPropertybooking.FieldNo(acwapp_OwnerEmail), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
-
-
-
+        // InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("Latest Deposit Amount"), CRMPropertybooking.FieldNo(acwapp_LatestDepositAmount), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
+        // InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("Original Contract No."), CRMPropertybooking.FieldNo(acwapp_OldContractNo), IntegrationFieldMapping.Direction::FromIntegrationTable, '', false, false);
+        // >> Add new fields for Commission
+        InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("Viewing By"), CRMPropertybooking.FieldNo(acwapp_ViewingByFullname), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
+        InsertIntegrationFieldMapping('CRM to BC Property', LeaseContractHeader.FieldNo("Renewal By"), CRMPropertybooking.FieldNo(acwapp_RenewalByFullname), IntegrationFieldMapping.Direction::FromIntegrationTable, '', false, false);
+        // << Add new fields for Commission
         CompanyInformation.Get;
         IntegrationTableMapping."Integration Table Filter".CreateOutStream(FilterStr);
         FilterText := 'VERSION(1) SORTING(Field1) WHERE(Field199=1(' + CompanyInformation."CRM Company Guid" + '))';

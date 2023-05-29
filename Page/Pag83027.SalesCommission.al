@@ -93,6 +93,14 @@ page 83027 "Sales Commission"
                 {
                     ToolTip = 'Specifies the value of the Salesperson Name field.';
                 }
+                field("Viewing By"; Rec."Viewing By")
+                {
+                    ToolTip = 'Specifies the value of the Viewing By field.';
+                }
+                field("Renewal By"; Rec."Renewal By")
+                {
+                    ToolTip = 'Specifies the value of the Renewal By field.';
+                }
             }
         }
     }
@@ -137,6 +145,7 @@ page 83027 "Sales Commission"
                 PromotedCategory = Process;
                 PromotedIsBig = true;
                 image = Document;
+                Enabled = Rec."Document No." <> '';
                 trigger OnAction()
                 var
 
@@ -168,6 +177,7 @@ page 83027 "Sales Commission"
                 PromotedCategory = Process;
                 PromotedIsBig = true;
                 image = Document;
+                Enabled = Rec."Contract No." <> '';
                 trigger OnAction()
                 var
                     l_recLeaseContractHeader: Record "Lease Contract Header";
@@ -200,6 +210,7 @@ page 83027 "Sales Commission"
         l_PostedDeferralLine: Record "Posted Deferral Line";
         l_recBillingSchedule: Record "Lease Contract Billing Sched.";
         l_recSalesComissionSetup: Record "Sales Commission Setup";
+        l_recLeaseContractHeader: Record "Lease Contract Header";
         DateStartfilter: Date;
         DateEndfilter: Date;
         l_Commission: Decimal;
@@ -325,9 +336,18 @@ page 83027 "Sales Commission"
                     end;
                     // >> For Renewal Commission Type - No need to refer to deferral schedule
                 end;
-
-
+                // >> Add to get veiwing by and renewal by
+                l_recLeaseContractHeader.reset;
                 If l_recCommissionTemp."Contract No." <> '' then begin
+                    l_recLeaseContractHeader.setrange("No.", l_recCommissionTemp."Contract No.");
+                    If l_recLeaseContractHeader.FindFirst then begin
+                        l_recCommissionTemp."Viewing By" := l_recLeaseContractHeader."Viewing By";
+                        l_recCommissionTemp."Renewal By" := l_recLeaseContractHeader."Renewal By";
+                    end;
+                    // end;
+                    // << Add to get veiwing by and renewal by
+
+                    //  If l_recCommissionTemp."Contract No." <> '' then begin
                     Rec.Init();
                     Rec.TransferFields(l_recCommissionTemp);
                     Rec.Insert();
@@ -337,6 +357,9 @@ page 83027 "Sales Commission"
             until l_recPostedSalesInvoice.next = 0;
 
         // Get Posted Sales Invoice <<
+
+
+
         // Get Posted Sales Credit Memo >>
 
         //l_recPostedCreditMemo.SetFilter("Posting Date", '%1..%2', DateStartfilter, DateEndfilter);
@@ -418,7 +441,7 @@ page 83027 "Sales Commission"
                             end;
                             l_recCommissionTemp."Contract No." := l_recPostedCreditMemo."Lease Contract No.";
                             l_recCommissionTemp."Commission Type" := l_recPostedCreditMemo."Commission Type";
-                            l_recCommissionTemp."Document Type" := l_recCommissionTemp."Document Type"::Invoice;
+                            l_recCommissionTemp."Document Type" := l_recCommissionTemp."Document Type"::"Credit Memo";
                             l_recCommissionTemp."Document No." := l_recPostedCreditMemo."No.";
                             l_recCommissionTemp.Date := l_recPostedCreditMemo."Posting Date";
                             If l_recPostedCreditMemo."Salesperson Code" <> '' then
@@ -432,8 +455,17 @@ page 83027 "Sales Commission"
                         end;
                     end;
                 end;
-
+                // >> Add to get veiwing by and renewal by
+                l_recLeaseContractHeader.reset;
                 If l_recCommissionTemp."Contract No." <> '' then begin
+                    l_recLeaseContractHeader.setrange("No.", l_recCommissionTemp."Contract No.");
+                    If l_recLeaseContractHeader.FindFirst then begin
+                        l_recCommissionTemp."Viewing By" := l_recLeaseContractHeader."Viewing By";
+                        l_recCommissionTemp."Renewal By" := l_recLeaseContractHeader."Renewal By";
+                    end;
+                    //end;
+                    // << Add to get veiwing by and renewal by
+                    //If l_recCommissionTemp."Contract No." <> '' then begin
                     Rec.Init();
                     Rec.TransferFields(l_recCommissionTemp);
                     Rec.Insert();
