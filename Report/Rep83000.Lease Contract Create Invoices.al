@@ -720,6 +720,10 @@ report 83000 "Lease Contract Create Invoices"
         l_recLeaseContractSetup.Get();
         l_recGeneralLedgerSetup.Get();
 
+        if l_recLeaseContractHeader.Get(SalesLine."Contract No.") then
+            if l_recLeaseContractHeader."Opening Contract" then exit;
+
+
         If SalesLine."Tender Type" <> '' then
             exit;
         if (SalesLine."Lease To Date" = 0D) or (SalesLine."Lease From Date" = 0D) then
