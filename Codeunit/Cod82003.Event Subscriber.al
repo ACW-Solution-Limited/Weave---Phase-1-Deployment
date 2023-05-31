@@ -31,6 +31,11 @@ codeunit 83002 EventSubscriber
         else
             ProcessSecondTimePayment(SalesInvHdrNo, SalesHeader);
 
+
+        if SalesHeader."Document Type" = SalesHeader."Document Type"::Invoice then
+            SalesHeader.DoPrintToDocumentAttachmentwhenpost(SalesHeader)
+        else
+            SalesHeader.DoPrintToDocumentAttachmentwhenpostcreditmemo(SalesHeader);
     end;
 
 
@@ -125,13 +130,13 @@ codeunit 83002 EventSubscriber
     [EventSubscriber(ObjectType::Codeunit, codeunit::"Sales-Post (Yes/No)", 'OnAfterPost', '', False, False)]
     local procedure OnAfterPost(var SalesHeader: Record "Sales Header")
     begin
-        SalesHeader.DoPrintToDocumentAttachmentwhenpost(SalesHeader);
+        //SalesHeader.DoPrintToDocumentAttachmentwhenpost(SalesHeader);
     end;
 
     [EventSubscriber(ObjectType::Page, page::"Sales Credit Memo", 'OnPostDocumentBeforeNavigateAfterPosting', '', False, False)]
     local procedure OnPostDocumentBeforeNavigateAfterPosting(var SalesHeader: Record "Sales Header"; var PostingCodeunitID: Integer; DocumentIsPosted: Boolean; var IsHandled: Boolean)
     begin
-        SalesHeader.DoPrintToDocumentAttachmentwhenpostcreditmemo(SalesHeader);
+        // SalesHeader.DoPrintToDocumentAttachmentwhenpostcreditmemo(SalesHeader);
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Invoice Post. Buffer", 'OnAfterInvPostBufferPrepareSales', '', False, False)]

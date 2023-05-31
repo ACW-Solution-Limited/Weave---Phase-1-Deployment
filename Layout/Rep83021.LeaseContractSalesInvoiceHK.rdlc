@@ -587,7 +587,7 @@
                                                     <Value>=Fields!LineAmount_Line.Value</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
-                                                      <Format>0.00;(0.00)</Format>
+                                                      <Format>#,0.00;(#,0.00)</Format>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
