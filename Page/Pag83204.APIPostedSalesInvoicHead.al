@@ -593,10 +593,10 @@ page 83204 "API Posted Sales Invoic Head."
                 {
                     Caption = 'Commision Amount / %';
                 }
-                field(customerGuidForCRM; Rec."Customer Guid for CRM")
-                {
-                    Caption = 'Customer Guid for CRM';
-                }
+                // field(customerGuidForCRM; Rec."Customer Guid for CRM")
+                // {
+                //     Caption = 'Customer Guid for CRM';
+                // }
                 field(companyName; Rec."Company Name")
                 {
                     Caption = 'Company Name';
@@ -605,10 +605,10 @@ page 83204 "API Posted Sales Invoic Head."
                 {
                     Caption = 'Company Guid for CRM';
                 }
-                field(propertyBookingGuidForCRM; Rec."Property Booking Guid for CRM")
-                {
-                    Caption = 'Property Booking Guid for CRM';
-                }
+                // field(propertyBookingGuidForCRM; Rec."Property Booking Guid for CRM")
+                // {
+                //     Caption = 'Property Booking Guid for CRM';
+                // }
                 field(paymentStatus; Rec."Payment Status")
                 {
                     Caption = 'Payment Status';
