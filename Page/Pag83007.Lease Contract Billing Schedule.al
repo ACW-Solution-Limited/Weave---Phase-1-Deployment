@@ -3,6 +3,7 @@ page 83007 "Lease Contract Billing Sched."
     Caption = 'Lease Contract Billing Schedule';
     PageType = List;
     SourceTable = "Lease Contract Billing Sched.";
+    AutoSplitKey = true;
 
     layout
     {

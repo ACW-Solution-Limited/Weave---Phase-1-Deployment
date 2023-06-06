@@ -108,7 +108,7 @@ page 82013 "QFPay - Refund"
                 var
                     l_cuQFPay: Codeunit "Integration - QFPay";
                 begin
-                    l_cuQFPay.GetTransactionQuery();
+                    l_cuQFPay.GetCurrentAndLastMonthTransaction();
                 end;
             }
             action("Create Journal")

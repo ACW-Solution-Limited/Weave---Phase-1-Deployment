@@ -1,7 +1,14 @@
 codeunit 82002 "Integration - QFPay"
 {
 
-    procedure GetTransactionQuery()
+    procedure GetCurrentAndLastMonthTransaction()
+    var
+    begin
+        GetTransactionQuery(CalcDate('-1M', WorkDate()));
+        GetTransactionQuery(WorkDate());
+    end;
+
+    procedure GetTransactionQuery(TransactionDate: Date)
     var
         l_payoutToken: JsonToken;
         contentHeaders: HttpHeaders;
@@ -13,6 +20,7 @@ codeunit 82002 "Integration - QFPay"
         l_txtresponseText: Text;
         l_jtoken: JsonToken;
         l_jArray: JsonArray;
+        l_txtCustomerSource: Text;
 
         CryptographyManagement: Codeunit "Cryptography Management";
         HashAlgorithmType: Option MD5,SHA1,SHA256,SHA384,SHA512;
@@ -30,8 +38,8 @@ codeunit 82002 "Integration - QFPay"
         l_recQFPaySetup.FindFirst();
 
 
-        l_txtStartTime := format(CreateDateTime(CalcDate('-CM', WorkDate), 000000T), 0, '<Year4>-<Month,2>-<Day,2> <Hours24,2>:<Minutes,2>:<Seconds,2>');
-        l_txtEndTime := format(CreateDateTime(CalcDate('CM', WorkDate), 235959T), 0, '<Year4>-<Month,2>-<Day,2> <Hours24,2>:<Minutes,2>:<Seconds,2>');
+        l_txtStartTime := format(CreateDateTime(CalcDate('-CM', TransactionDate), 000000T), 0, '<Year4>-<Month,2>-<Day,2> <Hours24,2>:<Minutes,2>:<Seconds,2>');
+        l_txtEndTime := format(CreateDateTime(CalcDate('CM', TransactionDate), 235959T), 0, '<Year4>-<Month,2>-<Day,2> <Hours24,2>:<Minutes,2>:<Seconds,2>');
 
 
         l_txttoMD5 := 'end_time=' + l_txtEndTime + '&page_size=100' + '&start_time=' + l_txtStartTime + l_recQFPaySetup."API Key";
@@ -60,15 +68,15 @@ codeunit 82002 "Integration - QFPay"
             if (GetValueAsText(l_payoutToken, 'errmsg') = '交易成功') then
                 if (GetValueAsText(l_payoutToken, 'order_type') = 'payment') then
                     InitQFPaymentLine(GetValueAsText(l_payoutToken, 'out_trade_no'),
-                                      GetValueAsText(l_payoutToken, 'syssn'),
-                                      GetValueAsDateTime(l_payoutToken, 'sysdtm'),
-                                      GetValueAsDateTime(l_payoutToken, 'paydtm'),
-                                      GetValueAsText(l_payoutToken, 'txcurrcd'),
-                                      GetValueAsDecimal(l_payoutToken, 'txamt'),
-                                      GetValueAsText(l_payoutToken, 'errmsg'),
-                                      GetValueAsText(l_payoutToken, 'pay_type'),
-                                      GetValueAsText(l_payoutToken, 'clisn'),
-                                      GetValueAsDateTime(l_payoutToken, 'txdtm'))
+                      GetValueAsText(l_payoutToken, 'syssn'),
+                      GetValueAsDateTime(l_payoutToken, 'sysdtm'),
+                      GetValueAsDateTime(l_payoutToken, 'paydtm'),
+                      GetValueAsText(l_payoutToken, 'txcurrcd'),
+                      GetValueAsDecimal(l_payoutToken, 'txamt'),
+                      GetValueAsText(l_payoutToken, 'errmsg'),
+                      GetValueAsText(l_payoutToken, 'pay_type'),
+                      GetValueAsText(l_payoutToken, 'clisn'),
+                      GetValueAsDateTime(l_payoutToken, 'txdtm'))
                 else
                     InitQFPayRefundLine(GetValueAsText(l_payoutToken, 'out_trade_no'),
                                               GetValueAsText(l_payoutToken, 'syssn'),
@@ -328,10 +336,6 @@ codeunit 82002 "Integration - QFPay"
                     l_recQFPayRefund."Refund Fee",
                     "Gen. Journal Account Type"::"G/L Account",
                     l_recQFPaySetup."Receiving Bank Account");
-
-
-
-
 
                 l_recQFPayRefund."General Journal Document Type" := l_recQFPayRefund."General Journal Document Type"::Refund;
                 l_recQFPayRefund."General Journal Document No." := l_codDocNo;

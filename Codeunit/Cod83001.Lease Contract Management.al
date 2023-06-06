@@ -997,6 +997,21 @@ codeunit 83001 "Lease Contract Management"
         end;
     end;
 
+
+    procedure PostSalesDocument(DocumentNo: Code[250])
+    var
+        l_cuSalesPost: Codeunit "Sales-Post";
+        l_recSalesHeader: Record "Sales Header";
+
+    begin
+        l_recSalesHeader.Reset();
+        l_recSalesHeader.SetFilter("No.", DocumentNo);
+        if l_recSalesHeader.FindFirst() then begin
+            l_recSalesHeader.Invoice := true;
+            l_cuSalesPost.Run(l_recSalesHeader);
+        end;
+    end;
+
     var
         l_intLineNo: Integer;
         g_deposit: Decimal;

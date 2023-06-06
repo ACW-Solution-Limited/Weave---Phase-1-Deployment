@@ -2,9 +2,9 @@ enum 80004 "External Payment Gateway"
 {
     Extensible = true;
 
-    value(0; "")
+    value(0; " ")
     {
-        Caption = '';
+        Caption = ' ';
     }
     value(1; Stripe)
     {

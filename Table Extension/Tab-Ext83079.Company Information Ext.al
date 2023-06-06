@@ -37,8 +37,7 @@ tableextension 83079 "Company Information Ext" extends "Company Information"
         field(83023; "Purch. Inv. Default Location"; Code[50]) { TableRelation = Location; }
 
         field(83025; "Building Name"; Text[250]) { Caption = 'Building Name'; }
-
-
+        field(83026; "Name Show in Posted Sales Inv."; Text[250]) { }
 
     }
 

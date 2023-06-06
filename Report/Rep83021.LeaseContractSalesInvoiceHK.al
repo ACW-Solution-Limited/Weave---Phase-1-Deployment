@@ -16,7 +16,7 @@ report 83021 "Lease Contract Sales InvoiceHK"
             DataItemTableView = SORTING("No.");
             RequestFilterFields = "No.", "Sell-to Customer No.", "No. Printed";
             RequestFilterHeading = 'Posted Sales Invoice';
-            column(CompanyAddress1; CompanyAddr[1])
+            column(CompanyAddress1; CompanyInfo."Name Show in Posted Sales Inv.")
             {
             }
             column(CompanyAddress2; CompanyAddr[2])

@@ -53,10 +53,14 @@ pageextension 83079 "Company Information Ext" extends "Company Information"
                     field("HK Expense Claim Master"; Rec."HK Expense Claim Master") { ApplicationArea = all; }
                     field("SG Expense Claim Master"; Rec."SG Expense Claim Master") { ApplicationArea = all; }
                 }
+
+
+                group("Reporting")
+                {
+                    field("Name Show in Posted Sales Inv."; Rec."Name Show in Posted Sales Inv.") { ApplicationArea = all; }
+                }
+
             }
-
         }
-
     }
-
 }
