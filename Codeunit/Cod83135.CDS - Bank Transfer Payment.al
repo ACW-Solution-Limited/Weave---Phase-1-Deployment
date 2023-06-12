@@ -93,7 +93,9 @@ codeunit 83135 "CDS - Bank Transfer Payment"
         InsertIntegrationFieldMapping('CRM to BC Bank Pymt', BankTransferPayment.FieldNo("Bank Transfer Payslip"), CRMBankTransferPayment.FieldNo(acwapp_BankTransferSlip), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Bank Pymt', BankTransferPayment.FieldNo("Confirmed Transfer Payment"), CRMBankTransferPayment.FieldNo(acwapp_BCStatus), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Bank Pymt', BankTransferPayment.FieldNo("Company Guid"), CRMBankTransferPayment.FieldNo(acwapp_Company), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
-
+        InsertIntegrationFieldMapping('CRM to BC Bank Pymt', BankTransferPayment.FieldNo(Status), CRMBankTransferPayment.FieldNo(acwapp_BankTransferPaymentStatus), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+        InsertIntegrationFieldMapping('CRM to BC Bank Pymt', BankTransferPayment.FieldNo(Type), CRMBankTransferPayment.FieldNo(acwapp_Type), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
+        InsertIntegrationFieldMapping('CRM to BC Bank Pymt', BankTransferPayment.FieldNo("Posted Sales Invoice No."), CRMBankTransferPayment.FieldNo(acwapp_InvoiceNo), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
 
 
         CompanyInformation.Get;

@@ -535,6 +535,17 @@
             Description = 'Value of the Total Amount Exclude VAT in base currency.';
             Caption = 'Total Amount Exclude VAT (Base)';
         }
+        field(106; acwapp_Status; Option)
+        {
+            ExternalName = 'acwapp_status';
+            ExternalType = 'Picklist';
+            Description = '';
+            Caption = 'Status';
+            InitValue = " ";
+            OptionMembers = " ",Pending,Confirmed;
+            OptionOrdinalValues = -1, 557130000, 557130001;
+        }
+
 
 
     }

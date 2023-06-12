@@ -75,6 +75,34 @@ table 83007 "Lease Contract Setup"
             TableRelation = "G/L Account"."No.";
         }
 
+        field(12; "Subscription Item No."; Code[50])
+        {
+            Caption = 'Subscription Item No.';
+            DataClassification = ToBeClassified;
+            TableRelation = Item."No.";
+        }
+
+
+        field(13; "Subscription G/L Account No."; Code[50])
+        {
+            Caption = 'Subscription G/L Account No.';
+            DataClassification = ToBeClassified;
+            TableRelation = Item."No.";
+        }
+
+        field(14; "Car Park Fee G/L Account No."; Code[20])
+        {
+            Caption = 'Car Park Fee G/L Account No.';
+            DataClassification = SystemMetadata;
+            TableRelation = "G/L Account"."No.";
+        }
+        field(15; "Locker Fee G/L Account No."; Code[20])
+        {
+            Caption = 'Locker Fee G/L Account No.';
+            DataClassification = SystemMetadata;
+            TableRelation = "G/L Account"."No.";
+        }
+
 
 
     }

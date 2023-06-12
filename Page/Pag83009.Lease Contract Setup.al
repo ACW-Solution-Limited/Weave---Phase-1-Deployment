@@ -49,6 +49,11 @@ page 83009 "Lease Contract Setup"
                 field("Item Sales Location"; rec."Item Sales Location") { ApplicationArea = All; }
                 field("Event Fee G/L Account No."; Rec."Event Fee G/L Account No.") { ApplicationArea = all; }
 
+                field("Subscription Item No."; Rec."Subscription Item No.") { ApplicationArea = all; }
+                field("Subscription G/L Account No."; Rec."Subscription G/L Account No.") { ApplicationArea = all; }
+                field("Car Park Fee G/L Account No."; Rec."Car Park Fee G/L Account No.") { ApplicationArea = all; }
+                field("Locker Fee G/L Account No."; Rec."Locker Fee G/L Account No.") { ApplicationArea = all; }
+
             }
         }
 

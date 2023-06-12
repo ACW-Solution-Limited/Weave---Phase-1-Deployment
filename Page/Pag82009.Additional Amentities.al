@@ -77,6 +77,11 @@ page 82009 "Additional Amentities"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the BC Status field.';
                 }
+                field("CRM Status"; Rec."CRM Status")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the CRM Status field.';
+                }
                 field("Total Amount"; Rec."Total Amount")
                 {
                     ApplicationArea = All;

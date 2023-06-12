@@ -111,8 +111,6 @@ table 83006 "Lease Contract Billing Sched."
         field(20; "Sub-Type"; Code[100])
         {
             Caption = 'Sub-Type';
-            // OptionMembers = "Additional Amenities","Additional Service","Welcome Amenities","Extra Charges","Ad Hoc",Admin;
-            // DataClassification = SystemMetadata;
         }
         field(21; "Stripe Invoice ID"; Text[250])
         {
@@ -120,18 +118,6 @@ table 83006 "Lease Contract Billing Sched."
 
         }
 
-
-
-
-
-
-
-
-        // field(22; "Amount Excluding VAT"; Decimal) // To  be deleted 
-        // {
-        //     Caption = 'Amount Excluding VAT';
-        //     DataClassification = SystemMetadata;
-        // }
 
         field(22; "Sales Invoice Creation Date"; DateTime) { Caption = 'Sales Invoice Creation Date'; }
         field(23; "Tender Type"; Code[20]) { Caption = 'Tender Type'; }
@@ -149,6 +135,14 @@ table 83006 "Lease Contract Billing Sched."
         }
 
         field(30; "Settled"; Boolean) { }
+
+        field(31; "Subscription Reference ID"; Code[250]) { }
+
+        field(32; "Subscription Service Type"; Enum "Subscription Service Type")
+        {
+
+        }
+
     }
 
     keys
@@ -160,4 +154,18 @@ table 83006 "Lease Contract Billing Sched."
         key(key1; "Customer No.", "Posting Date", "Contract No.", "Line No.") { }
 
     }
+
+    procedure GetNextLineNo(ContractNo: Code[250]): Integer
+    var
+        l_recBillingSchdeule: Record "Lease Contract Billing Sched.";
+    begin
+        l_recBillingSchdeule.Reset();
+        l_recBillingSchdeule.SetFilter("Contract No.", ContractNo);
+        l_recBillingSchdeule.SetCurrentKey("Line No.");
+        l_recBillingSchdeule.SetAscending("Line No.", true);
+        if l_recBillingSchdeule.FindLast() then
+            exit(l_recBillingSchdeule."Line No." + 10000)
+        else
+            exit(10000);
+    end;
 }

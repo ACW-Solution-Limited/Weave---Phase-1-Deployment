@@ -3,16 +3,22 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
 
     trigger OnRun()
     var
-        CRMAdditionalService: Record "Additional Service";
-        CRMExtraCharge: Record "Extra Charge";
-        CRMAdditionalAmenities: Record "Additional Amenities";
+        AdditionalService: Record "Additional Service";
+        ExtraCharge: Record "Extra Charge";
+        AdditionalAmenities: Record "Additional Amenities";
+        CarPark: Record "Car Park";
+        Locker: Record Locker;
+        TenderTypeDiscount: Record "Tender Type Discount";
     begin
 
-        CreateAdditionalService(CRMAdditionalService);
-        CreateAdditionalAmenities(CRMAdditionalAmenities);
-        CreateExtraCharge(CRMExtraCharge);
-    end;
+        CreateAdditionalService(AdditionalService);
+        CreateAdditionalAmenities(AdditionalAmenities);
+        CreateExtraCharge(ExtraCharge);
+        CreateCarPark(CarPark);
+        CreateLocker(Locker);
 
+        InsertTenderTypeDiscount(TenderTypeDiscount, true);
+    end;
 
     //procedure CreateWelcomeAmentities(var CRMWelcomeAmentities: Record "CDS acwapp_welcomeamenities"; LineNo: Integer; PostingDate: Date; DueDate: Date; PaymentReferenceID: Text[250]): Integer
     procedure CreateWelcomeAmentities(var CRMWelcomeAmentities: Record "Welcome Amenities"; ContractNo: Text[100]; LineNo: Integer; PostingDate: Date; DueDate: Date; PaymentReferenceID: Text[250]): Integer
@@ -53,30 +59,44 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
 
 
     procedure CreateAdditionalService(var CRMAdditionalService: Record "Additional Service")
+    var
+        l_recLeaseContractSetup: Record "Lease Contract Setup";
     begin
+        CRMAdditionalService.SetRange("CRM Status", CRMAdditionalService."CRM Status"::Confirmed);
         CRMAdditionalService.SetRange("BC Status", CRMAdditionalService."BC Status"::Open);
         if CRMAdditionalService.FindFirst() then
             repeat
-                InsertLCBillingSchedule(g_OptBillingType::Item,
-                                       'Additional Service',
-                                       CRMAdditionalService."Customer No.",
-                                       CRMAdditionalService."Contract No.",
-                                       GetLineNo(CRMAdditionalService."Contract No."),
-                                       DT2DATE(CRMAdditionalService."Created On"),//#Posting Date
-                                       GetDueDate(CRMAdditionalService."Contract No.", DT2DATE(CRMAdditionalService."Created On")),//#Due Date
-                                       DT2DATE(CRMAdditionalService."Created On"), //#Item Sales Date
-                                       CRMAdditionalService."Item No.",
-                                       CRMAdditionalService.Quantity,
-                                       CRMAdditionalService.Price,
-                                       CRMAdditionalService."Total Amount",
-                                       CRMAdditionalService."Total Amount Inclu. VAT",
-                                       CRMAdditionalService."Stripe Invoice ID",
-                                       '',
-                                       '',
-                                       0,
-                                       0,
-                                       0D,
-                                       0D);
+                l_recLeaseContractSetup.Get();
+                if l_recLeaseContractSetup."Subscription Item No." = CRMAdditionalService."Item No." then
+                    CreateSubscriptionServiceToBillingSchdeule(CRMAdditionalService."Contract No.",
+                    CRMAdditionalService."Total Amount Inclu. VAT",
+                    DT2DATE(CRMAdditionalService."Service Start Date"),
+                    DT2DATE(CRMAdditionalService."Service End Date"),
+                    'Additional Service',
+                    CRMAdditionalService."Key",
+                    "Subscription Service Type"::"Additional Service",
+                    DT2DATE(CRMAdditionalService."Created On"))//#Posting Date
+                else
+                    InsertLCBillingSchedule(g_OptBillingType::Item,
+                                           'Additional Service',
+                                           CRMAdditionalService."Customer No.",
+                                           CRMAdditionalService."Contract No.",
+                                           GetLineNo(CRMAdditionalService."Contract No."),
+                                           DT2DATE(CRMAdditionalService."Created On"),//#Posting Date
+                                           GetDueDate(CRMAdditionalService."Contract No.", DT2DATE(CRMAdditionalService."Created On")),//#Due Date
+                                           DT2DATE(CRMAdditionalService."Created On"), //#Item Sales Date
+                                           CRMAdditionalService."Item No.",
+                                           CRMAdditionalService.Quantity,
+                                           CRMAdditionalService.Price,
+                                           CRMAdditionalService."Total Amount",
+                                           CRMAdditionalService."Total Amount Inclu. VAT",
+                                           CRMAdditionalService."Stripe Invoice ID",
+                                           '',
+                                           '',
+                                           0,
+                                           0,
+                                           0D,
+                                           0D);
 
                 CRMAdditionalService."BC Status" := CRMAdditionalService."BC Status"::Created;
                 CRMAdditionalService."Payment Status" := CRMAdditionalService."Payment Status"::Paid;
@@ -88,6 +108,7 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
 
     procedure CreateAdditionalAmenities(var CRMAdditionalAmenities: Record "Additional Amenities")
     begin
+        CRMAdditionalAmenities.SetRange("CRM Status", CRMAdditionalAmenities."CRM Status"::Confirmed);
         CRMAdditionalAmenities.SetRange("BC Status", CRMAdditionalAmenities."BC Status"::Open);
         if CRMAdditionalAmenities.FindFirst() then
             repeat
@@ -278,6 +299,146 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
             until CRMExtraCharge.Next() = 0;
 
     end;
+
+    procedure CreateCarPark(CarPark: Record "Car Park")
+    var
+
+    begin
+        CarPark.SetRange("Bill. Sche. Creation Datetime", 0DT);
+        if CarPark.FindFirst() then
+            repeat
+
+                CreateSubscriptionServiceToBillingSchdeule(CarPark."Contract No.", CarPark."Monthy Rent", DT2Date(CarPark."Start Date"), DT2Date(CarPark."End Date"),
+                'CarPark ' + CarPark."Car Park Property No.", CarPark."Car Park ID", "Subscription Service Type"::"Car Park", DT2Date(CarPark."Created On"));
+                CarPark."Bill. Sche. Creation Datetime" := CurrentDateTime;
+                CarPark."Created to Billing Schedule" := true;
+                CarPark.Modify();
+            until CarPark.Next() = 0;
+
+    end;
+
+    procedure CreateLocker(Locker: Record Locker)
+    var
+    begin
+
+        Locker.SetRange("Bill. Sche. Creation Datetime", 0DT);
+        if Locker.FindFirst() then
+            repeat
+                if Locker."Bill. Sche. Creation Datetime" <> 0DT then
+                    exit;
+
+                CreateSubscriptionServiceToBillingSchdeule(Locker."Contract No.", Locker."Monthy Rent", DT2Date(Locker."Start Date"), DT2Date(Locker."End Date"),
+                'Locker ' + Locker."Locker Property No.", Locker."Locker ID", "Subscription Service Type"::Locker, DT2Date(Locker."Created On"));
+                Locker."Bill. Sche. Creation Datetime" := CurrentDateTime;
+                Locker."Created to Billing Schedule" := true;
+                Locker.Modify();
+            until Locker.Next() = 0;
+
+    end;
+
+
+
+
+    procedure CreateSubscriptionServiceToBillingSchdeule(ContractNo: Code[250]; MonthlyRent: Decimal; ServiceStartDate: Date; ServiceEndDate: Date; Type: Text;
+    SubscriptionReferenceID: Code[250]; SubscriptionServiceType: Enum "Subscription Service Type"; CreatedOn: Date)
+    var
+        l_dateCalculationStart: Date;
+        l_recBillingSchedule: Record "Lease Contract Billing Sched.";
+        l_recPropertyUnit: Record "Property Unit";
+        l_decServiceAmount: Decimal;
+        l_dateServiceStartDate: Date;
+        l_dateServiceEndDate: Date;
+        l_intServiceDays: Integer;
+        l_decSubscriptionAmount: Decimal;
+    begin
+
+        if (ServiceStartDate = 0D) or (ServiceEndDate = 0D) then
+            exit;
+
+        l_decServiceAmount := 0;
+        l_dateCalculationStart := ServiceStartDate;
+        l_decSubscriptionAmount := MonthlyRent;
+
+        repeat
+            l_recBillingSchedule.Reset();
+            l_recBillingSchedule.SetCurrentKey("Contract Start Date");
+            l_recBillingSchedule.SetAscending("Contract Start Date", true);
+            l_recBillingSchedule.SetRange(l_recBillingSchedule.Type, l_recBillingSchedule.Type::Rent);
+            l_recBillingSchedule.SetRange(l_recBillingSchedule."Sub-Type", '');
+            l_recBillingSchedule.SetFilter(l_recBillingSchedule."Contract No.", ContractNo);
+            l_recBillingSchedule.SetFilter("Contract Start Date", '..%1', l_dateCalculationStart);
+            l_recBillingSchedule.SetFilter("Contract End Date", '>=%1', l_dateCalculationStart);
+
+            if l_recBillingSchedule.Count = 0 then
+                exit;
+
+            if l_recBillingSchedule.FindLast() then begin
+
+                if ServiceEndDate > l_recBillingSchedule."Contract End Date" then begin
+                    l_decServiceAmount := l_decSubscriptionAmount / l_recBillingSchedule."No. of Days Current Month" *
+                                     (l_recBillingSchedule."Contract End Date" - l_dateCalculationStart + 1);
+
+                    l_dateServiceStartDate := l_dateCalculationStart; // Contract Start Date
+                    l_dateServiceEndDate := l_recBillingSchedule."Contract End Date";// Contract End Date
+                    l_intServiceDays := (l_recBillingSchedule."Contract End Date" - l_dateCalculationStart + 1);
+                    l_dateCalculationStart := l_recBillingSchedule."Contract End Date" + 1;
+                end else begin
+                    l_decServiceAmount := l_decSubscriptionAmount / l_recBillingSchedule."No. of Days Current Month" *
+                                                         (ServiceEndDate - l_dateCalculationStart + 1);
+
+                    l_dateServiceStartDate := l_dateCalculationStart; // Contract Start Date
+                    l_dateServiceEndDate := ServiceEndDate;// Contract End Date
+                    l_intServiceDays := (ServiceEndDate - l_dateCalculationStart + 1);
+                    l_dateCalculationStart := ServiceEndDate + 1;
+                end;
+                InsertSubscriptionBillingSchdeuleLine(l_recBillingSchedule, Type, l_decServiceAmount, SubscriptionReferenceID, SubscriptionServiceType, l_intServiceDays, l_dateServiceStartDate, l_dateServiceEndDate, CreatedOn);
+            end;
+
+        until l_dateCalculationStart >= ServiceEndDate;
+        exit;
+    end;
+
+    procedure InsertSubscriptionBillingSchdeuleLine(RentalBillingScheduleLine: Record "Lease Contract Billing Sched."; SubType: Text[250]; ServiceAmount: Decimal; SubscriptionReferenceID: Code[250]; SubscriptionServiceType: Enum "Subscription Service Type"; NoOfDaysToBill: Integer; ContractStartDate: Date; ContractEndDate: Date; CreatedOn: Date)
+    var
+        l_recSubscriptionServiceBillingSchedule: Record "Lease Contract Billing Sched.";
+        l_recLeaseContractHeader: Record "Lease Contract Header";
+    begin
+        l_recLeaseContractHeader.Get(RentalBillingScheduleLine."Contract No.");
+        l_recSubscriptionServiceBillingSchedule.Init();
+        l_recSubscriptionServiceBillingSchedule.TransferFields(RentalBillingScheduleLine);
+        l_recSubscriptionServiceBillingSchedule."Line No." := l_recSubscriptionServiceBillingSchedule.GetNextLineNo(l_recSubscriptionServiceBillingSchedule."Contract No.");
+        l_recSubscriptionServiceBillingSchedule."Contract Start Date" := ContractStartDate;
+        l_recSubscriptionServiceBillingSchedule."Contract End Date" := ContractEndDate;
+        l_recSubscriptionServiceBillingSchedule.Amount := ServiceAmount;
+        l_recSubscriptionServiceBillingSchedule."Sub-Type" := SubType;
+        l_recSubscriptionServiceBillingSchedule."Subscription Service Type" := SubscriptionServiceType;
+        l_recSubscriptionServiceBillingSchedule."Subscription Reference ID" := SubscriptionReferenceID;
+        l_recSubscriptionServiceBillingSchedule."No. of Days to Bill" := NoOfDaysToBill;
+
+
+
+        if l_recSubscriptionServiceBillingSchedule."Document No." <> '' then begin
+            l_recSubscriptionServiceBillingSchedule."Posting Date" := GetPostingDate(l_recSubscriptionServiceBillingSchedule."Contract No.", CreatedOn);
+            l_recSubscriptionServiceBillingSchedule."Due Date" := GetDueDate(l_recSubscriptionServiceBillingSchedule."Contract No.", CreatedOn);
+            l_recSubscriptionServiceBillingSchedule."Document No." := '';
+            l_recSubscriptionServiceBillingSchedule.Status := l_recSubscriptionServiceBillingSchedule.Status::" ";
+            l_recSubscriptionServiceBillingSchedule."Stripe Invoice ID" := '';
+            l_recSubscriptionServiceBillingSchedule."Sales Invoice Creation Date" := 0DT;
+        end;
+
+        if (l_recLeaseContractHeader."Payment Type" = l_recLeaseContractHeader."Payment Type"::"Pre-paid") then begin            // Update Posting Date + Due Date if Pre-paid case
+            l_recSubscriptionServiceBillingSchedule."Due Date" := CalcDate('-1D', l_recSubscriptionServiceBillingSchedule."Contract Start Date");
+            l_recSubscriptionServiceBillingSchedule."Posting Date" := CalcDate('-7D', l_recSubscriptionServiceBillingSchedule."Due Date");
+
+        end;
+
+
+
+        l_recSubscriptionServiceBillingSchedule.Insert();
+    end;
+
+
+
     // >> Insert Tender Type Discount 
     procedure InsertTenderTypeDiscount(var TenderTypeDiscount: Record "Tender Type Discount"; JobQueue: Boolean)
     var
@@ -422,12 +583,9 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
                 exit(Date)
             else
                 exit(l_recLCBillingSchedule."Posting Date")
-        end
-        else
+        end else
             exit(Date)
-
     end;
-
 
     procedure GetLastRenetalPostingDate(ContractNo: Code[50]): Date
     var
@@ -452,7 +610,6 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
         l_recLCBillingSchedule.SetAscending("Posting Date", true);
         if l_recLCBillingSchedule.FindLast() then
             exit(l_recLCBillingSchedule."Due Date");
-
     end;
 
 

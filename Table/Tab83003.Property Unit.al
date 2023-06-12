@@ -142,7 +142,7 @@ table 83003 "Property Unit"
         {
             DataClassification = SystemMetadata;
             InitValue = " ";
-            OptionMembers = " ",Property,Floor,Room,Facilities;
+            OptionMembers = " ",Property,Room,Facilities,Carpark,Locker;
 
         }
         field(55; "CRM GUID"; Guid)

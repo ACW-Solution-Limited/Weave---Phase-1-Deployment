@@ -7,6 +7,7 @@ codeunit 83150 "Data Patch"
     trigger OnRun()
     begin
         ModifySalesInvoiceHeader('SI-2023050059');
+
     end;
 
 

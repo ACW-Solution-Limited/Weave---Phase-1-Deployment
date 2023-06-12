@@ -1,18 +1,18 @@
-﻿table 83140 "CDS acwapp_banktransferpayment"
+﻿table 83144 "CDS acwapp_locker"
 {
-    ExternalName = 'acwapp_banktransferpayment';
+    ExternalName = 'acwapp_locker';
     TableType = CDS;
     Description = '';
 
     fields
     {
-        field(1; acwapp_banktransferpaymentId; GUID)
+        field(1; acwapp_lockerId; GUID)
         {
-            ExternalName = 'acwapp_banktransferpaymentid';
+            ExternalName = 'acwapp_lockerid';
             ExternalType = 'Uniqueidentifier';
             ExternalAccess = Insert;
             Description = 'Unique identifier for entity instances';
-            Caption = 'Bank Transfer Payment';
+            Caption = 'Locker';
         }
         field(2; CreatedOn; Datetime)
         {
@@ -105,7 +105,7 @@
             ExternalName = 'statecode';
             ExternalType = 'State';
             ExternalAccess = Modify;
-            Description = 'Status of the Bank Transfer Payment';
+            Description = 'Status of the Locker';
             Caption = 'Status';
             InitValue = " ";
             OptionMembers = " ",Active,Inactive;
@@ -115,7 +115,7 @@
         {
             ExternalName = 'statuscode';
             ExternalType = 'Status';
-            Description = 'Reason for the status of the Bank Transfer Payment';
+            Description = 'Reason for the status of the Locker';
             Caption = 'Status Reason';
             InitValue = " ";
             OptionMembers = " ",Active,Inactive;
@@ -164,46 +164,9 @@
             ExternalName = 'acwapp_name';
             ExternalType = 'String';
             Description = 'The name of the custom entity.';
-            Caption = 'ID';
+            Caption = 'Name';
         }
-        field(35; acwapp_BedroomOffer; GUID)
-        {
-            ExternalName = 'acwapp_bedroomoffer';
-            ExternalType = 'Lookup';
-            Description = '';
-            Caption = 'Bedroom Offer';
-            TableRelation = "CDS acwapp_bedroomoffer".acwapp_bedroomofferId;
-        }
-        field(36; acwapp_BedroomOfferName; Text[100])
-        {
-            FieldClass = FlowField;
-            CalcFormula = lookup("CDS acwapp_bedroomoffer".acwapp_name where(acwapp_bedroomofferId = field(acwapp_BedroomOffer)));
-            ExternalName = 'acwapp_bedroomoffername';
-            ExternalType = 'String';
-            ExternalAccess = Read;
-        }
-        field(37; acwapp_BankTransferSlip; Text[2000])
-        {
-            ExternalName = 'acwapp_banktransferslip';
-            ExternalType = 'String';
-            Description = '';
-            Caption = 'Bank Transfer Slip';
-        }
-        field(38; acwapp_ConfirmBankTransferPayment; Boolean)
-        {
-            ExternalName = 'acwapp_confirmbanktransferpayment';
-            ExternalType = 'Boolean';
-            Description = '';
-            Caption = 'Confirm Bank Transfer Payment';
-        }
-        field(40; acwapp_APIGenerateNumber; Text[100])
-        {
-            ExternalName = 'acwapp_apigeneratenumber';
-            ExternalType = 'String';
-            Description = '';
-            Caption = 'API Generate Number';
-        }
-        field(41; acwapp_Company; GUID)
+        field(35; acwapp_Company; GUID)
         {
             ExternalName = 'acwapp_company';
             ExternalType = 'Lookup';
@@ -211,7 +174,7 @@
             Caption = 'Company';
             TableRelation = "CDS acwapp_bccompany".acwapp_bccompanyId;
         }
-        field(42; acwapp_CompanyName; Text[100])
+        field(36; acwapp_CompanyName; Text[100])
         {
             FieldClass = FlowField;
             CalcFormula = lookup("CDS acwapp_bccompany".acwapp_name where(acwapp_bccompanyId = field(acwapp_Company)));
@@ -219,55 +182,183 @@
             ExternalType = 'String';
             ExternalAccess = Read;
         }
-        field(43; acwapp_PropertyID; Text[100])
+        field(37; acwapp_PropertyNo; Text[100])
         {
-            ExternalName = 'acwapp_propertyid';
+            ExternalName = 'acwapp_propertyno';
             ExternalType = 'String';
             Description = '';
-            Caption = 'Property ID';
+            Caption = 'Property No.';
         }
-        field(44; acwapp_BCStatus; Boolean)
+        field(38; acwapp_ContractNo; Text[100])
         {
-            ExternalName = 'acwapp_bcstatus';
-            ExternalType = 'Boolean';
-            Description = '';
-            Caption = 'BC Status';
-        }
-
-
-        field(59; acwapp_InvoiceNo; Text[100])
-        {
-            ExternalName = 'acwapp_invoiceno';
+            ExternalName = 'acwapp_contractno';
             ExternalType = 'String';
             Description = '';
-            Caption = 'Invoice No.';
+            Caption = 'Contract No.';
         }
-
-        field(60; acwapp_Type; Option)
+        field(39; acwapp_ContractStatus; Option)
         {
-            ExternalName = 'acwapp_type';
+            ExternalName = 'acwapp_contractstatus';
             ExternalType = 'Picklist';
             Description = '';
-            Caption = 'Type';
+            Caption = 'Contract Status';
             InitValue = " ";
-            OptionMembers = " ",First,Regular;
-            OptionOrdinalValues = -1, 557130000, 557130001;
+            OptionMembers = " ",ConfirmedWithRoomAllocated,"ReadyForCheck-in",Active,FinishedContract,Terminated,"Terminated(beforeMove-in)";
+            OptionOrdinalValues = -1, 557130002, 557130004, 557130000, 557130005, 557130003, 557130001;
         }
-        field(62; acwapp_BankTransferPaymentStatus; Option)
+        field(41; acwapp_Account; GUID)
         {
-            ExternalName = 'acwapp_banktransferpaymentstatus';
+            ExternalName = 'acwapp_account';
+            ExternalType = 'Lookup';
+            Description = '';
+            Caption = 'Account';
+            TableRelation = "CRM Account".AccountId;
+        }
+        field(44; acwapp_AccountID; Text[100])
+        {
+            ExternalName = 'acwapp_accountid';
+            ExternalType = 'String';
+            Description = '';
+            Caption = 'Account ID';
+        }
+        field(45; acwapp_PayeeContact; GUID)
+        {
+            ExternalName = 'acwapp_payeecontact';
+            ExternalType = 'Lookup';
+            Description = '';
+            Caption = 'Payee Contact';
+            TableRelation = "CRM Contact".ContactId;
+        }
+        field(48; acwapp_Property; GUID)
+        {
+            ExternalName = 'acwapp_property';
+            ExternalType = 'Lookup';
+            Description = '';
+            Caption = 'Property';
+            TableRelation = "CDS acwapp_propertyunit".acwapp_propertyunitId;
+        }
+        field(49; acwapp_PropertyName; Text[100])
+        {
+            FieldClass = FlowField;
+            CalcFormula = lookup("CDS acwapp_propertyunit".acwapp_name where(acwapp_propertyunitId = field(acwapp_Property)));
+            ExternalName = 'acwapp_propertyname';
+            ExternalType = 'String';
+            ExternalAccess = Read;
+        }
+        field(50; acwapp_PropertyBooking; GUID)
+        {
+            ExternalName = 'acwapp_propertybooking';
+            ExternalType = 'Lookup';
+            Description = '';
+            Caption = 'Property Booking';
+            TableRelation = "CDS acwapp_propertybooking".acwapp_propertybookingId;
+        }
+        field(51; acwapp_PropertyBookingName; Text[200])
+        {
+            FieldClass = FlowField;
+            CalcFormula = lookup("CDS acwapp_propertybooking".acwapp_name where(acwapp_propertybookingId = field(acwapp_PropertyBooking)));
+            ExternalName = 'acwapp_propertybookingname';
+            ExternalType = 'String';
+            ExternalAccess = Read;
+        }
+        field(52; acwapp_Locker; GUID)
+        {
+            ExternalName = 'acwapp_locker';
+            ExternalType = 'Lookup';
+            Description = '';
+            Caption = 'Locker Guid';
+            TableRelation = "CDS acwapp_propertyunit".acwapp_propertyunitId;
+        }
+        field(53; acwapp_LockerName; Text[100])
+        {
+            FieldClass = FlowField;
+            CalcFormula = lookup("CDS acwapp_propertyunit".acwapp_name where(acwapp_propertyunitId = field(acwapp_Locker)));
+            ExternalName = 'acwapp_lockername';
+            ExternalType = 'String';
+            ExternalAccess = Read;
+        }
+        field(54; acwapp_StartDate; Datetime)
+        {
+            ExternalName = 'acwapp_startdate';
+            ExternalType = 'DateTime';
+            Description = '';
+            Caption = 'Start Date';
+        }
+        field(55; acwapp_EndDate; Datetime)
+        {
+            ExternalName = 'acwapp_enddate';
+            ExternalType = 'DateTime';
+            Description = '';
+            Caption = 'End Date';
+        }
+        field(56; acwapp_MonthlyRent; Decimal)
+        {
+            ExternalName = 'acwapp_monthlyrent';
+            ExternalType = 'Money';
+            Description = '';
+            Caption = 'Monthly Rent';
+        }
+        field(57; TransactionCurrencyId; GUID)
+        {
+            ExternalName = 'transactioncurrencyid';
+            ExternalType = 'Lookup';
+            Description = 'Unique identifier of the currency associated with the entity.';
+            Caption = 'Currency';
+            TableRelation = "CRM Transactioncurrency".TransactionCurrencyId;
+        }
+        field(59; ExchangeRate; Decimal)
+        {
+            ExternalName = 'exchangerate';
+            ExternalType = 'Decimal';
+            ExternalAccess = Read;
+            Description = 'Exchange rate for the currency associated with the entity with respect to the base currency.';
+            Caption = 'Exchange Rate';
+        }
+        field(60; acwapp_monthlyrent_Base; Decimal)
+        {
+            ExternalName = 'acwapp_monthlyrent_base';
+            ExternalType = 'Money';
+            ExternalAccess = Read;
+            Description = 'Value of the Monthly Rent in base currency.';
+            Caption = 'Monthly Rent (Base)';
+        }
+        field(63; acwapp_PaymentType; Option)
+        {
+            ExternalName = 'acwapp_paymenttype';
             ExternalType = 'Picklist';
             Description = '';
-            Caption = 'Bank Transfer Payment Status';
+            Caption = 'Payment Type';
             InitValue = " ";
-            OptionMembers = " ",Pending,Paid,Rejected;
-            OptionOrdinalValues = -1, 557130000, 557130001, 557130002;
+            OptionMembers = " ","Pre-paid","One-off(ShortStay)",Monthly;
+            OptionOrdinalValues = -1, 557130002, 557130000, 557130001;
         }
-
+        field(69; acwapp_ID; Text[100])
+        {
+            ExternalName = 'acwapp_id';
+            ExternalType = 'String';
+            Description = '';
+            Caption = 'ID';
+        }
+        field(70; acwapp_LockerType; GUID)
+        {
+            ExternalName = 'acwapp_lockertype';
+            ExternalType = 'Lookup';
+            Description = '';
+            Caption = 'Locker Type';
+            TableRelation = "CDS acwapp_roomtype".acwapp_roomtypeId;
+        }
+        field(71; acwapp_LockerTypeName; Text[100])
+        {
+            FieldClass = FlowField;
+            CalcFormula = lookup("CDS acwapp_roomtype".acwapp_name where(acwapp_roomtypeId = field(acwapp_LockerType)));
+            ExternalName = 'acwapp_lockertypename';
+            ExternalType = 'String';
+            ExternalAccess = Read;
+        }
     }
     keys
     {
-        key(PK; acwapp_banktransferpaymentId)
+        key(PK; acwapp_lockerId)
         {
             Clustered = true;
         }

@@ -28,6 +28,7 @@ codeunit 83001 "Lease Contract Management"
 
         if p_recLeaseContractHeader."No." = 'PB-230223-005' then exit;
         if p_recLeaseContractHeader."Opening Contract" then exit;
+        // if p_recLeaseContractHeader."Renewal Contract Datetime" <> 0DT then exit;
 
         l_intLineNo := 0;
         g_deposit := 0;
@@ -118,7 +119,7 @@ codeunit 83001 "Lease Contract Management"
                         l_recLeaseContractBillingSchedule."Contract No." := p_recLeaseContractHeader."No.";
                         l_recLeaseContractBillingSchedule.Type := l_recLeaseContractBillingSchedule.type::Rent;
                         l_recLeaseContractBillingSchedule."Contract Start Date" := DT2date(p_recLeaseContractHeaderTemp."Contract Start Date");
-                        If l_recLeaseContractBillingSchedule."Contract Start Date" = DT2Date(p_recLeaseContractHeader."Contract Start Date") then begin
+                        If (l_recLeaseContractBillingSchedule."Contract Start Date" = DT2Date(p_recLeaseContractHeader."Contract Start Date")) and (p_recLeaseContractHeader."Original Contract No." = '') then begin
                             l_recLeaseContractBillingSchedule."Posting Date" := DT2Date(p_recLeaseContractHeader.SystemCreatedAt);
                             l_recLeaseContractBillingSchedule."Due Date" := l_recLeaseContractBillingSchedule."Posting Date";
                         end else begin
@@ -234,7 +235,7 @@ codeunit 83001 "Lease Contract Management"
                         If p_recLeaseContractHeader."1st Payment Stripe Invoice ID" <> '' then begin
                             // Prepayment >>
                             If p_recLeaseContractHeader."Payment Type" = p_recLeaseContractHeader."Payment Type"::Monthly then begin
-                                If l_recLeaseContractBillingSchedule."Contract Start Date" = DT2date(p_recLeaseContractHeader."Contract Start Date") then begin
+                                If (l_recLeaseContractBillingSchedule."Contract Start Date" = DT2date(p_recLeaseContractHeader."Contract Start Date")) AND (p_recLeaseContractHeader."Original Contract No." = '') then begin
                                     l_recLeaseContractBillingSchedule."Stripe Invoice ID" := p_recLeaseContractHeader."1st Payment Stripe Invoice ID";
                                 end;
                             end else begin
@@ -556,7 +557,10 @@ codeunit 83001 "Lease Contract Management"
                     l_recLeaseContractBillingSchedule2."Due Date" := CalcDate('-1D', l_recLeaseContractBillingSchedule."Contract Start Date")
                 else
                     l_recLeaseContractBillingSchedule2."Due Date" := l_recLeaseContractBillingSchedule."Posting Date";
-
+                // To update due date >>
+                If l_recLeaseContractBillingSchedule."Contract Start Date" = DT2Date(p_recLeaseContractHeader."Contract Start Date") then
+                    l_recLeaseContractBillingSchedule2."Due Date" := l_recLeaseContractBillingSchedule."Posting Date";
+                // To update due date  <<   
                 l_recLeaseContractBillingSchedule2."Contract End Date" := l_recLeaseContractBillingSchedule."Contract End Date";
                 l_recLeaseContractBillingSchedule2."No. of Days Current Month" := l_recLeaseContractBillingSchedule."No. of Days Current Month";
                 l_recLeaseContractBillingSchedule2."No. of Days to Bill" := l_recLeaseContractBillingSchedule."No. of Days to Bill";
@@ -600,11 +604,15 @@ codeunit 83001 "Lease Contract Management"
             l_recLeaseContractBillingSchedule2."Sub-Type" := 'Monthly Discount';
             l_recLeaseContractBillingSchedule2."Contract Start Date" := l_recLeaseContractBillingSchedule."Contract Start Date";
             l_recLeaseContractBillingSchedule2."Posting Date" := l_recLeaseContractBillingSchedule."Posting Date";
+
             If p_recLeaseContractHeader."Payment Type" = p_recLeaseContractHeader."Payment Type"::Monthly then
                 l_recLeaseContractBillingSchedule2."Due Date" := CalcDate('-1D', l_recLeaseContractBillingSchedule."Contract Start Date")
             else
                 l_recLeaseContractBillingSchedule2."Due Date" := l_recLeaseContractBillingSchedule."Posting Date";
-
+            // To update due date >>
+            If l_recLeaseContractBillingSchedule."Contract Start Date" = DT2Date(p_recLeaseContractHeader."Contract Start Date") then
+                l_recLeaseContractBillingSchedule2."Due Date" := l_recLeaseContractBillingSchedule."Posting Date";
+            // To update due date  <<
             l_recLeaseContractBillingSchedule2."Contract End Date" := l_recLeaseContractBillingSchedule."Contract End Date";
             l_recLeaseContractBillingSchedule2."No. of Days Current Month" := l_recLeaseContractBillingSchedule."No. of Days Current Month";
             l_recLeaseContractBillingSchedule2."No. of Days to Bill" := l_recLeaseContractBillingSchedule."No. of Days to Bill";
@@ -631,7 +639,7 @@ codeunit 83001 "Lease Contract Management"
             l_recLeaseContractBillingSchedule2."Line No." := l_intLineNo;
             If p_recLeaseContractHeader."1st Payment Stripe Invoice ID" <> '' then begin
                 If p_recLeaseContractHeader."Payment Type" = p_recLeaseContractHeader."Payment Type"::Monthly then begin
-                    If l_recLeaseContractBillingSchedule2."Contract Start Date" = DT2date(p_recLeaseContractHeader."Contract Start Date") then
+                    If (l_recLeaseContractBillingSchedule2."Contract Start Date" = DT2date(p_recLeaseContractHeader."Contract Start Date")) AND (p_recLeaseContractHeader."Original Contract No." = '') then
                         l_recLeaseContractBillingSchedule2."Stripe Invoice ID" := p_recLeaseContractHeader."1st Payment Stripe Invoice ID";
                 end else begin
                     l_recLeaseContractBillingSchedule2."Stripe Invoice ID" := p_recLeaseContractHeader."1st Payment Stripe Invoice ID";
@@ -720,6 +728,8 @@ codeunit 83001 "Lease Contract Management"
                     l_recLeaseContractBillingScheduleinsertTemp.Status := l_recLeaseContractBillingSchedule2.Status::" ";
                     l_recLeaseContractBillingScheduleinsertTemp.Type := l_recLeaseContractBillingSchedule2.Type::Rent;
                     l_recLeaseContractBillingScheduleInsertTemp."Sub-Type" := l_recLeaseContractBillingSchedule2."Sub-Type";
+                    l_recLeaseContractBillingScheduleInsertTemp."Subscription Reference ID" := l_recLeaseContractBillingSchedule2."Subscription Reference ID";
+                    l_recLeaseContractBillingScheduleInsertTemp."Subscription Service Type" := l_recLeaseContractBillingSchedule2."Subscription Service Type";
                     l_recLeaseContractBillingScheduleinsertTemp."Tender Type" := l_recLeaseContractBillingSchedule2."Tender Type";
                     l_recLeaseContractBillingScheduleinsertTemp.insert;
                 end else begin
@@ -750,6 +760,8 @@ codeunit 83001 "Lease Contract Management"
                         l_recLeaseContractBillingScheduleinsertTemp.Type := l_recLeaseContractBillingSchedule2.Type::Rent;
                         l_recLeaseContractBillingScheduleinsertTemp."Customer No." := p_recLeaseContractHeader."Customer No.";
                         l_recLeaseContractBillingScheduleinsertTemp."Sub-Type" := l_recLeaseContractBillingSchedule2."Sub-Type";
+                        l_recLeaseContractBillingScheduleinsertTemp."Subscription Reference ID" := l_recLeaseContractBillingSchedule2."Subscription Reference ID";
+                        l_recLeaseContractBillingScheduleinsertTemp."Subscription Service Type" := l_recLeaseContractBillingSchedule2."Subscription Service Type";
                         l_recLeaseContractBillingScheduleinsertTemp."Tender Type" := l_recLeaseContractBillingSchedule2."Tender Type";
                         l_recLeaseContractBillingScheduleinsertTemp.insert;
                     end;
@@ -771,6 +783,10 @@ codeunit 83001 "Lease Contract Management"
     var
         l_recLeaseContractBillingScheduleinsertTemp2: Record "Lease Contract Billing Sched." temporary;
         l_recLeaseContractBillingScheduleInsert2: Record "Lease Contract Billing Sched.";
+        l_recCarPark: Record "Car Park";
+        l_recLocker: Record Locker;
+        l_recAdditionalService: Record "Additional Service";
+        l_decMonthlySubscriptionAmount: Decimal;
     begin
         // Message('%1', l_recLeaseContractBillingSchedule."Line No.");
         Clear(l_recLeaseContractBillingScheduleinsertTemp2);
@@ -814,8 +830,35 @@ codeunit 83001 "Lease Contract Management"
                 end;
         end;
         //<<
+        //Subscription Service >>
+        if l_recLeaseContractBillingSchedule."Subscription Service Type" <> l_recLeaseContractBillingSchedule."Subscription Service Type"::" " then begin
+            case l_recLeaseContractBillingSchedule."Subscription Service Type" of
+                l_recLeaseContractBillingSchedule."Subscription Service Type"::"Car Park":
+                    if l_recCarPark.Get(l_recLeaseContractBillingSchedule."Subscription Reference ID") then
+                        l_decMonthlySubscriptionAmount := l_recCarPark."Monthy Rent";
+
+                l_recLeaseContractBillingSchedule."Subscription Service Type"::Locker:
+                    if l_recLocker.Get(l_recLeaseContractBillingSchedule."Subscription Reference ID") then
+                        l_decMonthlySubscriptionAmount := l_recLocker."Monthy Rent";
+
+                l_recLeaseContractBillingSchedule."Subscription Service Type"::"Additional Service":
+                    begin
+                        l_recAdditionalService.Reset();
+                        l_recAdditionalService.SetFilter("Key", l_recLeaseContractBillingSchedule."Subscription Reference ID");
+                        if l_recAdditionalService.FindFirst() then
+                            l_decMonthlySubscriptionAmount := l_recAdditionalService."Total Amount Inclu. VAT";
+                    end;
+            end;
+            l_recLeaseContractBillingScheduleinsertTemp2.Amount := (l_decMonthlySubscriptionAmount * l_recLeaseContractBillingScheduleinsertTemp2."No. of Days to Bill" / l_recLeaseContractBillingScheduleinsertTemp2."No. of Days Current Month");
+        end;
+
+        //Subscription Service <<
+
         // l_recLeaseContractBillingScheduleinsertTemp2."Amount Excluding VAT" := (p_recLeaseContractHeader.Price * l_recLeaseContractBillingScheduleinsertTemp2."No. of Days to Bill" / l_recLeaseContractBillingScheduleinsertTemp2."No. of Days Current Month");
         l_recLeaseContractBillingScheduleinsertTemp2.Status := l_recLeaseContractBillingScheduleinsertTemp2.Status::" ";
+        l_recLeaseContractBillingScheduleinsertTemp2."Sub-Type" := l_recLeaseContractBillingSchedule."Sub-Type";
+        l_recLeaseContractBillingScheduleinsertTemp2."Subscription Reference ID" := l_recLeaseContractBillingSchedule."Subscription Reference ID";
+        l_recLeaseContractBillingScheduleinsertTemp2."Subscription Service Type" := l_recLeaseContractBillingSchedule."Subscription Service Type";
         l_recLeaseContractBillingScheduleinsertTemp2.Type := l_recLeaseContractBillingSchedule.Type::Rent;
         l_recLeaseContractBillingScheduleinsertTemp2.insert;
 
@@ -856,12 +899,17 @@ codeunit 83001 "Lease Contract Management"
         If l_recLeaseContractBillingSchedule2."Sub-Type" = 'MONTHLY DISCOUNT' then
             l_recLeaseContractBillingScheduleinsertTemp2.Amount := -(p_recLeaseContractHeader."Monthly Discount" * l_recLeaseContractBillingScheduleinsertTemp2."No. of Days to Bill" / l_recLeaseContractBillingScheduleinsertTemp2."No. of Days Current Month")
         else
-            l_recLeaseContractBillingScheduleinsertTemp2.Amount := -(l_recLeaseContractBillingSchedule2.Amount * l_recLeaseContractBillingScheduleinsertTemp2."No. of Days to Bill" / l_recLeaseContractBillingScheduleinsertTemp2."No. of Days Current Month");
+            if l_recLeaseContractBillingSchedule2."Subscription Reference ID" <> '' then
+                l_recLeaseContractBillingScheduleinsertTemp2.Amount := l_recLeaseContractBillingSchedule2.Amount * l_recLeaseContractBillingScheduleinsertTemp2."No. of Days to Bill" / l_recLeaseContractBillingScheduleinsertTemp2."No. of Days Current Month"
+            else
+                l_recLeaseContractBillingScheduleinsertTemp2.Amount := -(l_recLeaseContractBillingSchedule2.Amount * l_recLeaseContractBillingScheduleinsertTemp2."No. of Days to Bill" / l_recLeaseContractBillingScheduleinsertTemp2."No. of Days Current Month");
 
         // l_recLeaseContractBillingScheduleinsertTemp2."Amount Excluding VAT" := -(l_recLeaseContractBillingScheduleinsertTemp."Amount Excluding VAT" * l_recLeaseContractBillingScheduleinsertTemp2."No. of Days to Bill" / l_recLeaseContractBillingScheduleinsertTemp2."No. of Days Current Month");
         l_recLeaseContractBillingScheduleinsertTemp2.Status := l_recLeaseContractBillingScheduleinsertTemp2.Status::" ";
         l_recLeaseContractBillingScheduleinsertTemp2.Type := l_recLeaseContractBillingScheduleinsertTemp2.Type::Rent;
         l_recLeaseContractBillingScheduleinsertTemp2."Sub-Type" := l_recLeaseContractBillingSchedule2."Sub-Type";
+        l_recLeaseContractBillingScheduleinsertTemp2."Subscription Reference ID" := l_recLeaseContractBillingSchedule2."Subscription Reference ID";
+        l_recLeaseContractBillingScheduleinsertTemp2."Subscription Service Type" := l_recLeaseContractBillingSchedule2."Subscription Service Type";
         l_recLeaseContractBillingScheduleinsertTemp2.insert;
 
     end;
@@ -981,8 +1029,16 @@ codeunit 83001 "Lease Contract Management"
                 l_recLeaseContractBillingSchedule2.Type := l_recLeaseContractBillingSchedule2.Type::Rent;
                 l_recLeaseContractBillingSchedule2."Sub-Type" := 'Tender Type Discount';
                 l_recLeaseContractBillingSchedule2."Contract Start Date" := l_recLeaseContractBillingSchedule."Contract Start Date";
-                l_recLeaseContractBillingSchedule2."Due Date" := l_recLeaseContractBillingSchedule."Due Date";
-                l_recLeaseContractBillingSchedule2."Posting Date" := l_recLeaseContractBillingSchedule."Posting Date";
+
+                if p_recLeaseContractHeader."Original Contract No." = '' then begin
+                    l_recLeaseContractBillingSchedule2."Due Date" := l_recLeaseContractBillingSchedule."Due Date";
+                    l_recLeaseContractBillingSchedule2."Posting Date" := l_recLeaseContractBillingSchedule."Posting Date";
+                end
+                else begin
+                    l_recLeaseContractBillingSchedule2."Due Date" := DT2Date(p_recLeaseContractHeader.SystemCreatedAt);
+                    l_recLeaseContractBillingSchedule2."Posting Date" := DT2Date(p_recLeaseContractHeader.SystemCreatedAt);
+                end;
+
                 l_recLeaseContractBillingSchedule2."Contract End Date" := l_recLeaseContractBillingSchedule."Contract End Date";
                 l_recLeaseContractBillingSchedule2."No. of Days Current Month" := l_recLeaseContractBillingSchedule."No. of Days Current Month";
                 l_recLeaseContractBillingSchedule2."No. of Days to Bill" := l_recLeaseContractBillingSchedule."No. of Days to Bill";
@@ -997,6 +1053,30 @@ codeunit 83001 "Lease Contract Management"
         end;
     end;
 
+    procedure RenewalContract(OrginalContractNo: Code[250]; RenewContactNo: Code[250])
+    var
+        l_recLeaseContractHeader: Record "Lease Contract Header";
+        l_recOrginalContractHeader: Record "Lease Contract Header";
+
+    begin
+        if l_recLeaseContractHeader.Get(RenewContactNo) then begin
+            RefreshBillingSchedule(l_recLeaseContractHeader, true);
+            UpdateOrginalContractRemainigDepositToRenewDate(OrginalContractNo);
+            CreateContractDocument(RenewContactNo, '', 'Invoice');
+            CreateContractDocument(OrginalContractNo, GetDepositPostedSalesInvoice(RenewContactNo), 'Credit Memo');
+
+            PostSalesDocument(GetDepositPostedSalesInvoice(RenewContactNo));
+            PostSalesDocument(GetOrginalContractCreditMemo(OrginalContractNo));
+            UpdateOrginalContractRemainigDepositToSettled(OrginalContractNo);
+            Commit();
+
+            l_recOrginalContractHeader.Get(OrginalContractNo);
+            l_recOrginalContractHeader."Renewal Contract" := true;
+            l_recOrginalContractHeader."Renewal Contract Datetime" := CurrentDateTime;
+            l_recOrginalContractHeader."Renewal Contract No." := RenewContactNo;
+            l_recOrginalContractHeader.Modify();
+        end;
+    end;
 
     procedure PostSalesDocument(DocumentNo: Code[250])
     var
@@ -1011,6 +1091,138 @@ codeunit 83001 "Lease Contract Management"
             l_cuSalesPost.Run(l_recSalesHeader);
         end;
     end;
+
+    procedure CreateContractDocument(ContractNo: Code[250]; ApplyToDocumentNo: Code[250]; Type: text)
+    var
+        l_recLeaseContractHeader: Record "Lease Contract Header";
+        l_reptLeaseContractCreateInvoices: Report "Lease Contract Create Invoices";
+    begin
+        l_recLeaseContractHeader.SetFilter("No.", ContractNo);
+        Clear(l_reptLeaseContractCreateInvoices);
+        l_reptLeaseContractCreateInvoices.SetTableView(l_recLeaseContractHeader);
+        l_reptLeaseContractCreateInvoices.SetApplyToDocumentNo(ApplyToDocumentNo);
+        l_reptLeaseContractCreateInvoices.UseRequestPage := false;
+        l_reptLeaseContractCreateInvoices.Run();
+    end;
+
+    procedure GetDepositPostedSalesInvoice(ContractNo: Code[250]): Code[250]
+    var
+        l_recBillingSchedule: Record "Lease Contract Billing Sched.";
+    begin
+        l_recBillingSchedule.Reset();
+        l_recBillingSchedule.SetFilter("Contract No.", ContractNo);
+        l_recBillingSchedule.SetRange(Status, l_recBillingSchedule.Status::Created);
+        l_recBillingSchedule.SetRange(Type, l_recBillingSchedule.Type::Deposit);
+        l_recBillingSchedule.SetFilter("Stripe Invoice ID", '<>%1', '');
+        if l_recBillingSchedule.FindFirst() then
+            exit(l_recBillingSchedule."Document No.")
+        else
+            exit('')
+    end;
+
+    procedure GetOrginalContractCreditMemo(ContractNo: Code[250]): Code[250]
+    var
+        l_recBillingSchedule: Record "Lease Contract Billing Sched.";
+    begin
+        l_recBillingSchedule.Reset();
+        l_recBillingSchedule.SetFilter("Contract No.", ContractNo);
+        l_recBillingSchedule.SetRange(Status, l_recBillingSchedule.Status::Created);
+        l_recBillingSchedule.SetRange(Type, l_recBillingSchedule.Type::Deposit);
+        l_recBillingSchedule.SetFilter("Stripe Invoice ID", '');
+        if l_recBillingSchedule.FindFirst() then
+            exit(l_recBillingSchedule."Document No.")
+        else
+            exit('')
+    end;
+
+    procedure UpdateOrginalContractRemainigDepositToRenewDate(OrginalContractNo: Code[250])
+    var
+        l_recOrginalBillingSchedule: Record "Lease Contract Billing Sched.";
+
+    begin
+        l_recOrginalBillingSchedule.Reset();
+        l_recOrginalBillingSchedule.SetFilter("Contract No.", OrginalContractNo);
+        l_recOrginalBillingSchedule.SetRange(Type, l_recOrginalBillingSchedule.Type::Deposit);
+        l_recOrginalBillingSchedule.SetFilter("Stripe Invoice ID", '');
+        l_recOrginalBillingSchedule.SetRange(Status, l_recOrginalBillingSchedule.Status::" ");
+        if (l_recOrginalBillingSchedule.FindFirst()) then
+            repeat
+                l_recOrginalBillingSchedule."Posting Date" := Today();
+                l_recOrginalBillingSchedule.Modify();
+            until l_recOrginalBillingSchedule.Next() = 0;
+    end;
+
+    procedure UpdateOrginalContractRemainigDepositToSettled(OrginalContractNo: Code[250])
+    var
+        l_recOrginalBillingSchedule: Record "Lease Contract Billing Sched.";
+        l_reCustomerLedgerEntry: Record "Cust. Ledger Entry";
+
+    begin
+        l_recOrginalBillingSchedule.Reset();
+        l_recOrginalBillingSchedule.SetFilter("Contract No.", OrginalContractNo);
+        l_recOrginalBillingSchedule.SetRange(Type, l_recOrginalBillingSchedule.Type::Deposit);
+        l_recOrginalBillingSchedule.SetFilter("Stripe Invoice ID", '');
+        l_recOrginalBillingSchedule.SetRange(Status, l_recOrginalBillingSchedule.Status::Posted);
+        l_recOrginalBillingSchedule.SetRange("Document Type", l_recOrginalBillingSchedule."Document Type"::"Credit Memo");
+        if l_recOrginalBillingSchedule.FindFirst() then
+            repeat
+                l_reCustomerLedgerEntry.Reset();
+                l_reCustomerLedgerEntry.SetFilter("Document No.", l_recOrginalBillingSchedule."Document No.");
+                if l_reCustomerLedgerEntry.FindFirst() then begin
+                    l_recOrginalBillingSchedule.Settled := not (l_reCustomerLedgerEntry.Open);
+                    l_recOrginalBillingSchedule.Modify();
+                end;
+            until l_recOrginalBillingSchedule.Next() = 0;
+    end;
+
+
+    procedure DeleteDepositFromOrginalContract(OrginalContractNo: Code[250])
+    var
+        l_recOrginalBillingSchedule: Record "Lease Contract Billing Sched.";
+        l_recLeaseContractHeader: Record "Lease Contract Header";
+    begin
+        l_recLeaseContractHeader.Get(OrginalContractNo);
+
+        l_recOrginalBillingSchedule.Reset();
+        l_recOrginalBillingSchedule.SetFilter("Contract No.", OrginalContractNo);
+        l_recOrginalBillingSchedule.SetRange(Type, l_recOrginalBillingSchedule.Type::Deposit);
+        l_recOrginalBillingSchedule.SetFilter(Amount, '<0');
+        l_recOrginalBillingSchedule.SetFilter("Stripe Invoice ID", '');
+        if (l_recOrginalBillingSchedule.FindLast()) and (l_recOrginalBillingSchedule.Count = 1) then begin
+            l_recOrginalBillingSchedule.Delete();
+        end;
+    end;
+
+    local procedure UpdateDepositDifferencetoRenewalContact(OrginalContractNo: Code[250]; RenewContactNo: Code[250])
+    var
+
+        l_recOrginalLeaseContractHeader: Record "Lease Contract Header";
+        l_recRenewLeaseContractHeader: Record "Lease Contract Header";
+        l_recRenewalBillingSchedule: Record "Lease Contract Billing Sched.";
+    begin
+
+        l_recOrginalLeaseContractHeader.Get(OrginalContractNo);
+        l_recRenewLeaseContractHeader.Get(RenewContactNo);
+        l_recRenewalBillingSchedule.Reset();
+        l_recRenewalBillingSchedule.SetFilter("Contract No.", RenewContactNo);
+        l_recRenewalBillingSchedule.SetRange(Type, l_recRenewalBillingSchedule.Type::Deposit);
+        l_recRenewalBillingSchedule.SetFilter(Amount, '>0');
+        if l_recRenewalBillingSchedule.FindFirst() then begin
+            if l_recRenewLeaseContractHeader."Deposit Amount" > l_recOrginalLeaseContractHeader."Deposit Amount" then begin
+                l_recRenewalBillingSchedule.Amount := l_recRenewLeaseContractHeader."Deposit Amount" - l_recOrginalLeaseContractHeader."Deposit Amount";
+                l_recRenewalBillingSchedule.Modify();
+            end
+            else
+                l_recRenewalBillingSchedule.Delete();
+        end;
+    end;
+
+
+
+
+
+
+
 
     var
         l_intLineNo: Integer;

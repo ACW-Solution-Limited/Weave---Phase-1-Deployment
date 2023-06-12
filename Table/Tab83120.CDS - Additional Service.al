@@ -504,6 +504,31 @@
             Description = 'Value of the Total Amount Include VAT in base currency.';
             Caption = 'Total Amount Include VAT (Base)';
         }
+        field(105; acwapp_Status; Option)
+        {
+            ExternalName = 'acwapp_status';
+            ExternalType = 'Picklist';
+            Description = '';
+            Caption = 'Status';
+            InitValue = " ";
+            OptionMembers = " ",Pending,Confirmed;
+            OptionOrdinalValues = -1, 557130000, 557130001;
+        }
+        field(107; acwapp_PaymentAmount; Decimal)
+        {
+            ExternalName = 'acwapp_paymentamount';
+            ExternalType = 'Money';
+            Description = '';
+            Caption = 'Payment Amount';
+        }
+        field(108; acwapp_paymentamount_Base; Decimal)
+        {
+            ExternalName = 'acwapp_paymentamount_base';
+            ExternalType = 'Money';
+            ExternalAccess = Read;
+            Description = 'Value of the Payment Amount in base currency.';
+            Caption = 'Payment Amount (Base)';
+        }
     }
     keys
     {

@@ -120,6 +120,12 @@ table 83015 "Additional Amenities"
             Caption = 'Payment Link';
             DataClassification = ToBeClassified;
         }
+        field(41; "CRM Status"; Option)
+        {
+            Caption = 'CRM Status';
+            OptionMembers = " ",Pending,Confirmed;
+
+        }
 
 
         field(100; "Billing Schedule Line No."; Integer) { Caption = 'Billing Schedule Line No.'; }

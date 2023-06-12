@@ -3,9 +3,18 @@ codeunit 82002 "Integration - QFPay"
 
     procedure GetCurrentAndLastMonthTransaction()
     var
+        l_datStartDate: Date;
+        l_datEndDate: Date;
     begin
-        GetTransactionQuery(CalcDate('-1M', WorkDate()));
-        GetTransactionQuery(WorkDate());
+        l_datStartDate := (CalcDate('-CM-5D', WorkDate()));
+        l_datEndDate := (CalcDate('CM', WorkDate()));
+
+        repeat
+            GetTransactionQuery(l_datStartDate);
+            l_datStartDate := (CalcDate('+1D', l_datStartDate));
+        until l_datStartDate > l_datEndDate;
+        Message('QFPay payment has been generated sucessfully!');
+
     end;
 
     procedure GetTransactionQuery(TransactionDate: Date)
@@ -38,8 +47,8 @@ codeunit 82002 "Integration - QFPay"
         l_recQFPaySetup.FindFirst();
 
 
-        l_txtStartTime := format(CreateDateTime(CalcDate('-CM', TransactionDate), 000000T), 0, '<Year4>-<Month,2>-<Day,2> <Hours24,2>:<Minutes,2>:<Seconds,2>');
-        l_txtEndTime := format(CreateDateTime(CalcDate('CM', TransactionDate), 235959T), 0, '<Year4>-<Month,2>-<Day,2> <Hours24,2>:<Minutes,2>:<Seconds,2>');
+        l_txtStartTime := format(CreateDateTime(TransactionDate, 000000T), 0, '<Year4>-<Month,2>-<Day,2> <Hours24,2>:<Minutes,2>:<Seconds,2>');
+        l_txtEndTime := format(CreateDateTime(TransactionDate, 235959T), 0, '<Year4>-<Month,2>-<Day,2> <Hours24,2>:<Minutes,2>:<Seconds,2>');
 
 
         l_txttoMD5 := 'end_time=' + l_txtEndTime + '&page_size=100' + '&start_time=' + l_txtStartTime + l_recQFPaySetup."API Key";
@@ -91,7 +100,7 @@ codeunit 82002 "Integration - QFPay"
                                               GetValueAsText(l_payoutToken, 'origssn'));
 
         end;
-        Message('QFPay payment has been generated sucessfully!');
+
 
     end;
 

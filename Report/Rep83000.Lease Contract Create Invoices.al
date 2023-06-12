@@ -16,12 +16,10 @@ report 83000 "Lease Contract Create Invoices"
                 l_recBillingSchedule: Record "Lease Contract Billing Sched.";
                 l_contractdate: Date;
             begin
-
                 l_recBillingSchedule.reset;
                 l_recBillingSchedule.SetRange("Contract No.", LeaseContractHeader."No.");
                 l_recBillingSchedule.SetRange(Status, l_recBillingSchedule.Status::" ");
                 l_recBillingSchedule.SetRange("Posting Date", 0D, g_datAsOfDate);
-                //CurrReport.Skip();             
                 InitBillingScheduleTempTable(l_recBillingSchedule);
                 //Get Property Unit Value >>
                 //l_contractdate := g_datAsOfDate + 8;
@@ -206,8 +204,11 @@ report 83000 "Lease Contract Create Invoices"
                         begin
                             If g_recLeaseBillingSchedule_Temp."Sub-Type" = '' then begin
                                 l_recSalesLineTemp."Billing Schedule Type" := l_recSalesLineTemp."Billing Schedule Type"::Rent;
-                                // l_recSalesLineTemp."No." := l_recLeaseContractSetup."Rental Income G/L Account No.";
-                                l_recSalesLineTemp."No." := GetGLAccountByRoomType(l_recLeaseContractHeader."Room Type");
+                                if g_recLeaseBillingSchedule_Temp."Subscription Service Type" = g_recLeaseBillingSchedule_Temp."Subscription Service Type"::" " then
+                                    l_recSalesLineTemp."No." := GetGLAccountByRoomType(l_recLeaseContractHeader."Room Type")
+                                else
+                                    l_recSalesLineTemp."No." := GetGLAccountBySubscriptionServiceType(g_recLeaseBillingSchedule_Temp."Subscription Service Type");
+
                                 l_recSalesLineTemp."No. of Days to Bill" := g_recLeaseBillingSchedule_Temp."No. of Days to Bill";
                                 /* l_recSalesLineTemp."Invoice Description" := StrSubstNo('%1 - (#%2) - %3 - %4 in %5 - %6 from %7 to %8 (%9)',
                                                             g_CustomerName,
@@ -639,8 +640,13 @@ report 83000 "Lease Contract Create Invoices"
     begin
         SalesHeader := SalesHeaderTemp;
         SalesHeader."Document Type" := DocumentType;
-        If SalesHeader."Document Type" = SalesHeader."Document Type"::"Credit Memo" then
+        If SalesHeader."Document Type" = SalesHeader."Document Type"::"Credit Memo" then begin
             SalesHeader."Contract Termination Date" := DT2Date(LeaseContractHeader."Contract Termination Date");
+            if g_codeApplyToDocumentNo <> '' then begin
+                SalesHeader."Applies-to Doc. No." := g_codeApplyToDocumentNo;
+                SalesHeader."Applies-to Doc. Type" := SalesHeader."Applies-to Doc. Type"::Invoice;
+            end;
+        end;
         SalesHeader."No." := '';
         SalesHeader.insert(true);
 
@@ -839,18 +845,46 @@ report 83000 "Lease Contract Create Invoices"
             exit(l_recPropertyUnitRoomType."G/L Account")
         end;
 
-
         Error('No related G/L Account of room type : ' + RoomType);
+    end;
+
+
+    procedure GetGLAccountBySubscriptionServiceType(SubscriptionServiceType: Enum "Subscription Service Type"): Code[50]
+    var
+        l_recLeaseContractSetup: Record "Lease Contract Setup";
+    begin
+        l_recLeaseContractSetup.Get();
+
+        case SubscriptionServiceType of
+            SubscriptionServiceType::"Additional Service":
+                if l_recLeaseContractSetup."Subscription G/L Account No." <> '' then
+                    exit(l_recLeaseContractSetup."Subscription G/L Account No.");
+            SubscriptionServiceType::"Car Park":
+                if l_recLeaseContractSetup."Car Park Fee G/L Account No." <> '' then
+                    exit(l_recLeaseContractSetup."Car Park Fee G/L Account No.");
+            SubscriptionServiceType::Locker:
+                if l_recLeaseContractSetup."Locker Fee G/L Account No." <> '' then
+                    exit(l_recLeaseContractSetup."Locker Fee G/L Account No.");
+        end;
+
+
+        Error('No related G/L Account of Subscription Service Type : ' + format(SubscriptionServiceType));
 
 
 
     end;
 
 
+
     procedure SetAsOfDate(AsOfDate: Date)
     begin
         //   g_datAsOfDate := AsOfDate;
         g_datAsOfDate := WorkDate();
+    end;
+
+    procedure SetApplyToDocumentNo(DocumentNo: Code[250])
+    begin
+        g_codeApplyToDocumentNo := DocumentNo;
     end;
 
 
@@ -948,6 +982,8 @@ report 83000 "Lease Contract Create Invoices"
 
         g_Salesperson: Code[20];
         g_optBillingScheudleDocumentType: Option Invoice,"Credit Memo";
+
+        g_codeApplyToDocumentNo: Code[250];
 
 
 

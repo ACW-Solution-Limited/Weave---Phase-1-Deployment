@@ -17,6 +17,8 @@ page 83000 "Lease Contract"
                     Caption = 'Contract No.';
                     ApplicationArea = All;
                 }
+                field("Original Contract No."; Rec."Original Contract No.") { ApplicationArea = All; }
+                field("Renewal Contract No."; Rec."Renewal Contract No.") { Visible = Rec."Renewal Contract No." <> ''; ApplicationArea = All; }
                 field("Contract Name"; Rec."Contract Name")
                 {
                     ToolTip = 'Specifies the value of the No. field.';
@@ -106,6 +108,11 @@ page 83000 "Lease Contract"
                     field("Deposit Amount"; rec."Deposit Amount")
                     {
                         ToolTip = 'Spcifies the value of the Deposit Amount field.';
+                        ApplicationArea = All;
+                    }
+                    field("Latest Deposit Amount"; rec."Latest Deposit Amount")
+                    {
+                        ToolTip = 'Spcifies the value of the Latest Deposit Amount field.';
                         ApplicationArea = All;
                     }
 
@@ -224,7 +231,6 @@ page 83000 "Lease Contract"
 
                     field("Run Terminated Billing Sched."; Rec."Run Terminated Billing Sched.") { ApplicationArea = All; }
                     field("Deposit Returned"; Rec."Deposit Returned") { ApplicationArea = All; }
-                    field("Opening Contract"; Rec."Opening Contract") { ApplicationArea = All; }
 
                 }
                 group("Sales Commission")
@@ -272,6 +278,69 @@ page 83000 "Lease Contract"
                     RunPageView = sorting("Customer No.", "Posting Date", "Contract No.", "Line No.") order(ascending);
 
                 }
+
+                action("Welcome Amenities")
+                {
+                    ApplicationArea = All;
+                    Promoted = true;
+                    PromotedIsBig = true;
+                    PromotedCategory = Process;
+                    Image = AddToHome;
+                    RunObject = page "Welcome Amenities";
+                    RunPageLink = "Contract No." = field("No.");
+                }
+                action("Additional Amentities")
+                {
+                    ApplicationArea = All;
+                    Promoted = true;
+                    PromotedIsBig = true;
+                    PromotedCategory = Process;
+                    Image = AddToHome;
+                    RunObject = page "Additional Amentities";
+                    RunPageLink = "Contract No." = field("No.");
+                }
+                action("Additional Service")
+                {
+                    ApplicationArea = All;
+                    Promoted = true;
+                    PromotedIsBig = true;
+                    PromotedCategory = Process;
+                    Image = AddToHome;
+                    RunObject = page "Additional Service";
+                    RunPageLink = "Contract No." = field("No.");
+                }
+                action("Extra Charges")
+                {
+                    ApplicationArea = All;
+                    Promoted = true;
+                    PromotedIsBig = true;
+                    PromotedCategory = Process;
+                    Image = ExchangeRateAdjustRegister;
+                    RunObject = page "Extra Charges";
+                    RunPageLink = "Contract No." = field("No.");
+                }
+                action("Car Park")
+                {
+                    ApplicationArea = All;
+                    Promoted = true;
+                    PromotedIsBig = true;
+                    PromotedCategory = Process;
+                    Image = Delivery;
+                    RunObject = page "Car Park";
+                    RunPageLink = "Contract No." = field("No.");
+                }
+                action("Locker")
+                {
+                    ApplicationArea = All;
+                    Promoted = true;
+                    PromotedIsBig = true;
+                    PromotedCategory = Process;
+                    Image = Lock;
+                    RunObject = page Locker;
+                    RunPageLink = "Contract No." = field("No.");
+
+                }
+
             }
         }
         area(Processing)
@@ -291,7 +360,10 @@ page 83000 "Lease Contract"
 
                         l_cduLeaseContractMgt: Codeunit "Lease Contract Management";
                     begin
-                        l_cduLeaseContractMgt.RefreshBillingSchedule(rec, false);
+                        if rec."Original Contract No." = '' then
+                            l_cduLeaseContractMgt.RefreshBillingSchedule(rec, false)
+                        else
+                            l_cduLeaseContractMgt.RenewalContract(Rec."Original Contract No.", Rec."No.");
                     end;
                 }
                 action("Terminate Contract")

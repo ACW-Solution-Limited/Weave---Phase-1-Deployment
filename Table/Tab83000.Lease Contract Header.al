@@ -204,10 +204,17 @@ table 83000 "Lease Contract Header"
             DataClassification = ToBeClassified;
             DecimalPlaces = 0 : 5;
         }
+
         field(45; "One off Discount"; Decimal)
         {
             DataClassification = ToBeClassified;
             DecimalPlaces = 0 : 5;
+        }
+
+        field(46; "Latest Deposit Amount"; Decimal)
+        {
+
+
         }
         field(50; "Net Amount"; Decimal)
         {
@@ -302,6 +309,46 @@ table 83000 "Lease Contract Header"
         {
             DataClassification = ToBeClassified;
         }
+        field(106; "Car Park No."; Code[50])
+        {
+            trigger OnValidate()
+            begin
+                // CreateSubscriptionService('CarPark');
+            end;
+
+        }
+        field(107; "Car Park Start Date"; DateTime)
+        {
+            trigger OnValidate()
+            begin
+                if "New Contract Start Date" <> 0DT then
+                    if "Car Park Start Date" < "New Contract Start Date" then
+                        Error('The Car Park Start Date cannot be earlier than the New Contract Start Date.')
+                    else
+                        exit;
+
+                if "Contract Start Date" <> 0DT then
+                    if "Car Park Start Date" < "Contract Start Date" then
+                        Error('The Car Park Start Date cannot be earlier than the Contract Start Date.');
+            end;
+        }
+        field(108; "Car Park End Date"; DateTime)
+        {
+            trigger OnValidate()
+            begin
+                if "New Contract End Date" <> 0DT then
+                    if "Car Park End Date" > "New Contract End Date" then
+                        Error('The Car Park End Date cannot be later than the New Contract End Date.')
+                    else
+                        exit;
+
+                if "Contract End Date" <> 0DT then
+                    if "Car Park End Date" > "Contract End Date" then
+                        Error('The Car Park End Date cannot be later than the Contract End Date.');
+            end;
+
+        }
+
         field(110; "Property Unit"; Code[20])
         {
             Caption = 'Property Unit';
@@ -312,6 +359,49 @@ table 83000 "Lease Contract Header"
             Caption = 'Property Unit Name';
             DataClassification = ToBeClassified;
         }
+
+        field(116; "Locker No."; Code[50])
+        {
+            trigger OnValidate()
+            begin
+                // CreateSubscriptionService('Locker');
+            end;
+
+        }
+        field(117; "Locker Start Date"; DateTime)
+        {
+
+            trigger OnValidate()
+            begin
+                if "New Contract Start Date" <> 0DT then
+                    if "Locker Start Date" < "New Contract Start Date" then
+                        Error('The Locker Start Date cannot be earlier than the New Contract Start Date.')
+                    else
+                        exit;
+
+                if "Contract Start Date" <> 0DT then
+                    if "Locker Start Date" < "Contract Start Date" then
+                        Error('The Locker Start Date cannot be earlier than the Contract Start Date.');
+            end;
+
+        }
+        field(118; "Locker End Date"; DateTime)
+        {
+            trigger OnValidate()
+            begin
+                if "New Contract End Date" <> 0DT then
+                    if "Locker End Date" > "New Contract End Date" then
+                        Error('The Car Park Start Date cannot be later than the New Contract Start Date.')
+                    else
+                        exit;
+
+
+                if "Contract End Date" <> 0DT then
+                    if "Locker End Date" > "Contract End Date" then
+                        Error('The Car Park Start Date cannot be later than the Contract Start Date.');
+            end;
+        }
+
         field(120; Status; Option)
         {
             Caption = 'Status';
@@ -325,6 +415,8 @@ table 83000 "Lease Contract Header"
 
             DataClassification = SystemMetadata;
         }
+
+
         field(130; "Company Name"; Text[100])
         {
             Caption = 'Company Name';
@@ -350,6 +442,14 @@ table 83000 "Lease Contract Header"
             Caption = 'Final Amount';
             DataClassification = SystemMetadata;
         }
+
+        field(154; "Renewal Contract No."; code[100])
+        {
+            Editable = false;
+            TableRelation = "Lease Contract Header"."No.";
+
+        }
+
         field(155; "Deposit Returned"; Boolean)
         {
             Caption = 'Deposit Returned';
@@ -361,6 +461,16 @@ table 83000 "Lease Contract Header"
             Caption = 'Opening Contract';
             DataClassification = SystemMetadata;
         }
+
+
+        field(157; "Renewal Contract"; Boolean) { }
+        field(158; "Renewal Contract Datetime"; DateTime) { }
+        field(159; "Original Contract No."; Code[100])
+        {
+            TableRelation = "Lease Contract Header"."No.";
+
+        }
+
         field(160; "Billing Schedule Created"; Boolean)
         {
             Caption = 'Billing Scheduled Created';
@@ -444,6 +554,9 @@ table 83000 "Lease Contract Header"
             Clustered = true;
         }
     }
+
+
+
     trigger OnInsert()
     var
         l_recLeaseContractSetup: Record "Lease Contract Setup";
@@ -460,6 +573,7 @@ table 83000 "Lease Contract Header"
         /*if (Status = Status::"ReadyForCheck-in") OR (Status = Status::ConfirmedWithRoomAllocated) OR (Status = Status::Active) then
             l_cduRefreshBillingSched.RefreshBillingSchedule(Rec, true);*/
     end;
+
 
     trigger OnDelete()
     var

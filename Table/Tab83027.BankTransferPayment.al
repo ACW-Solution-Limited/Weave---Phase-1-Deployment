@@ -2,6 +2,8 @@ table 83027 "Bank Transfer Payment"
 {
     Caption = 'Bank Transfer Payment';
     DataClassification = ToBeClassified;
+    LookupPageId = "Bank Transfer Payment";
+    DrillDownPageId = "Bank Transfer Payment";
 
     fields
     {
@@ -31,6 +33,16 @@ table 83027 "Bank Transfer Payment"
             Caption = 'Company Guid';
             DataClassification = ToBeClassified;
         }
+
+        field(6; Type; Option) { OptionMembers = " ",First,Regular; }
+        field(7; "Posted Sales Invoice No."; Code[250]) { }
+
+        field(8; Status; Option)
+        {
+            InitValue = Pending;
+            OptionMembers = " ",Pending,Paid,Rejected;
+        }
+
     }
     keys
     {

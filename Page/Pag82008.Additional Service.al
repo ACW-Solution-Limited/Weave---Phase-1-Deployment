@@ -62,6 +62,11 @@ page 82008 "Additional Service"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Service End Date field.';
                 }
+                field("Payment Amount"; Rec."Payment Amount")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Payment Amount field.';
+                }
                 field("Payment Status"; Rec."Payment Status")
                 {
                     ApplicationArea = All;
@@ -71,6 +76,11 @@ page 82008 "Additional Service"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the BC Status field.';
+                }
+                field("CRM Status"; Rec."CRM Status")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the CRM Status field.';
                 }
                 field("Stripe Invoice ID"; Rec."Stripe Invoice ID")
                 {

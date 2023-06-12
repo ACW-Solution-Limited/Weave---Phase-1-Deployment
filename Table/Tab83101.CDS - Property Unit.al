@@ -187,8 +187,8 @@
             Description = '';
             Caption = 'Type';
             InitValue = " ";
-            OptionMembers = " ",Property,Floor,Room,Facilities;
-            OptionOrdinalValues = -1, 557130000, 557130001, 557130002, 557130003;
+            OptionMembers = " ",Property,Room,Facilities,Carpark,Locker;
+            OptionOrdinalValues = -1, 557130000, 557130002, 557130003, 557130001, 557130004;
         }
         field(41; acwapp_EnglishShortDescription; Text[100])
         {

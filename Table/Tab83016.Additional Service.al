@@ -2,6 +2,8 @@ table 83016 "Additional Service"
 {
     Caption = 'Additional Service';
     DataClassification = ToBeClassified;
+    DrillDownPageId = "Additional Service";
+    LookupPageId = "Additional Service";
 
     fields
     {
@@ -72,6 +74,13 @@ table 83016 "Additional Service"
             Caption = 'Service End Date';
             DataClassification = ToBeClassified;
         }
+
+
+        field(27; "Payment Amount"; Decimal)
+        {
+            Caption = 'Payment Amount';
+            DataClassification = ToBeClassified;
+        }
         field(28; "Total Amount"; Decimal)
         {
             Caption = 'Total Amount';
@@ -94,6 +103,12 @@ table 83016 "Additional Service"
             Caption = 'BC Status';
             DataClassification = ToBeClassified;
             OptionMembers = " ",Open,Created,Posted;
+        }
+        field(41; "CRM Status"; Option)
+        {
+            Caption = 'CRM Status';
+            OptionMembers = " ",Pending,Confirmed;
+
         }
         field(45; "Payment Status"; Option)
         {
