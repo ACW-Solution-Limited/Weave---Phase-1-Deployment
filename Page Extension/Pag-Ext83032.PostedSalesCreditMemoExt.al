@@ -17,12 +17,12 @@ pageextension 83032 "Posted Sales Credit Memo Ext" extends "Posted Sales Credit 
 
         addafter("Salesperson Code")
         {
-            field("Commission Type"; Rec."Commission Type")
-            { ApplicationArea = All; }
+           field("Commission Type"; Rec."Commission Type")
+            { ApplicationArea = All; Visible = false; }
             field("Calculation Type"; Rec."Calculation Type")
-            { ApplicationArea = All; }
+            { ApplicationArea = All; Visible = false; }
             field("Commission Amount"; Rec."Commission Amount")
-            { ApplicationArea = All; }
+            { ApplicationArea = All; Visible = false; }
         }
 
     }

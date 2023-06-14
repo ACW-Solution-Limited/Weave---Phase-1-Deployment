@@ -17,11 +17,11 @@ pageextension 83006 "Sales Credit Memo Ext" extends "Sales Credit Memo"
         addafter("Salesperson Code")
         {
             field("Commission Type"; Rec."Commission Type")
-            { ApplicationArea = All; }
+            { ApplicationArea = All; Visible = false; }
             field("Calculation Type"; Rec."Calculation Type")
-            { ApplicationArea = All; }
+            { ApplicationArea = All; Visible = false; }
             field("Commission Amount"; Rec."Commission Amount")
-            { ApplicationArea = All; }
+            { ApplicationArea = All; Visible = false; }
         }
 
     }

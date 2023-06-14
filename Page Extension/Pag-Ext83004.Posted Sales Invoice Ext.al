@@ -34,11 +34,11 @@ pageextension 83004 PostedSalesInvoiceExt extends "Posted Sales Invoice"
         addafter("Salesperson Code")
         {
             field("Commission Type"; Rec."Commission Type")
-            { ApplicationArea = All; }
+            { ApplicationArea = All; Visible = false; }
             field("Calculation Type"; Rec."Calculation Type")
-            { ApplicationArea = All; }
+            { ApplicationArea = All; Visible = false; }
             field("Commission Amount"; Rec."Commission Amount")
-            { ApplicationArea = All; }
+            { ApplicationArea = All; Visible = false; }
         }
 
     }
