@@ -112,7 +112,7 @@ codeunit 83123 "CDS Additional Service"
         InsertIntegrationFieldMapping('CRM to BC Add. Ser', AdditionalService.FieldNo("Stripe Invoice ID"), CRMAdditionalServices.FieldNo(acwapp_stripeinvoiceid), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Add. Ser', AdditionalService.FieldNo("Payment Link"), CRMAdditionalServices.FieldNo(acwapp_paymentlink), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Add. Ser', AdditionalService.FieldNo("Payment Amount"), CRMAdditionalServices.FieldNo(acwapp_PaymentAmount), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
-
+        InsertIntegrationFieldMapping('CRM to BC Add. Ser', AdditionalService.FieldNo("CRM Status"), CRMAdditionalServices.FieldNo(acwapp_Status), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
 
         CompanyInformation.Get;
         IntegrationTableMapping."Integration Table Filter".CreateOutStream(FilterStr);

@@ -107,6 +107,7 @@ codeunit 83119 "CDS Additional Amenities"
         InsertIntegrationFieldMapping('CRM to BC Add. Amen.', AdditionalItemSales.FieldNo("Total Amount Inclu. VAT"), CRMAdditionalAmenities.FieldNo(acwapp_TotalAmount), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Add. Amen.', AdditionalItemSales.FieldNo("Stripe Invoice ID"), CRMAdditionalAmenities.FieldNo(acwapp_stripeinvoiceid), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Add. Amen.', AdditionalItemSales.FieldNo("Payment Link"), CRMAdditionalAmenities.FieldNo(acwapp_paymentlink), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
+        InsertIntegrationFieldMapping('CRM to BC Add. Amen.', AdditionalItemSales.FieldNo("CRM Status"), CRMAdditionalAmenities.FieldNo(acwapp_Status), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         CompanyInformation.Get;
         IntegrationTableMapping."Integration Table Filter".CreateOutStream(FilterStr);
         FilterText := 'VERSION(1) SORTING(Field1) WHERE(Field92=1(' + CompanyInformation."CRM Company Guid" + '))';

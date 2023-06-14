@@ -85,6 +85,10 @@ page 83007 "Lease Contract Billing Sched."
                 {
                     ApplicationArea = All;
                 }
+                field("Customer No."; Rec."Customer No.")
+                {
+                    ApplicationArea = All;
+                }
                 field("Document Type"; Rec."Document Type")
                 {
                     ApplicationArea = All;
