@@ -8,7 +8,7 @@ table 83024 "Sales Commission Setup"
         field(1; "Type"; Option)
         {
             Caption = 'Type';
-            OptionMembers = " ",DirectBooking,B2COutreach,B2BOutreach,B2CCompanyAssign,B2BRenewal,B2CRenewal,"B2CCompanyAssign-PropertyViewing(OperationTeam)";
+            OptionMembers = " ",DirectBooking,B2COutreach,B2BOutreach,B2CCompanyAssign,B2BRenewal,B2CRenewal,"B2CCompanyAssign-PropertyViewing(OperationTeam)","B2BOutreach-AgencyCommission";
             DataClassification = ToBeClassified;
         }
         field(2; "Calculation Type"; Enum "Calculation Type")

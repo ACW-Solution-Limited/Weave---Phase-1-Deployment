@@ -23,33 +23,48 @@ codeunit 83152 "Data Patch Commission"
         l_recSalesHeader.SetFilter("Document Type", '=%1|%2', l_recSalesHeader."Document Type"::Invoice, l_recSalesHeader."Document Type"::"Credit Memo");
         If l_recSalesHeader.FindFirst() then
             repeat
-                If l_recSalesHeader."Commission Type" <> l_recSalesHeader."Commission Type"::" " then begin
-                    l_recLeaseContractHeader.Reset;
-                    l_recLeaseContractHeader.SetRange("No.", l_recSalesHeader."Lease Contract No.");
-                    If l_recLeaseContractHeader.FindFirst() then begin
-                        If l_recLeaseContractHeader."Salesperson Code" <> '' then begin
+                l_recLeaseContractHeader.reset;
+                l_Salescommissionsetup.reset;
+                l_recLeaseContractHeader.SetRange("No.", l_recSalesHeader."Lease Contract No.");
+                If l_recLeaseContractHeader.FindFirst() then begin
+                    If l_recLeaseContractHeader."Commission Type" <> l_recLeaseContractHeader."Commission Type"::" " then begin
+                        l_Salescommissionsetup.Setrange(Type, l_recLeaseContractHeader."Commission Type");
+                        l_Salescommissionsetup.FindFirst;
+                        l_recSalesHeader."Commission Type" := l_recLeaseContractHeader."Commission Type";
+                        l_recSalesHeader."Calculation Type" := l_Salescommissionsetup."Calculation Type";
+                        l_recSalesHeader."Commission Amount" := l_Salescommissionsetup.Amount;
+                        If l_recLeaseContractHeader."Salesperson Code" <> '' then
                             l_recSalesHeader."Salesperson Code" := l_recLeaseContractHeader."Salesperson Code";
-                            l_recSalesHeader.Modify();
-                        end;
-                    end;
-                end else begin
-                    l_recLeaseContractHeader.reset;
-                    l_Salescommissionsetup.reset;
-                    l_recLeaseContractHeader.SetRange("No.", l_recSalesHeader."Lease Contract No.");
-                    If l_recLeaseContractHeader.FindFirst() then begin
-                        If l_recLeaseContractHeader."Commission Type" <> l_recLeaseContractHeader."Commission Type"::" " then begin
-                            l_Salescommissionsetup.Setrange(Type, l_recLeaseContractHeader."Commission Type");
-                            l_Salescommissionsetup.FindFirst;
-
-                            l_recSalesHeader."Commission Type" := l_recLeaseContractHeader."Commission Type";
-                            l_recSalesHeader."Calculation Type" := l_Salescommissionsetup."Calculation Type";
-                            l_recSalesHeader."Commission Amount" := l_Salescommissionsetup.Amount;
-                            If l_recLeaseContractHeader."Salesperson Code" <> '' then
-                                l_recSalesHeader."Salesperson Code" := l_recLeaseContractHeader."Salesperson Code";
-                            l_recSalesHeader.Modify();
-                        end;
+                        l_recSalesHeader.Modify();
                     end;
                 end;
+            /*If l_recSalesHeader."Commission Type" <> l_recSalesHeader."Commission Type"::" " then begin
+                l_recLeaseContractHeader.Reset;
+                l_recLeaseContractHeader.SetRange("No.", l_recSalesHeader."Lease Contract No.");
+                If l_recLeaseContractHeader.FindFirst() then begin
+                    If l_recLeaseContractHeader."Salesperson Code" <> '' then begin
+                        l_recSalesHeader."Salesperson Code" := l_recLeaseContractHeader."Salesperson Code";
+                        l_recSalesHeader.Modify();
+                    end;
+                end;
+            end else begin
+                l_recLeaseContractHeader.reset;
+                l_Salescommissionsetup.reset;
+                l_recLeaseContractHeader.SetRange("No.", l_recSalesHeader."Lease Contract No.");
+                If l_recLeaseContractHeader.FindFirst() then begin
+                    If l_recLeaseContractHeader."Commission Type" <> l_recLeaseContractHeader."Commission Type"::" " then begin
+                        l_Salescommissionsetup.Setrange(Type, l_recLeaseContractHeader."Commission Type");
+                        l_Salescommissionsetup.FindFirst;
+
+                        l_recSalesHeader."Commission Type" := l_recLeaseContractHeader."Commission Type";
+                        l_recSalesHeader."Calculation Type" := l_Salescommissionsetup."Calculation Type";
+                        l_recSalesHeader."Commission Amount" := l_Salescommissionsetup.Amount;
+                        If l_recLeaseContractHeader."Salesperson Code" <> '' then
+                            l_recSalesHeader."Salesperson Code" := l_recLeaseContractHeader."Salesperson Code";
+                        l_recSalesHeader.Modify();
+                    end;
+                end;
+            end;*/
             until l_recSalesHeader.Next() = 0;
     end;
 
@@ -66,33 +81,50 @@ codeunit 83152 "Data Patch Commission"
 
         if l_recSalesInvoiceHeader.FindFirst() then
             repeat
-                If l_recSalesInvoiceHeader."Commission Type" <> l_recSalesInvoiceHeader."Commission Type"::" " then begin
-                    l_recLeaseContractHeader.Reset;
-                    l_recLeaseContractHeader.SetRange("No.", l_recSalesInvoiceHeader."Lease Contract No.");
-                    If l_recLeaseContractHeader.FindFirst() then begin
-                        If l_recLeaseContractHeader."Salesperson Code" <> '' then begin
-                            l_recSalesInvoiceHeader."Salesperson Code" := l_recLeaseContractHeader."Salesperson Code";
-                            l_recSalesInvoiceHeader.Modify();
-                        end;
-                    end;
-                end else begin
-                    l_recLeaseContractHeader.reset;
-                    l_Salescommissionsetup.reset;
-                    l_recLeaseContractHeader.SetRange("No.", l_recSalesInvoiceHeader."Lease Contract No.");
-                    If l_recLeaseContractHeader.FindFirst() then begin
-                        If l_recLeaseContractHeader."Commission Type" <> l_recLeaseContractHeader."Commission Type"::" " then begin
-                            l_Salescommissionsetup.Setrange(Type, l_recLeaseContractHeader."Commission Type");
-                            l_Salescommissionsetup.FindFirst;
 
-                            l_recSalesInvoiceHeader."Commission Type" := l_recLeaseContractHeader."Commission Type";
-                            l_recSalesInvoiceHeader."Calculation Type" := l_Salescommissionsetup."Calculation Type";
-                            l_recSalesInvoiceHeader."Commission Amount" := l_Salescommissionsetup.Amount;
-                            If l_recLeaseContractHeader."Salesperson Code" <> '' then
-                                l_recSalesInvoiceHeader."Salesperson Code" := l_recLeaseContractHeader."Salesperson Code";
-                            l_recSalesInvoiceHeader.Modify();
-                        end;
+
+                l_recLeaseContractHeader.reset;
+                l_Salescommissionsetup.reset;
+                l_recLeaseContractHeader.SetRange("No.", l_recSalesInvoiceHeader."Lease Contract No.");
+                If l_recLeaseContractHeader.FindFirst() then begin
+                    If l_recLeaseContractHeader."Commission Type" <> l_recLeaseContractHeader."Commission Type"::" " then begin
+                        l_Salescommissionsetup.Setrange(Type, l_recLeaseContractHeader."Commission Type");
+                        l_Salescommissionsetup.FindFirst;
+                        l_recSalesInvoiceHeader."Commission Type" := l_recLeaseContractHeader."Commission Type";
+                        l_recSalesInvoiceHeader."Calculation Type" := l_Salescommissionsetup."Calculation Type";
+                        l_recSalesInvoiceHeader."Commission Amount" := l_Salescommissionsetup.Amount;
+                        If l_recLeaseContractHeader."Salesperson Code" <> '' then
+                            l_recSalesInvoiceHeader."Salesperson Code" := l_recLeaseContractHeader."Salesperson Code";
+                        l_recSalesInvoiceHeader.Modify();
                     end;
                 end;
+            // If l_recSalesInvoiceHeader."Commission Type" <> l_recSalesInvoiceHeader."Commission Type"::" " then begin
+            //     l_recLeaseContractHeader.Reset;
+            //     l_recLeaseContractHeader.SetRange("No.", l_recSalesInvoiceHeader."Lease Contract No.");
+            //     If l_recLeaseContractHeader.FindFirst() then begin
+            //         If l_recLeaseContractHeader."Salesperson Code" <> '' then begin
+            //             l_recSalesInvoiceHeader."Salesperson Code" := l_recLeaseContractHeader."Salesperson Code";
+            //             l_recSalesInvoiceHeader.Modify();
+            //         end;
+            //     end;
+            // end else begin
+            //     l_recLeaseContractHeader.reset;
+            //     l_Salescommissionsetup.reset;
+            //     l_recLeaseContractHeader.SetRange("No.", l_recSalesInvoiceHeader."Lease Contract No.");
+            //     If l_recLeaseContractHeader.FindFirst() then begin
+            //         If l_recLeaseContractHeader."Commission Type" <> l_recLeaseContractHeader."Commission Type"::" " then begin
+            //             l_Salescommissionsetup.Setrange(Type, l_recLeaseContractHeader."Commission Type");
+            //             l_Salescommissionsetup.FindFirst;
+
+            //             l_recSalesInvoiceHeader."Commission Type" := l_recLeaseContractHeader."Commission Type";
+            //             l_recSalesInvoiceHeader."Calculation Type" := l_Salescommissionsetup."Calculation Type";
+            //             l_recSalesInvoiceHeader."Commission Amount" := l_Salescommissionsetup.Amount;
+            //             If l_recLeaseContractHeader."Salesperson Code" <> '' then
+            //                 l_recSalesInvoiceHeader."Salesperson Code" := l_recLeaseContractHeader."Salesperson Code";
+            //             l_recSalesInvoiceHeader.Modify();
+            //         end;
+            //     end;
+            // end;
             until l_recSalesInvoiceHeader.Next() = 0;
     end;
 
@@ -105,33 +137,48 @@ codeunit 83152 "Data Patch Commission"
         l_recCreditMemoHeader.Reset;
         if l_recCreditMemoHeader.FindFirst() then
             repeat
-                If l_recCreditMemoHeader."Commission Type" <> l_recCreditMemoHeader."Commission Type"::" " then begin
-                    l_recLeaseContractHeader.Reset;
-                    l_recLeaseContractHeader.SetRange("No.", l_recCreditMemoHeader."Lease Contract No.");
-                    If l_recLeaseContractHeader.FindFirst() then begin
-                        If l_recLeaseContractHeader."Salesperson Code" <> '' then begin
+                l_recLeaseContractHeader.reset;
+                l_Salescommissionsetup.reset;
+                l_recLeaseContractHeader.SetRange("No.", l_recCreditMemoHeader."Lease Contract No.");
+                If l_recLeaseContractHeader.FindFirst() then begin
+                    If l_recLeaseContractHeader."Commission Type" <> l_recLeaseContractHeader."Commission Type"::" " then begin
+                        l_Salescommissionsetup.Setrange(Type, l_recLeaseContractHeader."Commission Type");
+                        l_Salescommissionsetup.FindFirst;
+                        l_recCreditMemoHeader."Commission Type" := l_recLeaseContractHeader."Commission Type";
+                        l_recCreditMemoHeader."Calculation Type" := l_Salescommissionsetup."Calculation Type";
+                        l_recCreditMemoHeader."Commission Amount" := l_Salescommissionsetup.Amount;
+                        If l_recLeaseContractHeader."Salesperson Code" <> '' then
                             l_recCreditMemoHeader."Salesperson Code" := l_recLeaseContractHeader."Salesperson Code";
-                            l_recCreditMemoHeader.Modify();
-                        end;
-                    end;
-                end else begin
-                    l_recLeaseContractHeader.reset;
-                    l_Salescommissionsetup.reset;
-                    l_recLeaseContractHeader.SetRange("No.", l_recCreditMemoHeader."Lease Contract No.");
-                    If l_recLeaseContractHeader.FindFirst() then begin
-                        If l_recLeaseContractHeader."Commission Type" <> l_recLeaseContractHeader."Commission Type"::" " then begin
-                            l_Salescommissionsetup.Setrange(Type, l_recLeaseContractHeader."Commission Type");
-                            l_Salescommissionsetup.FindFirst;
-
-                            l_recCreditMemoHeader."Commission Type" := l_recLeaseContractHeader."Commission Type";
-                            l_recCreditMemoHeader."Calculation Type" := l_Salescommissionsetup."Calculation Type";
-                            l_recCreditMemoHeader."Commission Amount" := l_Salescommissionsetup.Amount;
-                            If l_recLeaseContractHeader."Salesperson Code" <> '' then
-                                l_recCreditMemoHeader."Salesperson Code" := l_recLeaseContractHeader."Salesperson Code";
-                            l_recCreditMemoHeader.Modify();
-                        end;
+                        l_recCreditMemoHeader.Modify();
                     end;
                 end;
+            // If l_recCreditMemoHeader."Commission Type" <> l_recCreditMemoHeader."Commission Type"::" " then begin
+            //     l_recLeaseContractHeader.Reset;
+            //     l_recLeaseContractHeader.SetRange("No.", l_recCreditMemoHeader."Lease Contract No.");
+            //     If l_recLeaseContractHeader.FindFirst() then begin
+            //         If l_recLeaseContractHeader."Salesperson Code" <> '' then begin
+            //             l_recCreditMemoHeader."Salesperson Code" := l_recLeaseContractHeader."Salesperson Code";
+            //             l_recCreditMemoHeader.Modify();
+            //         end;
+            //     end;
+            // end else begin
+            //     l_recLeaseContractHeader.reset;
+            //     l_Salescommissionsetup.reset;
+            //     l_recLeaseContractHeader.SetRange("No.", l_recCreditMemoHeader."Lease Contract No.");
+            //     If l_recLeaseContractHeader.FindFirst() then begin
+            //         If l_recLeaseContractHeader."Commission Type" <> l_recLeaseContractHeader."Commission Type"::" " then begin
+            //             l_Salescommissionsetup.Setrange(Type, l_recLeaseContractHeader."Commission Type");
+            //             l_Salescommissionsetup.FindFirst;
+
+            //             l_recCreditMemoHeader."Commission Type" := l_recLeaseContractHeader."Commission Type";
+            //             l_recCreditMemoHeader."Calculation Type" := l_Salescommissionsetup."Calculation Type";
+            //             l_recCreditMemoHeader."Commission Amount" := l_Salescommissionsetup.Amount;
+            //             If l_recLeaseContractHeader."Salesperson Code" <> '' then
+            //                 l_recCreditMemoHeader."Salesperson Code" := l_recLeaseContractHeader."Salesperson Code";
+            //             l_recCreditMemoHeader.Modify();
+            //         end;
+            //     end;
+            // end;
             until l_recCreditMemoHeader.Next() = 0;
     end;
 

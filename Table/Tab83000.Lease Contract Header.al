@@ -497,7 +497,7 @@ table 83000 "Lease Contract Header"
         field(180; "Commission Type"; Option)
         {
             Caption = 'Commission Type';
-            OptionMembers = " ",DirectBooking,B2COutreach,B2BOutreach,B2CCompanyAssign,B2BRenewal,B2CRenewal,"B2CCompanyAssign-PropertyViewing(OperationTeam)";
+            OptionMembers = " ",DirectBooking,B2COutreach,B2BOutreach,B2CCompanyAssign,B2BRenewal,B2CRenewal,"B2CCompanyAssign-PropertyViewing(OperationTeam)","B2BOutreach-AgencyCommission";
             DataClassification = ToBeClassified;
         }
         field(185; "Salesperson Email"; Text[250])
