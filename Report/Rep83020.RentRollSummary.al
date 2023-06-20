@@ -69,7 +69,12 @@ report 83020 "Rent Roll Summary"
                     g_decOccupancyinPeriodDays := g_datEndDate - g_datStartDate + 1;
 
                 g_decMonthlyRent := CalcMonthyRent();
-                g_decActualRent := CalcActualRent(LeaseContractHeader, g_decOccupancyinPeriodDays);
+
+                if LeaseContractHeader."Opening Contract" then
+                    g_decActualRent := CalcActualRentByDailyFactorForOpeningContract(LeaseContractHeader, g_decOccupancyinPeriodDays)
+                else
+                    g_decActualRent := CalcActualRent(LeaseContractHeader, g_decOccupancyinPeriodDays);
+
                 g_decOccupancyDaysAdjusted := g_decOccupancyinPeriodDays;
                 g_decGrossRevenueToBeRecognised := g_decMonthlyRent * g_decOccupancyinPeriodDays / (g_datEndDate - g_datStartDate + 1);
             end;
@@ -89,7 +94,10 @@ report 83020 "Rent Roll Summary"
                         ApplicationArea = all;
                         trigger OnValidate()
                         begin
-                            g_datEndDate := CalcDate('+1M', g_datStartDate);
+                            if (Date2DMY(g_datStartDate, 1) = 1) then
+                                g_datEndDate := CalcDate('CM', g_datStartDate)
+                            else
+                                g_datEndDate := CalcDate('+1M', g_datStartDate);
                         end;
                     }
                     field("End Date"; g_datEndDate) { ApplicationArea = all; }
@@ -238,13 +246,14 @@ report 83020 "Rent Roll Summary"
             l_recBillingSchedule.SetAscending("Contract Start Date", true);
             l_recBillingSchedule.SetRange(l_recBillingSchedule.Type, l_recBillingSchedule.Type::Rent);
             l_recBillingSchedule.SetFilter(l_recBillingSchedule."Contract No.", LeaseContractHeader."No.");
-            // l_recBillingSchedule.SetFilter("Contract Start Date", '..%1', l_dateCalculationStart);
+            l_recBillingSchedule.SetFilter("Sub-Type", '');
             l_recBillingSchedule.SetFilter("Contract End Date", '>%1', l_dateCalculationStart);
 
             if l_recBillingSchedule.Count = 0 then
                 exit(l_decActualRent);
 
             if l_recBillingSchedule.FindFirst() then begin
+
 
                 if g_datEndDate > l_recBillingSchedule."Contract End Date" then begin
                     if LeaseContractHeader."Monthly Rent" <> 0 then
@@ -266,6 +275,25 @@ report 83020 "Rent Roll Summary"
         exit(l_decActualRent);
     end;
 
+
+    procedure CalcActualRentByDailyFactorForOpeningContract(LeaseContractHeader: Record "Lease Contract Header"; OccupancyinPeriodDays: Decimal): Decimal
+    var
+        l_recBillingSchedule: Record "Lease Contract Billing Sched.";
+    begin
+        l_recBillingSchedule.Reset();
+        l_recBillingSchedule.SetRange(l_recBillingSchedule.Type, l_recBillingSchedule.Type::Rent);
+        l_recBillingSchedule.SetFilter(l_recBillingSchedule."Contract No.", LeaseContractHeader."No.");
+        l_recBillingSchedule.SetFilter("Sub-Type", '%1|%2', '', 'DISCOUNT');
+
+        l_recBillingSchedule.CalcSums(Amount);
+
+        if l_recBillingSchedule.Amount <> 0 then
+            exit(l_recBillingSchedule.Amount / (DT2Date(LeaseContractHeader."Contract End Date") - DT2Date(LeaseContractHeader."Contract Start Date") + 1) * OccupancyinPeriodDays)
+        else
+            exit(0);
+
+
+    end;
 
 
     var

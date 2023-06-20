@@ -20,6 +20,9 @@ report 83000 "Lease Contract Create Invoices"
                 l_recBillingSchedule.SetRange("Contract No.", LeaseContractHeader."No.");
                 l_recBillingSchedule.SetRange(Status, l_recBillingSchedule.Status::" ");
                 l_recBillingSchedule.SetRange("Posting Date", 0D, g_datAsOfDate);
+                if g_boolSetDepositOnlyForRenewalContractOnOringalPostingDate then
+                    l_recBillingSchedule.SetRange(Type, l_recBillingSchedule.Type::Deposit);
+
                 InitBillingScheduleTempTable(l_recBillingSchedule);
                 //Get Property Unit Value >>
                 //l_contractdate := g_datAsOfDate + 8;
@@ -153,7 +156,7 @@ report 83000 "Lease Contract Create Invoices"
                 l_recSalesLineTemp."Billing Schedule Line No." := g_recLeaseBillingSchedule_Temp."Line No.";
                 l_recSalesLineTemp."Billing Schedule Sub-Type" := g_recLeaseBillingSchedule_Temp."Sub-Type";
                 if (g_recLeaseBillingSchedule_Temp."Contract Start Date" = 0D) or (g_recLeaseBillingSchedule_Temp."Contract End Date" = 0D) then begin // for credit memo
-                    If g_recLeaseBillingSchedule_Temp."Sub-Type" <> 'EXTENSION' then begin
+                    If (g_recLeaseBillingSchedule_Temp."Sub-Type" <> 'EXTENSION') AND (g_recLeaseBillingSchedule_Temp."Sub-Type" <> 'EARLY MOVE-IN') then begin
                         l_recSalesLineTemp."Lease From Date" := DT2Date(l_recLeaseContractHeader."Contract Start Date");
                         l_recSalesLineTemp."Lease To Date" := DT2Date(l_recLeaseContractHeader."Contract End Date");
                     end;
@@ -887,6 +890,11 @@ report 83000 "Lease Contract Create Invoices"
         g_codeApplyToDocumentNo := DocumentNo;
     end;
 
+    procedure SetDepositOnlyForRenewalContractOnOringalPostingDate()
+    begin
+        g_boolSetDepositOnlyForRenewalContractOnOringalPostingDate := true;
+    end;
+
 
     procedure InsertCommission(Var LeaseContractHeader: Record "Lease Contract Header"; BillingDate: Date)
     var
@@ -984,6 +992,7 @@ report 83000 "Lease Contract Create Invoices"
         g_optBillingScheudleDocumentType: Option Invoice,"Credit Memo";
 
         g_codeApplyToDocumentNo: Code[250];
+        g_boolSetDepositOnlyForRenewalContractOnOringalPostingDate: Boolean;
 
 
 

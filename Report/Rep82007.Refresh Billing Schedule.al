@@ -16,11 +16,12 @@ report 82007 "Refresh Billing Schedule"
             begin
                 l_recLeasecontractBillingSched.Reset();
                 l_recLeasecontractBillingSched.setrange("Contract No.", LeaseContractHeader."No.");
-                If not l_recLeasecontractBillingSched.FindSet then
+                If not l_recLeasecontractBillingSched.FindSet then begin
                     if LeaseContractHeader."Original Contract No." = '' then
                         l_Codeleasecontract.RefreshBillingSchedule(LeaseContractHeader, true)
                     else
                         l_Codeleasecontract.RenewalContract(LeaseContractHeader."Original Contract No.", LeaseContractHeader."No.");
+                end;
             end;
         }
     }

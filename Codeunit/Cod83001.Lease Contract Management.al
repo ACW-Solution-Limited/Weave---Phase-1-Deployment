@@ -1060,13 +1060,17 @@ codeunit 83001 "Lease Contract Management"
 
     begin
         if l_recLeaseContractHeader.Get(RenewContactNo) then begin
+
+            if l_recLeaseContractHeader."Opening Contract" then exit;
+            if l_recLeaseContractHeader."No." = 'PB-230223-005' then exit;
+
             RefreshBillingSchedule(l_recLeaseContractHeader, true);
             UpdateOrginalContractRemainigDepositToRenewDate(OrginalContractNo);
             CreateContractDocument(RenewContactNo, '', 'Invoice');
             CreateContractDocument(OrginalContractNo, GetDepositPostedSalesInvoice(RenewContactNo), 'Credit Memo');
 
-            PostSalesDocument(GetDepositPostedSalesInvoice(RenewContactNo));
-            PostSalesDocument(GetOrginalContractCreditMemo(OrginalContractNo));
+            //  PostSalesDocument(GetDepositPostedSalesInvoice(RenewContactNo));
+            //  PostSalesDocument(GetOrginalContractCreditMemo(OrginalContractNo));
             UpdateOrginalContractRemainigDepositToSettled(OrginalContractNo);
             Commit();
 
@@ -1084,6 +1088,8 @@ codeunit 83001 "Lease Contract Management"
         l_recSalesHeader: Record "Sales Header";
 
     begin
+        if DocumentNo = '' then exit;
+
         l_recSalesHeader.Reset();
         l_recSalesHeader.SetFilter("No.", DocumentNo);
         if l_recSalesHeader.FindFirst() then begin
@@ -1101,6 +1107,7 @@ codeunit 83001 "Lease Contract Management"
         Clear(l_reptLeaseContractCreateInvoices);
         l_reptLeaseContractCreateInvoices.SetTableView(l_recLeaseContractHeader);
         l_reptLeaseContractCreateInvoices.SetApplyToDocumentNo(ApplyToDocumentNo);
+        l_reptLeaseContractCreateInvoices.SetDepositOnlyForRenewalContractOnOringalPostingDate();
         l_reptLeaseContractCreateInvoices.UseRequestPage := false;
         l_reptLeaseContractCreateInvoices.Run();
     end;
