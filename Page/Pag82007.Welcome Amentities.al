@@ -6,6 +6,7 @@ page 82007 "Welcome Amenities"
     SourceTable = "Welcome Amenities";
     UsageCategory = Lists;
 
+
     layout
     {
         area(content)

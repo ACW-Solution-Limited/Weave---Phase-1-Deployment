@@ -41,7 +41,7 @@ tableextension 83008 "Sales Invoice Header Ext" extends "Sales Invoice Header"
         field(83006; "Contract Start Date"; Date) { Caption = 'Contract Start Date'; }
         field(83007; "Contract End Date"; Date) { Caption = 'Contract End Date'; }
 
-        field(83009; "Commission Type"; Option) { Caption = 'Commission Type'; OptionMembers = " ",DirectBooking,B2COutreach,B2BOutreach,B2CCompanyAssign,B2BRenewal,B2CRenewal,"B2CCompanyAssign-PropertyViewing(OperationTeam)","B2BOutreach-AgencyCommission"; }
+        field(83009; "Commission Type"; Option) { Caption = 'Commission Type'; OptionMembers = " ",DirectBooking,B2COutreach,B2BOutreach,"B2BOutreach-AgencyCommission",B2CCompanyAssign,B2BRenewal,B2CRenewal,"B2CCompanyAssign-PropertyViewing(OperationTeam)"; }
         field(83010; "Calculation Type"; Enum "Calculation Type") { Caption = 'Calculation Type'; }
 
         field(83011; "Commission Amount"; Decimal) { Caption = 'Commision Amount / %'; }

@@ -1184,8 +1184,8 @@
             Description = '';
             Caption = 'Commission Type';
             InitValue = " ";
-           OptionMembers = " ", DirectBooking, B2COutreach, B2BOutreach, B2CCompanyAssign, B2BRenewal, B2CRenewal, "B2CCompanyAssign-PropertyViewing(OperationTeam)", "B2BOutreach-AgencyCommission";
-      OptionOrdinalValues = -1, 557130000, 557130001, 557130002, 557130003, 557130004, 557130005, 557130006, 557130007;
+            OptionMembers = " ",DirectBooking,B2COutreach,B2BOutreach,"B2BOutreach-AgencyCommission",B2CCompanyAssign,B2BRenewal,B2CRenewal,"B2CCompanyAssign-PropertyViewing(OperationTeam)";
+            OptionOrdinalValues = -1, 557130000, 557130001, 557130002, 557130007, 557130003, 557130004, 557130005, 557130006;
         }
         field(264; acwapp_NumberofDaysExtension; Integer)
         {

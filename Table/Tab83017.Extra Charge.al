@@ -145,7 +145,7 @@ table 83017 "Extra Charge"
         field(40; "CRM Status"; Option)
         {
             Caption = 'CRM Status';
-            OptionMembers = Pending,Confirmed;
+            OptionMembers = Pending,Confirmed,Settled;
 
         }
         field(49; "External Payment Gateway"; Enum "External Payment Gateway")

@@ -443,10 +443,31 @@
             ExternalName = 'acwapp_status';
             ExternalType = 'Picklist';
             Description = '';
-            Caption = 'Approval Status';
+            Caption = 'Status';
             InitValue = Pending;
-            OptionMembers = Pending,Confirmed;
-            OptionOrdinalValues = 557130000, 557130001;
+            OptionMembers = Pending,Confirmed,Settled;
+            OptionOrdinalValues = 557130000, 557130001, 557130003;
+        }
+        field(89; acwapp_ExtensionStartDate; Date)
+        {
+            ExternalName = 'acwapp_extensionstartdate';
+            ExternalType = 'DateTime';
+            Description = '';
+            Caption = 'Extension Start Date';
+        }
+        field(90; acwapp_ExtensionEndDate; Date)
+        {
+            ExternalName = 'acwapp_extensionenddate';
+            ExternalType = 'DateTime';
+            Description = '';
+            Caption = 'Extension End Date';
+        }
+        field(91; acwapp_Descriptionnew; Text[1000])
+        {
+            ExternalName = 'acwapp_descriptionnew';
+            ExternalType = 'String';
+            Description = '';
+            Caption = 'Description New';
         }
 
     }

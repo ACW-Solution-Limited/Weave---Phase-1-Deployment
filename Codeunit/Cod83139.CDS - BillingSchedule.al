@@ -89,6 +89,8 @@ codeunit 83139 CDSBillingSchedule
         CUCreateJob: Codeunit "Integ. Table Create Job Queue";
         CompanyInformation: Record "Company Information";
     begin
+
+
         CompanyInformation.Get;
 
         InsertIntegrationTableMapping(

@@ -7,6 +7,7 @@ pageextension 83008 PostedSalesCreditMemoExt extends "Posted Sales Credit Memo L
             field("Invoice Description"; Rec."Invoice Description")
             { ApplicationArea = All; }
         }
+
         addlast(content)
         {
 

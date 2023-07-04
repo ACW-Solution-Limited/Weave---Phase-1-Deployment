@@ -70,12 +70,11 @@ report 83019 "Rent Roll Summary (Commission)"
                 g_decTotalStayPeriodPerLicenseAgreement := CalcTotalStaryPeriodPerLicenseAgreement();
                 g_decRemainingStay := CalcRemainingStay();
 
-                g_decOccupancyinPeriodDays := CalcOccupancyInPeriod(g_datCheckInDay, g_datCheckOutDay);
-                if g_decOccupancyinPeriodDays < 0 then
-                    g_decOccupancyinPeriodDays := 0;
+                g_decRemainingStay := AdjustShortStayRemainingStay(g_decRemainingStay);
 
-                if (g_decOccupancyinPeriodDays > g_datEndDate - g_datStartDate + 1) then
-                    g_decOccupancyinPeriodDays := g_datEndDate - g_datStartDate + 1;
+                g_decOccupancyinPeriodDays := CalcOccupancyInPeriod(g_datCheckInDay, g_datCheckOutDay);
+                g_decOccupancyinPeriodDays := AdjustOccupancyDay(g_decOccupancyinPeriodDays, g_datCheckOutDay);
+
 
                 g_decMonthlyRent := CalcMonthyRent();
 
@@ -197,6 +196,25 @@ report 83019 "Rent Roll Summary (Commission)"
 
     end;
 
+    procedure AdjustOccupancyDay(OccupancyinPeriodDays: Decimal; CheckOutDate: Date): Decimal
+    begin
+        if OccupancyinPeriodDays <= 0 then
+            exit(0);
+
+        if (OccupancyinPeriodDays > g_datEndDate - g_datStartDate + 1) then
+            exit(g_datEndDate - g_datStartDate + 1);
+
+
+
+        if (LeaseContractHeader."Payment Type" = LeaseContractHeader."Payment Type"::"One-off (ShortStay)") and
+           (CheckOutDate <= g_datEndDate) then
+            exit(OccupancyinPeriodDays - 1)
+        else
+            exit(OccupancyinPeriodDays)
+
+
+    end;
+
 
 
 
@@ -216,6 +234,16 @@ report 83019 "Rent Roll Summary (Commission)"
             exit(0)
     end;
 
+    procedure AdjustShortStayRemainingStay(RemainingStay: Decimal): Decimal
+    begin
+        if (RemainingStay) <= 0 then
+            exit(0);
+
+        if LeaseContractHeader."Payment Type" = LeaseContractHeader."Payment Type"::"One-off (ShortStay)" then
+            exit(RemainingStay - 1)
+        else
+            exit(RemainingStay);
+    end;
 
     procedure GetCustomerPostingGroup(CustomerNo: Code[50]): Text
     var

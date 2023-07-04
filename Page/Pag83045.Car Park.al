@@ -6,6 +6,7 @@ page 83045 "Car Park"
     SourceTable = "Car Park";
     UsageCategory = Lists;
 
+
     layout
     {
         area(content)

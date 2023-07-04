@@ -110,6 +110,17 @@ page 83016 "Extra Charges"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Service End Date field.';
                 }
+
+                field("New Contract Start Date"; Rec."New Contract Start Date")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the New Contract Start Date field.';
+                }
+                field("New Contract End Date"; Rec."New Contract End Date")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the New Contract End Date field.';
+                }
             }
 
         }

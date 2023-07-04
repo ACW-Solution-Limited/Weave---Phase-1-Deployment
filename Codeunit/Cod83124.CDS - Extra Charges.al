@@ -94,7 +94,7 @@ codeunit 83124 "CDS Extra Charges"
         InsertIntegrationFieldMapping('CRM to BC Ext. Char.', ExtraCharges.FieldNo("Charges Type"), CRMExtraCharges.FieldNo(acwapp_ChargesType), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Ext. Char.', ExtraCharges.FieldNo("Item Type"), CRMExtraCharges.FieldNo(acwapp_ProductTypeName), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Ext. Char.', ExtraCharges.FieldNo("Item No."), CRMExtraCharges.FieldNo(acwapp_ProductID), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
-        InsertIntegrationFieldMapping('CRM to BC Ext. Char.', ExtraCharges.FieldNo("Description"), CRMExtraCharges.FieldNo(acwapp_Description), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
+        InsertIntegrationFieldMapping('CRM to BC Ext. Char.', ExtraCharges.FieldNo("Description"), CRMExtraCharges.FieldNo(acwapp_Descriptionnew), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Ext. Char.', ExtraCharges.FieldNo("Total Amount"), CRMExtraCharges.FieldNo(acwapp_Amount), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Ext. Char.', ExtraCharges.FieldNo("Total Amount Inclu. VAT"), CRMExtraCharges.FieldNo(acwapp_amountincludegst), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Ext. Char.', ExtraCharges.FieldNo("BC Status"), CRMExtraCharges.FieldNo(acwapp_BCStatus), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
@@ -103,10 +103,13 @@ codeunit 83124 "CDS Extra Charges"
         InsertIntegrationFieldMapping('CRM to BC Ext. Char.', ExtraCharges.FieldNo("Payment Link"), CRMExtraCharges.FieldNo(acwapp_paymentlink), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Ext. Char.', ExtraCharges.FieldNo("Customer No."), CRMExtraCharges.FieldNo(acwapp_accountid), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Ext. Char.', ExtraCharges.FieldNo("Created On"), CRMExtraCharges.FieldNo(createdon), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
-        InsertIntegrationFieldMapping('CRM to BC Ext. Char.', ExtraCharges.FieldNo("New Contract Start Date"), CRMExtraCharges.FieldNo(acwapp_newcontractstartdate), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
-        InsertIntegrationFieldMapping('CRM to BC Ext. Char.', ExtraCharges.FieldNo("New Contract End Date"), CRMExtraCharges.FieldNo(acwapp_newcontractenddate), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
+        InsertIntegrationFieldMapping('CRM to BC Ext. Char.', ExtraCharges.FieldNo("Service Start Date"), CRMExtraCharges.FieldNo(acwapp_ExtensionStartDate), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
+        InsertIntegrationFieldMapping('CRM to BC Ext. Char.', ExtraCharges.FieldNo("Service End Date"), CRMExtraCharges.FieldNo(acwapp_ExtensionEndDate), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Ext. Char.', ExtraCharges.FieldNo("Extra Charge ID"), CRMExtraCharges.FieldNo(acwapp_name), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
         InsertIntegrationFieldMapping('CRM to BC Ext. Char.', ExtraCharges.FieldNo("CRM Status"), CRMExtraCharges.FieldNo(acwapp_Status), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
+        InsertIntegrationFieldMapping('CRM to BC Ext. Char.', ExtraCharges.FieldNo("New Contract Start Date"), CRMExtraCharges.FieldNo(acwapp_NewContractStartDate), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
+        InsertIntegrationFieldMapping('CRM to BC Ext. Char.', ExtraCharges.FieldNo("New Contract End Date"), CRMExtraCharges.FieldNo(acwapp_NewContractEndDate), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
+
 
         CompanyInformation.Get;
         IntegrationTableMapping."Integration Table Filter".CreateOutStream(FilterStr);

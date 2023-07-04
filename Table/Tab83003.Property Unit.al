@@ -145,6 +145,8 @@ table 83003 "Property Unit"
             OptionMembers = " ",Property,Room,Facilities,Carpark,Locker;
 
         }
+
+
         field(55; "CRM GUID"; Guid)
         {
             DataClassification = ToBeClassified;

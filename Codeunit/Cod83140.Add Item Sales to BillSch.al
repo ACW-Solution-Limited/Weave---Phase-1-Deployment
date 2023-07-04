@@ -201,7 +201,7 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
                                                                        DT2DATE(CRMExtraCharge."Created On"),//#Item Sales Date
                                                                        CRMExtraCharge."Item No.",
                                                                        1,
-                                                                        CRMExtraCharge."Total Amount",
+                                                                       CRMExtraCharge."Total Amount",
                                                                        CRMExtraCharge."Total Amount",
                                                                        CRMExtraCharge."Total Amount Inclu. VAT",
                                                                        CRMExtraCharge."Stripe Invoice ID",
@@ -209,8 +209,8 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
                                                                        '',
                                                                        0,
                                                                        0,
-                                                                       0D,
-                                                                       0D)
+                                                                      CRMExtraCharge."Service Start Date",
+                                                                      CRMExtraCharge."Service End Date");
                         end;
                     CRMExtraCharge."Charges Type"::AdHoc, CRMExtraCharge."Charges Type"::" ":
                         begin
@@ -260,8 +260,8 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
                                            '',
                                            0,
                                            0,
-                                           0D,
-                                           0D);
+                                           DT2DATE(CRMExtraCharge."New Contract Start Date"),
+                                           DT2DATE(CRMExtraCharge."New Contract End Date"));
                         end;
                     // >> For extension P2
                     CRMExtraCharge."Charges Type"::Extension:
@@ -285,8 +285,8 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
                                              '',
                                              0,
                                              0,
-                                             0D,
-                                             0D);
+                                            CRMExtraCharge."Service Start Date",
+                                            CRMExtraCharge."Service End Date");
 
                         end;
                 // << For extension P2
@@ -513,6 +513,8 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
         l_recLCBillingSchedule."Add. Sales Item Unit Price" := SalesUnitPrice;
         l_recLCBillingSchedule.Amount := TotalAmount;
         l_recLCBillingSchedule."Stripe Invoice ID" := PaymentReferenceID;
+        l_recLCBillingSchedule."Contract Start Date" := contractstartdate;
+        l_recLCBillingSchedule."Contract End Date" := contractenddate;
         // For Tender Type only >>
         If CreditMemoNo <> '' then begin
             l_recCreditMemo.Setrange("No.", CreditMemoNo);
@@ -526,8 +528,6 @@ codeunit 83140 "Addi.Item Sales to Bill. Sch."
             l_recLCBillingSchedule."No. of Days to Bill" := billingdays;
             l_recLCBillingSchedule."No. of Days Current Month" := currentMonth;
             l_recLCBillingSchedule."Sales Invoice Creation Date" := CurrentDateTime;
-            l_recLCBillingSchedule."Contract Start Date" := contractstartdate;
-            l_recLCBillingSchedule."Contract End Date" := contractenddate;
         end;
         // For Tender Type only <<
         l_recLCBillingSchedule.insert;

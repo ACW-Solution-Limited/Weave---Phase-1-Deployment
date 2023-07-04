@@ -5,10 +5,9 @@ table 83024 "Sales Commission Setup"
 
     fields
     {
-        field(1; "Type"; Option)
+        field(1; "Type"; Enum "Commission Type")
         {
             Caption = 'Type';
-            OptionMembers = " ",DirectBooking,B2COutreach,B2BOutreach,B2CCompanyAssign,B2BRenewal,B2CRenewal,"B2CCompanyAssign-PropertyViewing(OperationTeam)","B2BOutreach-AgencyCommission";
             DataClassification = ToBeClassified;
         }
         field(2; "Calculation Type"; Enum "Calculation Type")

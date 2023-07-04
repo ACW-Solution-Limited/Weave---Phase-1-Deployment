@@ -118,6 +118,7 @@ codeunit 83115 CDSPropertyUnit
 
 
 
+
         IntegrationTableMapping.reset;
         IntegrationTableMapping.SetFilter(Name, 'CRM to BC Pro. Unit');
         CUCreateJob.CreateCustomSyncJobQueueEntry(IntegrationTableMapping);

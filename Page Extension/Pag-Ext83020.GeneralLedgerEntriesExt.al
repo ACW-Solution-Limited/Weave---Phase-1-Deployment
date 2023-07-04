@@ -8,8 +8,8 @@ pageextension 83020 "General Ledger Entries Ext" extends "General Ledger Entries
         modify("Source No.") { Visible = true; }
 
         //BC Version 22.0 >>
-        // modify("VAT Bus. Posting Group") { Visible = true; }
-        //modify("VAT Prod. Posting Group") { Visible = true; }
+        modify("VAT Bus. Posting Group") { Visible = true; }
+        modify("VAT Prod. Posting Group") { Visible = true; }
         //BC Version 22.0 <<
 
         addafter("Source No.")

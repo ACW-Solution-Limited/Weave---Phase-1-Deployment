@@ -10,11 +10,10 @@ table 83025 "Sales Commission Line"
             Caption = 'Contract No.';
             DataClassification = ToBeClassified;
         }
-        field(2; "Commission Type"; Option)
+        field(2; "Commission Type"; Enum "Commission Type")
         {
-            Caption = 'Type';
+            Caption = 'Commission Type';
             DataClassification = ToBeClassified;
-            OptionMembers = " ",DirectBooking,B2COutreach,B2BOutreach,B2CCompanyAssign,B2BRenewal,B2CRenewal,"B2CCompanyAssign-PropertyViewing(OperationTeam)","B2BOutreach-AgencyCommission";
         }
         field(3; "Date"; Date)
         {
