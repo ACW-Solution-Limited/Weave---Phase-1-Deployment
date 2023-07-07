@@ -1,9 +1,9 @@
-report 83020 "Rent Roll Summary"
+report 83018 "Rent Roll Summary (Investors)"
 {
     ApplicationArea = All;
-    Caption = 'Rent Roll Summary';
+    Caption = 'Rent Roll Summary (Investors)';
     UsageCategory = ReportsAndAnalysis;
-    RDLCLayout = './Layout/Rep83020.RentRollSummary.rdlc';
+    RDLCLayout = './Layout/Rep83018.Rent Roll Summary-Investors.rdlc';
 
 
     dataset
@@ -19,8 +19,6 @@ report 83020 "Rent Roll Summary"
             column(RatePlan; g_txtRatePlan) { }
             column(BookingReference; "No.") { }
             column(BookingCreatedBy; "Salesperson Name") { }
-            column(BookingAccountCode; "Customer No.") { }
-            column(BookingAccount; "Customer Name") { }
             column(BookingAccountType; g_txtBookingAccountType) { }
             column(PaymentType; "Payment Type") { }
             column(CheckInDay; g_datCheckInDay) { }
@@ -33,6 +31,10 @@ report 83020 "Rent Roll Summary"
             column(OccupancyinPeriodDays; g_decOccupancyinPeriodDays) { }
             column(OccupancyDaysAdjusted; g_decOccupancyDaysAdjusted) { }
             column(GrossRevenueToBeRecognised; g_decGrossRevenueToBeRecognised) { }
+
+
+
+
             trigger OnPreDataItem()
             begin
                 //    LeaseContractHeader.SetFilter("No.", '20221118-00002/6660');
@@ -76,6 +78,11 @@ report 83020 "Rent Roll Summary"
 
                 g_decOccupancyDaysAdjusted := g_decOccupancyinPeriodDays;
                 g_decGrossRevenueToBeRecognised := g_decMonthlyRent * g_decOccupancyinPeriodDays / (g_datEndDate - g_datStartDate + 1);
+
+
+                g_decCommissionAmount := GetSalesCommissionAmount(g_decActualRent, LeaseContractHeader);
+
+
             end;
         }
 
@@ -179,6 +186,7 @@ report 83020 "Rent Roll Summary"
             exit(CheckOutDate - g_datStartDate + 1);
 
         exit(0);
+
     end;
 
     procedure AdjustOccupancyDay(OccupancyinPeriodDays: Decimal; CheckOutDate: Date): Decimal
@@ -201,6 +209,8 @@ report 83020 "Rent Roll Summary"
     end;
 
 
+
+
     procedure CalcTotalStaryPeriodPerLicenseAgreement(): Decimal
     begin
         if LeaseContractHeader."Payment Type" = LeaseContractHeader."Payment Type"::"One-off (ShortStay)" then
@@ -217,7 +227,6 @@ report 83020 "Rent Roll Summary"
             exit(0)
     end;
 
-
     procedure AdjustShortStayRemainingStay(RemainingStay: Decimal): Decimal
     begin
         if (RemainingStay) <= 0 then
@@ -228,7 +237,6 @@ report 83020 "Rent Roll Summary"
         else
             exit(RemainingStay);
     end;
-
 
 
     procedure GetCustomerPostingGroup(CustomerNo: Code[50]): Text
@@ -282,8 +290,8 @@ report 83020 "Rent Roll Summary"
 
             if l_recBillingSchedule.FindFirst() then begin
 
-                if g_datEndDate > l_recBillingSchedule."Contract End Date" then begin
 
+                if g_datEndDate > l_recBillingSchedule."Contract End Date" then begin
                     if LeaseContractHeader."Monthly Rent" <> 0 then
                         l_decActualRent += (LeaseContractHeader."Monthly Rent" - LeaseContractHeader."Monthly Discount") / l_recBillingSchedule."No. of Days Current Month" *
                                          (l_recBillingSchedule."Contract End Date" - l_dateCalculationStart + 1);
@@ -324,8 +332,45 @@ report 83020 "Rent Roll Summary"
     end;
 
 
+    procedure GetSalesCommissionAmount(ActualAmount: Decimal; LeaseContract: Record "Lease Contract Header"): Decimal
+    var
+        l_recSalesCommissionSetup: Record "Sales Commission Setup";
+        l_recBillingSchedule: Record "Lease Contract Billing Sched.";
+        l_intNoOfPeriod: Integer;
+    begin
+
+        l_intNoOfPeriod := 0;
+        l_recBillingSchedule.SetFilter("Contract No.", '%1', LeaseContract."No.");
+        l_recBillingSchedule.SetRange(Type, l_recBillingSchedule.Type::Rent);
+        l_recBillingSchedule.setRange(l_recBillingSchedule."Sub-Type", '');
+        If l_recBillingSchedule.findset then
+            repeat
+                If l_recBillingSchedule."No. of Days Current Month" = l_recBillingSchedule."No. of Days to Bill" then
+                    l_intNoOfPeriod += 1;
+            until l_recBillingSchedule.Next = 0;
+
+
+
+        if l_recSalesCommissionSetup.Get(LeaseContract."Commission Type") then begin
+            if l_recSalesCommissionSetup."Minimum Contract Period" > l_intNoOfPeriod then
+                exit(0);
+
+            case l_recSalesCommissionSetup."Calculation Type" of
+                l_recSalesCommissionSetup."Calculation Type"::ByAmount:
+                    exit(l_recSalesCommissionSetup.Amount);
+
+                l_recSalesCommissionSetup."Calculation Type"::ByPrecentage:
+                    exit(ActualAmount * (l_recSalesCommissionSetup.Amount / 100));
+            end;
+            exit(0);
+        end;
+
+    end;
+
+
     var
 
+        g_pageSalesCommissionLine: Page "Sales Commission";
         g_datStartDate: Date;
         g_datEndDate: Date;
         g_datGenerationDate: Date;
@@ -342,6 +387,9 @@ report 83020 "Rent Roll Summary"
         g_decOccupancyinPeriodDays: Decimal;
         g_decOccupancyDaysAdjusted: Decimal;
         g_decGrossRevenueToBeRecognised: Decimal;
+
+        g_decCommissionAmount: Decimal;
+
 
 
 }
